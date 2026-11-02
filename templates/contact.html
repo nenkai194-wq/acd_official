@@ -1,0 +1,159 @@
+{% extends "base.html" %}
+
+{% block title %}Kontak & Konsultasi Teknis - PT. Aksara Cipta Digital (ACD){% endblock %}
+
+{% block content %}
+<div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
+    <!-- Interactive Particle Constellation Canvas -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <div class="deptech-grid-pattern"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">Hubungi Kami</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Konsultasi Gratis Rancang Bangun Software</h1>
+        <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2.5 animate-fade-in-up delay-300">
+            Diskusikan kebutuhan aplikasi atau sistem perusahaan Anda dengan System Analyst senior kami. Kami siap memberikan masukan arsitektur dan estimasi anggaran tanpa biaya.
+        </p>
+    </div>
+</div>
+
+<div class="py-20 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100 animate-fade-in-up delay-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+            <!-- Left: Contact Details & Info -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="deptech-card-dark rounded-2xl p-6 space-y-4">
+                    <h3 class="text-lg font-bold text-white pb-2 border-b border-indigo-950/60">Informasi Kontak Langsung</h3>
+                    
+                    <div class="flex items-start space-x-3.5">
+                        <div class="w-9 h-9 rounded-lg bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 flex items-center justify-center shrink-0">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-slate-400 uppercase">WhatsApp Hotline</span>
+                            <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}" target="_blank" class="text-sm font-bold text-white hover:text-emerald-400 transition">
+                                +62 812-8888-2510 (Fast Response)
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-3.5">
+                        <div class="w-9 h-9 rounded-lg bg-blue-950/80 text-blue-400 border border-blue-800/60 flex items-center justify-center shrink-0">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-slate-400 uppercase">Email Konsultasi Resmi</span>
+                            <a href="mailto:{{ config.COMPANY_EMAIL }}" class="text-sm font-bold text-white hover:text-blue-400 transition">
+                                {{ config.COMPANY_EMAIL }}
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-3.5">
+                        <div class="w-9 h-9 rounded-lg bg-indigo-950/80 text-indigo-400 border border-indigo-800/60 flex items-center justify-center shrink-0">
+                            <i data-lucide="phone" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-slate-400 uppercase">Telepon Kantor</span>
+                            <span class="text-sm font-bold text-white">{{ config.COMPANY_PHONE }}</span>
+                        </div>
+                    </div>
+
+                    <div class="flex items-start space-x-3.5">
+                        <div class="w-9 h-9 rounded-lg bg-purple-950/80 text-purple-400 border border-purple-800/60 flex items-center justify-center shrink-0">
+                            <i data-lucide="clock" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <span class="block text-xs font-bold text-slate-400 uppercase">Jam Operasional</span>
+                            <span class="text-xs text-slate-300">Senin - Jumat: 08:30 - 17:00 WIB</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Office addresses card -->
+                <div class="deptech-card-dark rounded-2xl p-6 space-y-4">
+                    <h3 class="text-lg font-bold text-white pb-2 border-b border-indigo-950/60">Lokasi Kantor</h3>
+
+                    <div>
+                        <span class="text-xs font-bold text-indigo-400 uppercase">Head Office Jakarta</span>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">{{ config.COMPANY_ADDRESS }}</p>
+                    </div>
+
+                    <div class="pt-3 border-t border-indigo-950/60">
+                        <span class="text-xs font-bold text-cyan-400 uppercase">Engineering Center Yogyakarta</span>
+                        <p class="text-xs text-slate-300 mt-1 leading-relaxed">{{ config.COMPANY_BRANCH }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Interactive Consultation Form -->
+            <div class="lg:col-span-7">
+                <div class="deptech-card-dark p-8 sm:p-10">
+                    <div class="mb-6">
+                        <span class="text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-3 py-1 rounded-full uppercase tracking-wider">Formulir Kebutuhan</span>
+                        <h2 class="text-2xl font-extrabold text-white mt-2">Kirimkan Deskripsi Kebutuhan Anda</h2>
+                        <p class="text-xs text-slate-400 mt-1">Kami menghargai kerahasiaan data bisnis Anda (Non-Disclosure Agreement siap ditandatangani).</p>
+                    </div>
+
+                    <form class="ajax-consultation-form space-y-4">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nama Lengkap *</label>
+                                <input type="text" name="name" required placeholder="Budi Santoso" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nama Instansi / Perusahaan</label>
+                                <input type="text" name="company" placeholder="PT. Sukses Mandiri" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Email Perusahaan / Resmi *</label>
+                                <input type="email" name="email" required placeholder="budi@suksesmandiri.co.id" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nomor WhatsApp Aktif *</label>
+                                <input type="tel" name="phone" required placeholder="081298765432" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Kategori Solusi Software *</label>
+                                <select name="service_type" required class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white">
+                                    <option value="Aplikasi Bisnis ERP" class="bg-[#05091d] text-white">Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)</option>
+                                    <option value="Aplikasi E-Government" class="bg-[#05091d] text-white">Aplikasi E-Government (Smart Governance / SPBE)</option>
+                                    <option value="Mobile Apps" class="bg-[#05091d] text-white">Mobile Apps (Android & iOS Native/Flutter)</option>
+                                    <option value="Web Base App" class="bg-[#05091d] text-white">Web Base App & Sistem Informasi Operasional</option>
+                                    <option value="Website Korporat" class="bg-[#05091d] text-white">Website Korporat & Portal Berita</option>
+                                    <option value="GIS & Geoportal" class="bg-[#05091d] text-white">GIS & Geoportal Spasial</option>
+                                    <option value="Integrasi Sistem & API" class="bg-[#05091d] text-white">Integrasi Sistem & API Enterprise</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Perkiraan Range Budget (Opsional)</label>
+                                <select name="budget_range" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white">
+                                    <option value="Di bawah 50 Juta" class="bg-[#05091d] text-white">Di bawah Rp 50 Juta</option>
+                                    <option value="50 - 150 Juta" selected class="bg-[#05091d] text-white">Rp 50 Juta - Rp 150 Juta</option>
+                                    <option value="150 - 300 Juta" class="bg-[#05091d] text-white">Rp 150 Juta - Rp 300 Juta</option>
+                                    <option value="Di atas 300 Juta" class="bg-[#05091d] text-white">> Rp 300 Juta (Enterprise Scale)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Uraian Kebutuhan & Masalah Operasional yang Ingin Diselesaikan *</label>
+                            <textarea name="message" required rows="4" placeholder="Jelaskan secara singkat fitur utama yang Anda butuhkan, jumlah calon pengguna, serta target jadwal peluncuran sistem..." class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500"></textarea>
+                        </div>
+
+                        <button type="submit" class="w-full py-4 deptech-btn-primary font-extrabold text-xs uppercase tracking-wider shadow-xl">
+                            Kirim Formulir Konsultasi Gratis
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

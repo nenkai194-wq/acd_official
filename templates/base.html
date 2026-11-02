@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}ACD IT Consultant - AI, Software Developer{% endblock %}</title>
+    <meta name="description" content="{% block meta_desc %}PT. Aksara Cipta Digital (ACD Digital Consulting) - Jasa Pembuatan Aplikasi Mobile, Web Base, Sistem Informasi ERP, dan E-Government terpercaya dan bergaransi di Indonesia.{% endblock %}">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo_acd_icon.png') }}">
+
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            200: '#c7d2fe',
+                            300: '#a5b4fc',
+                            400: '#818cf8',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            800: '#3730a3',
+                            900: '#312e81',
+                            950: '#1e1b4b',
+                        },
+                        deptech: {
+                            dark: '#020617',
+                            slate: '#0f172a',
+                            navy: '#1e1b4b',
+                            indigo: '#6366f1',
+                            purple: '#7c3aed',
+                            violet: '#8b5cf6',
+                            cyan: '#06b6d4',
+                            light: '#f8fafc',
+                        },
+                        accent: {
+                            cyan: '#38bdf8',
+                            amber: '#f59e0b',
+                            emerald: '#10b981',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="bg-[#020617] text-slate-100 antialiased flex flex-col min-h-screen">
+
+
+
+    <!-- 2. MAIN NAVIGATION (STICKY HEADER WITH SEAMLESS COSMIC DARK THEME) -->
+    <header class="sticky top-0 z-40 bg-[#020617]/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(2,6,23,0.8)] border-b border-indigo-900/40 transition-all duration-300">
+        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+            <div class="flex items-center justify-between h-20 w-full relative">
+                <!-- Mobile Only: Brand Logo (Left on small screens) -->
+                <div class="lg:hidden flex items-center">
+                    <a href="{{ url_for('index') }}" class="flex items-center space-x-2.5 group py-1">
+                        <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="AKSARA CIPTA DIGITAL" class="h-10 w-auto transition transform group-hover:scale-105 drop-shadow-md shrink-0">
+                        <div class="flex flex-col justify-center">
+                            <span class="font-extrabold text-white text-xs tracking-tight leading-none whitespace-nowrap">AKSARA CIPTA DIGITAL</span>
+                            <span class="text-[9px] font-semibold text-indigo-400 tracking-tight leading-none mt-1 whitespace-nowrap">IT Consultant - AI, Software Developer</span>
+                        </div>
+                    </a>
+                </div>
+
+                <!-- Desktop Unified Center Cluster: Logo + Tulisan + Menu Utama + Hubungi Kami -->
+                <div class="hidden lg:flex items-center justify-center gap-2 xl:gap-3.5 2xl:gap-5 mx-auto z-20">
+                    <!-- 1. Logo & Tulisan Perusahaan -->
+                    <div class="flex items-center shrink-0 pr-1 xl:pr-2.5">
+                        <a href="{{ url_for('index') }}" class="flex items-center space-x-2.5 group py-1">
+                            <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="AKSARA CIPTA DIGITAL" class="h-10 xl:h-11 w-auto transition transform group-hover:scale-105 drop-shadow-md shrink-0">
+                            <div class="flex flex-col justify-center">
+                                <span class="font-extrabold text-white text-xs xl:text-sm tracking-tight leading-none whitespace-nowrap">AKSARA CIPTA DIGITAL</span>
+                                <span class="text-[9px] xl:text-[10px] font-semibold text-indigo-400 tracking-tight leading-none mt-1 whitespace-nowrap">IT Consultant - AI, Software Developer</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- 2. Menu Utama Navigasi -->
+                    <nav class="flex items-center gap-0.5 xl:gap-1.5 2xl:gap-2">
+                        <a href="{{ url_for('index') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 whitespace-nowrap">{{ t.nav_home }}</a>
+
+                        <!-- Dropdown: Aplikasi & Website -->
+                        <div class="relative nav-item">
+                            <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap">
+                                <span>{{ t.nav_apps_web }}</span>
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200"></i>
+                            </a>
+                            <div class="nav-dropdown absolute left-0 mt-1 w-80 bg-[#0a0f1d] rounded-2xl shadow-2xl border border-indigo-950 p-2 z-50">
+                                <div class="px-3 py-2 bg-indigo-950/50 rounded-xl mb-1 border-b border-indigo-900/40">
+                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Katalog Solusi Digital</span>
+                                </div>
+                                <a href="{{ url_for('service_detail', slug='mobile-apps') }}" class="flex items-start space-x-3 p-2.5 rounded-xl hover:bg-indigo-950/60 transition group">
+                                    <div class="w-8 h-8 rounded-lg bg-indigo-900/50 text-indigo-400 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition">
+                                        <i data-lucide="smartphone" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white group-hover:text-indigo-300">Mobile Apps</p>
+                                        <p class="text-xs text-slate-400">Android & iOS Native/Flutter</p>
+                                    </div>
+                                </a>
+                                <a href="{{ url_for('service_detail', slug='sistem-informasi') }}" class="flex items-start space-x-3 p-2.5 rounded-xl hover:bg-indigo-950/60 transition group">
+                                    <div class="w-8 h-8 rounded-lg bg-cyan-900/50 text-cyan-400 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition">
+                                        <i data-lucide="globe" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white group-hover:text-indigo-300">Web Base Apps</p>
+                                        <p class="text-xs text-slate-400">Sistem informasi operasional</p>
+                                    </div>
+                                </a>
+                                <a href="{{ url_for('service_detail', slug='website-korporat') }}" class="flex items-start space-x-3 p-2.5 rounded-xl hover:bg-indigo-950/60 transition group">
+                                    <div class="w-8 h-8 rounded-lg bg-purple-900/50 text-purple-400 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition">
+                                        <i data-lucide="layout" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white group-hover:text-indigo-300">Website Korporat</p>
+                                        <p class="text-xs text-slate-400">Company profile & portal berita</p>
+                                    </div>
+                                </a>
+                                <a href="{{ url_for('service_detail', slug='gis-geoportal') }}" class="flex items-start space-x-3 p-2.5 rounded-xl hover:bg-indigo-950/60 transition group">
+                                    <div class="w-8 h-8 rounded-lg bg-emerald-900/50 text-emerald-400 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition">
+                                        <i data-lucide="map-pin" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white group-hover:text-indigo-300">GIS & Geoportal</p>
+                                        <p class="text-xs text-slate-400">Pemetaan spasial & tata ruang</p>
+                                    </div>
+                                </a>
+                                <a href="{{ url_for('service_detail', slug='integrasi-sistem') }}" class="flex items-start space-x-3 p-2.5 rounded-xl hover:bg-indigo-950/60 transition group">
+                                    <div class="w-8 h-8 rounded-lg bg-violet-900/50 text-violet-400 flex items-center justify-center shrink-0 group-hover:bg-indigo-600 group-hover:text-white transition">
+                                        <i data-lucide="layers" class="w-4 h-4"></i>
+                                    </div>
+                                    <div>
+                                        <p class="text-sm font-semibold text-white group-hover:text-indigo-300">Integrasi Sistem & API</p>
+                                        <p class="text-xs text-slate-400">Sinkronisasi data antar platform</p>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown: Aplikasi Bisnis ERP -->
+                        <div class="relative nav-item">
+                            <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap">
+                                <span>{{ t.nav_erp }}</span>
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200"></i>
+                            </a>
+                            <div class="nav-dropdown absolute -left-20 mt-1 w-[560px] bg-[#0a0f1d] rounded-2xl shadow-2xl border border-indigo-950 p-4 z-50">
+                                <div class="flex justify-between items-center pb-2 mb-2 border-b border-indigo-900/40">
+                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Modul ERP Terintegrasi Custom</span>
+                                    <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="text-xs font-semibold text-indigo-400 hover:underline">Lihat Semua Modul →</a>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="{{ url_for('service_detail', slug='erp-hris-kepegawaian') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="users" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">HRIS & Kepegawaian</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='erp-presensi-absensi') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="check-circle" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">Presensi & Geofencing</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='erp-payroll-penggajian') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="dollar-sign" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">Payroll & PPh 21 TER</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='erp-accounting-keuangan') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="trending-up" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">Akuntansi & Finansial</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='erp-asset-management') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="box" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">Asset Management</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='erp-warehouse-management') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="archive" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">Warehouse & Stok</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='erp-document-management') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="file-text" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">E-Persuratan & Dokumen</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='erp-dashboard-eksekutif') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="pie-chart" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">Executive Dashboard BI</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dropdown: Aplikasi E-Government -->
+                        <div class="relative nav-item">
+                            <a href="{{ url_for('services_category', category='Aplikasi E-Government') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap">
+                                <span>{{ t.nav_egov }}</span>
+                                <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200"></i>
+                            </a>
+                            <div class="nav-dropdown absolute -left-20 mt-1 w-[560px] bg-[#0a0f1d] rounded-2xl shadow-2xl border border-indigo-950 p-4 z-50">
+                                <div class="flex justify-between items-center pb-2 mb-2 border-b border-indigo-900/40">
+                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Ekosistem Smart City & SPBE</span>
+                                    <a href="{{ url_for('services_category', category='Aplikasi E-Government') }}" class="text-xs font-semibold text-indigo-400 hover:underline">{{ t.nav_view_all_modules }}</a>
+                                </div>
+                                <div class="grid grid-cols-2 gap-2">
+                                    <a href="{{ url_for('service_detail', slug='egov-portal-daerah') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="shield" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">Portal Pemda & OPD</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='egov-data-sektoral') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="database" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">e-Data Sektoral SDI</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='egov-e-planning-musrenbang') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="calendar" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">e-Planning & Pokir</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='egov-e-monev-sakip') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="award" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">e-Monev & e-SAKIP</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='egov-e-lapor-pengaduan') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="message-square" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">e-Lapor & Aduan Warga</span>
+                                    </a>
+                                    <a href="{{ url_for('service_detail', slug='egov-e-perizinan-mpp') }}" class="flex items-center space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
+                                        <i data-lucide="clipboard" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                                        <span class="text-sm font-medium text-slate-200 group-hover:text-indigo-300">e-Perizinan TTE BSrE</span>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="{{ url_for('portfolio') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 whitespace-nowrap">{{ t.nav_portfolio }}</a>
+                        <a href="{{ url_for('about') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 whitespace-nowrap">{{ t.nav_about }}</a>
+                        <a href="{{ url_for('career') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 whitespace-nowrap">{{ t.nav_career }}</a>
+                    </nav>
+
+                    <!-- 3. Tombol Hubungi Kami (Merapat di sebelah menu utama) -->
+                    <div class="shrink-0 pl-1 xl:pl-2">
+                        <button onclick="openConsultationModal()" class="inline-flex items-center space-x-1.5 deptech-btn-primary px-3 xl:px-4 py-1.5 xl:py-2 font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/20 whitespace-nowrap">
+                            <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
+                            <span>{{ t.nav_consultation_btn }}</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Right Corner Controls: Minimalist Language Switcher ID/EN & Mobile Hamburger Button -->
+                <div class="flex items-center space-x-3 shrink-0 z-30 lg:absolute lg:right-6 xl:right-10">
+                    <!-- Minimalist Language Switcher (Pojok Kanan Atas) -->
+                    <div class="flex items-center text-xs font-semibold text-slate-300">
+                        <i data-lucide="globe" class="w-3.5 h-3.5 text-indigo-400 mr-1.5 shrink-0"></i>
+                        <div class="inline-flex items-center space-x-1 bg-[#05091d] border border-indigo-900/70 rounded-lg p-0.5 shadow-inner">
+                            <a href="{{ set_lang_url('id') }}" class="px-2 py-0.5 rounded-md transition text-xs {% if current_lang == 'id' %}text-white font-bold bg-gradient-to-r from-indigo-600 to-purple-600 shadow-sm{% else %}text-slate-400 hover:text-white{% endif %}" title="Bahasa Indonesia">ID</a>
+                            <span class="text-slate-600 text-[10px]">/</span>
+                            <a href="{{ set_lang_url('en') }}" class="px-2 py-0.5 rounded-md transition text-xs {% if current_lang == 'en' %}text-white font-bold bg-gradient-to-r from-indigo-600 to-purple-600 shadow-sm{% else %}text-slate-400 hover:text-white{% endif %}" title="English">EN</a>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="lg:hidden p-2 text-slate-300 hover:text-white hover:bg-indigo-950/50 rounded-xl transition ml-1" aria-label="Buka Menu">
+                        <i data-lucide="menu" class="w-6 h-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 3. MOBILE OFFCANVAS DRAWER -->
+    <div id="mobile-backdrop" class="fixed inset-0 bg-slate-950/80 z-50 hidden backdrop-blur-md transition-opacity"></div>
+    <div id="mobile-drawer" class="fixed top-0 right-0 bottom-0 w-80 max-w-[85vw] bg-[#030718] text-slate-100 border-l border-indigo-950/80 z-50 shadow-2xl transform translate-x-full transition-transform duration-300 ease-in-out flex flex-col">
+        <div class="p-4 border-b border-indigo-950/60 flex items-center justify-between">
+            <div class="flex items-center space-x-2.5">
+                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-11 w-auto">
+                <div class="flex flex-col justify-center">
+                    <span class="font-extrabold text-xs text-white leading-none tracking-tight">AKSARA CIPTA DIGITAL</span>
+                    <span class="text-[9px] font-semibold text-indigo-400 mt-1">IT Consultant - AI, Software Developer</span>
+                </div>
+            </div>
+            <button id="mobile-menu-close" class="p-2 text-slate-400 hover:text-white rounded-lg transition" aria-label="Tutup Menu">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+        </div>
+        <!-- Language Switcher in Mobile Drawer -->
+        <div class="px-4 py-2.5 bg-[#070c24] border-b border-indigo-950/60 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400 flex items-center">
+                <i data-lucide="globe" class="w-3.5 h-3.5 text-indigo-400 mr-1.5"></i>
+                <span>Bahasa / Language</span>
+            </span>
+            <div class="inline-flex items-center space-x-1 text-xs font-bold">
+                <a href="{{ set_lang_url('id') }}" class="px-2 py-0.5 rounded transition {% if current_lang == 'id' %}bg-indigo-600 text-white shadow-sm{% else %}text-slate-400 hover:text-indigo-400 bg-indigo-950/50 border border-indigo-900/60{% endif %}">ID</a>
+                <span class="text-slate-600">/</span>
+                <a href="{{ set_lang_url('en') }}" class="px-2 py-0.5 rounded transition {% if current_lang == 'en' %}bg-indigo-600 text-white shadow-sm{% else %}text-slate-400 hover:text-indigo-400 bg-indigo-950/50 border border-indigo-900/60{% endif %}">EN</a>
+            </div>
+        </div>
+        <div class="overflow-y-auto p-4 flex-1 space-y-2">
+            <a href="{{ url_for('index') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_home }}</a>
+            
+            <div>
+                <button class="mobile-dropdown-toggle w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition" data-target="m-sub-aplikasi">
+                    <span>{{ t.nav_apps_web }}</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 arrow-icon transition-transform"></i>
+                </button>
+                <div id="m-sub-aplikasi" class="hidden pl-4 pr-2 py-1 space-y-1 text-sm bg-[#070c24]/80 border border-indigo-950/60 rounded-lg mt-1">
+                    <a href="{{ url_for('service_detail', slug='mobile-apps') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">Mobile Apps (Android & iOS)</a>
+                    <a href="{{ url_for('service_detail', slug='sistem-informasi') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">Web Base & Sistem Informasi</a>
+                    <a href="{{ url_for('service_detail', slug='website-korporat') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">Website Korporat & Portal</a>
+                    <a href="{{ url_for('service_detail', slug='gis-geoportal') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">GIS & Geoportal</a>
+                    <a href="{{ url_for('service_detail', slug='integrasi-sistem') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">Integrasi Sistem & API</a>
+                </div>
+            </div>
+
+            <div>
+                <button class="mobile-dropdown-toggle w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition" data-target="m-sub-erp">
+                    <span>{{ t.nav_erp }}</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 arrow-icon transition-transform"></i>
+                </button>
+                <div id="m-sub-erp" class="hidden pl-4 pr-2 py-1 space-y-1 text-sm bg-[#070c24]/80 border border-indigo-950/60 rounded-lg mt-1">
+                    <a href="{{ url_for('service_detail', slug='erp-hris-kepegawaian') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">HRIS & Kepegawaian</a>
+                    <a href="{{ url_for('service_detail', slug='erp-presensi-absensi') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Presensi & Geofencing</a>
+                    <a href="{{ url_for('service_detail', slug='erp-payroll-penggajian') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Payroll & Pajak PPh 21</a>
+                    <a href="{{ url_for('service_detail', slug='erp-accounting-keuangan') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Akuntansi & Finansial</a>
+                    <a href="{{ url_for('service_detail', slug='erp-asset-management') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Asset Management</a>
+                    <a href="{{ url_for('service_detail', slug='erp-warehouse-management') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Warehouse & Inventori</a>
+                    <a href="{{ url_for('service_detail', slug='erp-document-management') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">E-Persuratan Dokumen</a>
+                    <a href="{{ url_for('service_detail', slug='erp-dashboard-eksekutif') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Executive Dashboard BI</a>
+                </div>
+            </div>
+
+            <div>
+                <button class="mobile-dropdown-toggle w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition" data-target="m-sub-egov">
+                    <span>{{ t.nav_egov }}</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 arrow-icon transition-transform"></i>
+                </button>
+                <div id="m-sub-egov" class="hidden pl-4 pr-2 py-1 space-y-1 text-sm bg-[#070c24]/80 border border-indigo-950/60 rounded-lg mt-1">
+                    <a href="{{ url_for('service_detail', slug='egov-portal-daerah') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">Portal Pemda & OPD</a>
+                    <a href="{{ url_for('service_detail', slug='egov-data-sektoral') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Data Sektoral SDI</a>
+                    <a href="{{ url_for('service_detail', slug='egov-e-planning-musrenbang') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Planning & Pokir</a>
+                    <a href="{{ url_for('service_detail', slug='egov-e-monev-sakip') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Monev & SAKIP</a>
+                    <a href="{{ url_for('service_detail', slug='egov-e-lapor-pengaduan') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Lapor Aduan Warga</a>
+                    <a href="{{ url_for('service_detail', slug='egov-e-perizinan-mpp') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Perizinan TTE BSrE</a>
+                </div>
+            </div>
+
+            <a href="{{ url_for('portfolio') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_portfolio }}</a>
+            <a href="{{ url_for('about') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_about }}</a>
+            <a href="{{ url_for('career') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_career }}</a>
+        </div>
+        <div class="p-4 border-t border-indigo-950/60 bg-[#070c24]">
+            <button onclick="openConsultationModal()" class="w-full deptech-btn-primary font-semibold py-2.5 rounded-xl text-center shadow-lg">
+                {{ t.nav_consultation_btn }}
+            </button>
+        </div>
+    </div>
+
+    <!-- MAIN BODY CONTENT -->
+    <main class="flex-grow animate-fade-in-up">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- 4. FOOTER (DEPTECH STYLE DEEP DARK & CYBER GLOW) -->
+    <footer class="bg-[#020617] text-slate-300 pt-16 pb-12 border-t border-indigo-950/80 relative overflow-hidden">
+        <!-- Background subtle glow -->
+        <div class="absolute -top-32 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute -bottom-32 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-10 mb-14">
+                <!-- Col 1: About ACD -->
+                <div class="lg:col-span-2 space-y-4">
+                    <div class="flex items-center space-x-3.5 mb-3">
+                        <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="AKSARA CIPTA DIGITAL" class="h-14 w-auto">
+                        <div class="flex flex-col justify-center">
+                            <span class="font-extrabold text-white text-base sm:text-lg leading-none tracking-tight">AKSARA CIPTA DIGITAL</span>
+                            <span class="text-[11px] font-semibold text-indigo-400 tracking-tight mt-1">IT Consultant - AI, Software Developer</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-slate-400 leading-relaxed pr-6">
+                        <strong class="text-white">{{ config.COMPANY_NAME }}</strong> adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.
+                    </p>
+                    <div class="pt-2 space-y-2 text-sm text-slate-300">
+                        <div class="flex items-start space-x-2.5">
+                            <i data-lucide="map-pin" class="w-4 h-4 text-indigo-400 mt-1 shrink-0"></i>
+                            <span class="text-xs text-slate-400">{{ config.COMPANY_ADDRESS }}</span>
+                        </div>
+                        <div class="flex items-start space-x-2.5">
+                            <i data-lucide="building" class="w-4 h-4 text-indigo-400 mt-1 shrink-0"></i>
+                            <span class="text-xs text-slate-400">Cabang Teknis: {{ config.COMPANY_BRANCH }}</span>
+                        </div>
+                        <div class="flex items-center space-x-2.5">
+                            <i data-lucide="phone" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                            <span class="text-xs text-slate-300">{{ config.COMPANY_PHONE }}</span>
+                        </div>
+                        <div class="flex items-center space-x-2.5">
+                            <i data-lucide="mail" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                            <a href="mailto:{{ config.COMPANY_EMAIL }}" class="text-xs text-slate-300 hover:text-white">{{ config.COMPANY_EMAIL }}</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Col 2: Aplikasi & Website -->
+                <div>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">Aplikasi & Website</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="{{ url_for('service_detail', slug='mobile-apps') }}" class="hover:text-white transition">Mobile Apps (Android & iOS)</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='sistem-informasi') }}" class="hover:text-white transition">Web Base Apps</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='website-korporat') }}" class="hover:text-white transition">Website Korporat</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='gis-geoportal') }}" class="hover:text-white transition">Geographic Information System (GIS)</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='integrasi-sistem') }}" class="hover:text-white transition">Integrasi Sistem & API</a></li>
+                        <li><a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="text-indigo-400 hover:text-indigo-300 font-medium pt-1 inline-block">Semua Aplikasi & Website →</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Aplikasi ERP -->
+                <div>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">Aplikasi Bisnis ERP</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="{{ url_for('service_detail', slug='erp-hris-kepegawaian') }}" class="hover:text-white transition">HRIS / Kepegawaian</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='erp-presensi-absensi') }}" class="hover:text-white transition">Presensi & Geofencing</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='erp-payroll-penggajian') }}" class="hover:text-white transition">Payroll & Pajak PPh21</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='erp-accounting-keuangan') }}" class="hover:text-white transition">Akuntansi & Keuangan</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='erp-asset-management') }}" class="hover:text-white transition">Asset Management</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='erp-warehouse-management') }}" class="hover:text-white transition">Warehouse Management</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='erp-document-management') }}" class="hover:text-white transition">Document Management</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='erp-dashboard-eksekutif') }}" class="hover:text-white transition">Dashboard Eksekutif</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: Aplikasi E-Government & Navigasi -->
+                <div>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">Aplikasi E-Gov</h4>
+                    <ul class="space-y-2 text-xs text-slate-400">
+                        <li><a href="{{ url_for('service_detail', slug='egov-portal-daerah') }}" class="hover:text-white transition">Website Pemerintah Daerah</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='egov-data-sektoral') }}" class="hover:text-white transition">e-Data Sektoral SDI</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='egov-e-planning-musrenbang') }}" class="hover:text-white transition">e-Planning Internal & Pokir</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='egov-e-monev-sakip') }}" class="hover:text-white transition">e-Monev & e-SAKIP</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='egov-e-lapor-pengaduan') }}" class="hover:text-white transition">e-Lapor & Pengaduan Warga</a></li>
+                        <li><a href="{{ url_for('service_detail', slug='egov-e-perizinan-mpp') }}" class="hover:text-white transition">e-Perizinan MPP TTE</a></li>
+                    </ul>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mt-6 mb-3 pb-1 border-b border-indigo-950">Tentang Kami</h4>
+                    <ul class="space-y-1.5 text-xs text-slate-400">
+                        <li><a href="{{ url_for('about') }}" class="hover:text-white transition">Profil Perusahaan ACD</a></li>
+                        <li><a href="{{ url_for('portfolio') }}" class="hover:text-white transition">Studi Kasus & Portofolio</a></li>
+                        <li><a href="{{ url_for('career') }}" class="hover:text-white transition">Karir di ACD</a></li>
+                        <li><a href="{{ url_for('blog') }}" class="hover:text-white transition">Blog & Wawasan IT</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Standard Compliance & Security Badges -->
+            <div class="py-6 border-t border-b border-indigo-950/90 flex flex-wrap justify-between items-center gap-4 text-xs text-slate-400">
+                <div class="flex items-center space-x-6">
+                    <span class="font-semibold text-slate-300">Standar Keamanan & Mutu:</span>
+                    <span class="inline-flex items-center space-x-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-400"></i><span>ISO 27001 Certified</span></span>
+                    <span class="inline-flex items-center space-x-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-purple-400"></i><span>OWASP Top 10 Compliant</span></span>
+                    <span class="inline-flex items-center space-x-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>SLA 99.9% Uptime Support</span></span>
+                </div>
+                <div>
+                    <span class="text-slate-400">Layanan Konsultasi & Aduan: <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}" target="_blank" class="text-indigo-400 font-semibold hover:underline">WhatsApp 24/7 Support</a></span>
+                </div>
+            </div>
+
+            <!-- Copyright and Legal -->
+            <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500">
+                <p>&copy; 2025 {{ config.COMPANY_NAME }} ({{ config.COMPANY_DOMAIN }}). All rights reserved.</p>
+                <div class="flex space-x-6 mt-4 sm:mt-0">
+                    <a href="{{ url_for('about') }}" class="hover:text-slate-400">Kebijakan Privasi</a>
+                    <a href="{{ url_for('about') }}" class="hover:text-slate-400">Syarat & Ketentuan Layanan</a>
+                    <a href="{{ url_for('contact') }}" class="hover:text-slate-400">Hubungi Konsultan</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 5. FLOATING WHATSAPP BUTTON -->
+    <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}?text=%5BACD%20Digital%20Consulting%5D%20Halo%20tim%20ACD%2C%20saya%20tertarik%20untuk%20konsultasi%20pembuatan%20aplikasi%20%2F%20website%20%2F%20sistem%20ERP." target="_blank" class="floating-wa-btn flex items-center justify-center w-14 h-14 bg-emerald-500 hover:bg-emerald-600 text-white rounded-full transition transform shadow-lg" aria-label="Chat WhatsApp">
+        <svg class="w-7 h-7 fill-current" viewBox="0 0 24 24">
+            <path d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766.001-3.187-2.575-5.77-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.502-2.961-2.617-.087-.116-.708-.94-.708-1.793s.448-1.273.607-1.446c.159-.173.346-.217.462-.217l.332.006c.106.005.249-.04.39.298.144.347.491 1.2.534 1.287.043.087.072.188.014.304-.058.116-.087.188-.173.289l-.26.304c-.087.086-.177.18-.076.354.101.174.449.741.964 1.201.662.591 1.221.774 1.394.861.174.086.275.072.376-.044.101-.116.433-.506.549-.68.116-.173.231-.144.39-.086s1.011.477 1.184.564.289.13.332.202c.043.073.043.419-.101.824zM12 2C6.477 2 2 6.477 2 12c0 1.821.487 3.53 1.338 5L2 22l5.12-1.343A9.957 9.957 0 0012 22c5.523 0 10-4.477 10-10S17.523 2 12 2z"/>
+        </svg>
+    </a>
+
+    <!-- 6. BACK TO TOP BUTTON -->
+    <button id="back-to-top" class="back-to-top-btn w-11 h-11 bg-[#070c24]/90 hover:bg-indigo-900/60 text-indigo-400 hover:text-white rounded-full border border-indigo-900/60 shadow-[0_0_15px_rgba(99,102,241,0.25)] flex items-center justify-center transition backdrop-blur-md" aria-label="Kembali ke atas">
+        <i data-lucide="chevron-up" class="w-5 h-5"></i>
+    </button>
+
+    <!-- 7. QUICK CONSULTATION MODAL -->
+    <div id="consultation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 hidden">
+        <div class="bg-[#070c24] rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-indigo-900/60 relative animate-in fade-in zoom-in-95 duration-200 text-slate-100">
+            <button onclick="closeConsultationModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-1.5 rounded-lg transition" aria-label="Tutup">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="mb-5">
+                <span class="inline-block text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-2.5 py-1 rounded-full uppercase tracking-wider mb-2">Konsultasi Solusi IT</span>
+                <h3 class="text-xl font-extrabold text-white">Rancang Aplikasi Bersama Konsultan ACD</h3>
+                <p class="text-xs text-slate-400 mt-1">Sampaikan kebutuhan atau kendala proses bisnis Anda. Tim kami akan menyiapkan analisis teknis & estimasi RAB gratis.</p>
+            </div>
+            
+            <form class="ajax-consultation-form space-y-3.5">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Lengkap *</label>
+                    <input type="text" name="name" required placeholder="Contoh: Budi Santoso" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Email Perusahaan / Pribadi *</label>
+                        <input type="email" name="email" required placeholder="budi@perusahaan.co.id" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nomor WhatsApp *</label>
+                        <input type="tel" name="phone" required placeholder="08123456789" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Instansi / Perusahaan</label>
+                        <input type="text" name="company" placeholder="PT / Instansi Anda" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">Kategori Kebutuhan *</label>
+                        <select id="modal-service-type" name="service_type" required class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white">
+                            <option value="Aplikasi Bisnis ERP" class="bg-[#030718] text-white">Aplikasi Bisnis ERP</option>
+                            <option value="Aplikasi E-Government" class="bg-[#030718] text-white">Aplikasi E-Government (Smart City)</option>
+                            <option value="Mobile Apps (Android & iOS)" class="bg-[#030718] text-white">Mobile Apps (Android & iOS)</option>
+                            <option value="Web Base App & Sistem Informasi" class="bg-[#030718] text-white">Web Base App & Sistem Informasi</option>
+                            <option value="Website Korporat & Portal" class="bg-[#030718] text-white">Website Korporat & Portal</option>
+                            <option value="GIS & Geoportal" class="bg-[#030718] text-white">GIS & Geoportal</option>
+                            <option value="Integrasi Sistem & API" class="bg-[#030718] text-white">Integrasi Sistem & API</option>
+                        </select>
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">Ceritakan Kebutuhan Proyek atau Kendala Sistem Anda *</label>
+                    <textarea name="message" required rows="3" placeholder="Contoh: Kami ingin membangun sistem ERP penggajian dan presensi mobile geofencing untuk 300 staf cabang..." class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500"></textarea>
+                </div>
+                <button type="submit" class="w-full deptech-btn-primary py-3 font-bold text-xs uppercase tracking-wider shadow-lg">
+                    Kirim Permintaan Konsultasi Gratis
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+    <script>
+        // Init Lucide Icons
+        lucide.createIcons();
+    </script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block extra_scripts %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,453 @@
+{% extends "base.html" %}
+
+{% block title %}ACD IT Consultant - AI, Software Developer{% endblock %}
+
+{% block content %}
+<!-- 1. HERO SECTION (DEPTECH DIGITAL SIGNATURE STYLE) -->
+<section class="deptech-hero-bg text-white pt-20 pb-24 lg:pt-28 lg:pb-36 relative overflow-hidden">
+    <!-- Interactive Particle Constellation Canvas (Deptech Digital Style) -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <!-- Cyber Matrix Grid Lines -->
+    <div class="deptech-grid-pattern"></div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div class="space-y-6 max-w-4xl mx-auto">
+            <!-- Badge -->
+            <div class="inline-flex items-center space-x-2 deptech-badge px-4 py-1.5 rounded-full text-xs font-semibold animate-fade-in-up delay-100">
+                <span class="w-2 h-2 rounded-full bg-accent-cyan animate-pulse"></span>
+                <span>{{ t.hero_badge }}</span>
+            </div>
+
+            <!-- Headline -->
+            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight sm:leading-snug text-white animate-fade-in-up delay-200">
+                {{ t.hero_headline_before }} <span class="text-deptech-gradient">{{ t.hero_headline_highlight }}</span> {{ t.hero_headline_after }}
+            </h1>
+
+            <!-- Main Paragraph -->
+            <p class="text-sm sm:text-base text-slate-300 max-w-2xl font-normal leading-relaxed mx-auto animate-fade-in-up delay-300">
+                {{ t.hero_description }}
+            </p>
+
+            <!-- CTA Actions -->
+            <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-400">
+                <button onclick="openConsultationModal()" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 deptech-btn-primary px-8 py-4 font-bold text-sm tracking-wide">
+                    <i data-lucide="message-square-plus" class="w-4 h-4"></i>
+                    <span>{{ t.hero_cta_primary }}</span>
+                </button>
+                <a href="{{ url_for('portfolio') }}" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 deptech-btn-secondary px-8 py-4 font-semibold text-sm">
+                    <span>{{ t.hero_cta_secondary }}</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4 text-indigo-400"></i>
+                </a>
+            </div>
+
+            <!-- Trust Metrics Bar -->
+            <div class="pt-12 mt-6 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto animate-fade-in-up delay-500">
+                <div class="p-3">
+                    <p class="text-2xl lg:text-4xl font-extrabold text-white">20+</p>
+                    <p class="text-xs text-slate-400 font-medium mt-1">{{ t.metric_clients_label }}</p>
+                </div>
+                <div class="p-3">
+                    <p class="text-2xl lg:text-4xl font-extrabold text-indigo-400">38</p>
+                    <p class="text-xs text-slate-400 font-medium mt-1">{{ t.metric_provinces_label }}</p>
+                </div>
+                <div class="p-3">
+                    <p class="text-2xl lg:text-4xl font-extrabold text-purple-400">99.9%</p>
+                    <p class="text-xs text-slate-400 font-medium mt-1">{{ t.metric_satisfaction_label }}</p>
+                </div>
+                <div class="p-3">
+                    <p class="text-2xl lg:text-4xl font-extrabold text-amber-400">100%</p>
+                    <p class="text-xs text-slate-400 font-medium mt-1">{{ t.metric_source_code_label }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 2. SOLUSI UTAMA (DEPTECH CARD STYLE DENGAN GRADASI WARNA ELEGAN & NYAMAN DI MATA) -->
+<section id="solusi-utama" class="py-24 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100 relative overflow-hidden border-t border-indigo-950/40">
+    <!-- Ambient Soft Glow Background (Mencegah silau, sejuk di mata) -->
+    <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 right-10 w-[500px] h-[300px] bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="deptech-grid-pattern opacity-15"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <span class="text-xs font-bold text-indigo-400 deptech-badge px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">{{ t.services_badge }}</span>
+            <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-4 tracking-tight">{{ t.services_heading }}</h2>
+            <p class="text-slate-300 text-sm sm:text-base mt-3 leading-relaxed max-w-2xl mx-auto">
+                {{ t.services_desc }}
+            </p>
+        </div>
+
+        <!-- 3 Pillars Cards Overview (Soft Dark Tech Aesthetic - Anti Glare) -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-4">
+            <!-- Pillar 1: Aplikasi & Website -->
+            <div class="deptech-card-dark p-8 flex flex-col justify-between hover:border-indigo-500/50 hover:shadow-2xl hover:shadow-indigo-500/10 transition group">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-indigo-950/70 text-indigo-400 flex items-center justify-center mb-5 border border-indigo-800/60 group-hover:bg-indigo-600 group-hover:text-white transition">
+                        <i data-lucide="smartphone" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2.5 group-hover:text-indigo-300 transition">Aplikasi & Website</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                        Solusi bagi perusahaan Anda untuk go-digital, meningkatkan profit bisnis secara maksimal, dan memberikan pengalaman pengguna kelas atas di smartphone maupun browser.
+                    </p>
+                    <ul class="space-y-2.5 text-xs text-slate-300 mb-6">
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>Mobile Apps Native / Flutter (iOS & Android)</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>Sistem Informasi Operasional & Web App</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>Website Korporat & Portal Berita</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>Geographic Information System (GIS) & Peta</span></li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="inline-flex items-center justify-between font-bold text-sm text-indigo-400 hover:text-indigo-300 pt-4 border-t border-indigo-950/80">
+                    <span>Eksplor Aplikasi & Website</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <!-- Pillar 2: Aplikasi Bisnis ERP -->
+            <div class="p-8 rounded-2xl bg-gradient-to-b from-[#0e163b] to-[#080d24] border-2 border-indigo-500 shadow-2xl shadow-indigo-500/25 flex flex-col justify-between relative group">
+                <div class="absolute -top-3.5 right-6 bg-gradient-to-r from-indigo-500 to-purple-600 text-white text-[11px] font-bold px-3.5 py-1 rounded-full uppercase tracking-wider shadow-lg">
+                    Paling Diminati Korporasi
+                </div>
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-purple-950/70 text-purple-400 flex items-center justify-center mb-5 border border-purple-800/60 group-hover:bg-purple-600 group-hover:text-white transition">
+                        <i data-lucide="layers" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2.5 group-hover:text-purple-300 transition">Aplikasi Bisnis ERP</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                        Membantu business owner dan manajemen mengelola serta mengotomatiskan seluruh proses operasional bisnis dari hulu ke hilir tanpa biaya lisensi per user.
+                    </p>
+                    <ul class="space-y-2.5 text-xs text-slate-300 mb-6">
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>HRIS, Presensi Geofencing & Rekrutmen</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>Payroll Otomatis & Pajak PPh 21 TER</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>Akuntansi PSAK, Neraca & Laba Rugi</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>Warehouse, Inventori & Asset Management</span></li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="inline-flex items-center justify-between font-bold text-sm text-indigo-300 hover:text-white pt-4 border-t border-indigo-900/60">
+                    <span>Eksplor Modul ERP</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+
+            <!-- Pillar 3: Aplikasi E-Government -->
+            <div class="deptech-card-dark p-8 flex flex-col justify-between hover:border-cyan-500/50 hover:shadow-2xl hover:shadow-cyan-500/10 transition group">
+                <div>
+                    <div class="w-12 h-12 rounded-2xl bg-cyan-950/70 text-cyan-400 flex items-center justify-center mb-5 border border-cyan-800/60 group-hover:bg-cyan-600 group-hover:text-white transition">
+                        <i data-lucide="shield" class="w-6 h-6"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-white mb-2.5 group-hover:text-cyan-300 transition">Aplikasi E-Government</h3>
+                    <p class="text-sm text-slate-300 leading-relaxed mb-6">
+                        Solusi software terpadu untuk memudahkan pelayanan publik, mewujudkan smart governance, dan mengintegrasikan Satu Data Indonesia sesuai regulasi.
+                    </p>
+                    <ul class="space-y-2.5 text-xs text-slate-300 mb-6">
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>e-Data Sektoral SDI & Walidata Daerah</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>e-Planning Musrenbang & Pokir Terpadu</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>e-Monev & Laporan Akuntabilitas SAKIP</span></li>
+                        <li class="flex items-center space-x-2"><i data-lucide="check" class="w-4 h-4 text-emerald-400"></i><span>e-Lapor Aduan Warga & Mal Pelayanan Publik (MPP)</span></li>
+                    </ul>
+                </div>
+                <a href="{{ url_for('services_category', category='Aplikasi E-Government') }}" class="inline-flex items-center justify-between font-bold text-sm text-cyan-400 hover:text-cyan-300 pt-4 border-t border-indigo-950/80">
+                    <span>Eksplor Solusi E-Gov</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 3. VALUE PROPOSITION: "KAMI PAHAMI PROSES BISNIS ANDA SEBELUM MEMBANGUN SOFTWARE" -->
+<section class="py-24 bg-gradient-to-b from-[#0a1030] via-[#060b20] to-[#020617] text-white border-t border-indigo-950/40 relative overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+            <div class="lg:col-span-6 space-y-5">
+                <span class="text-xs font-bold text-indigo-400 deptech-badge px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">Filosofi Kerja ACD</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white leading-tight tracking-tight">
+                    Kami Pahami Proses Bisnis Anda <span class="text-deptech-gradient">Sebelum Membangun Software</span>
+                </h2>
+                <p class="text-slate-300 leading-relaxed text-sm sm:text-base">
+                    Banyak proyek IT gagal bukan karena keterbatasan teknis koding, melainkan karena vendor tidak memahami konteks dan dinamika operasional klien. Di <strong>PT. Aksara Cipta Digital</strong>, kami menempatkan System Analyst dan Business Consultant di garis depan untuk merancang arsitektur yang menjawab akar permasalahan bisnis Anda.
+                </p>
+                <div class="pt-2">
+                    <button onclick="openConsultationModal()" class="inline-flex items-center space-x-2 deptech-btn-primary px-8 py-4 text-xs font-bold uppercase tracking-wider shadow-lg shadow-indigo-500/20">
+                        <span>Konsultasikan Masalah Bisnis Anda</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Pillars 6 Key Strengths (Comfortable Dark Theme Cards) -->
+            <div class="lg:col-span-6 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div class="p-5 rounded-2xl bg-[#090e24]/90 border border-indigo-950/80 hover:border-indigo-500/50 hover:shadow-xl transition group">
+                    <div class="w-10 h-10 rounded-xl bg-indigo-950/80 text-indigo-400 border border-indigo-800/60 flex items-center justify-center mb-3 group-hover:bg-indigo-600 group-hover:text-white transition">
+                        <i data-lucide="lightbulb" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base mb-1">Inovatif & Out of The Box</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">Zaman berubah, tren berkembang. Kami siap memberikan terobosan ide digital baru untuk efisiensi maksimal.</p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-[#090e24]/90 border border-indigo-950/80 hover:border-indigo-500/50 hover:shadow-xl transition group">
+                    <div class="w-10 h-10 rounded-xl bg-purple-950/80 text-purple-400 border border-purple-800/60 flex items-center justify-center mb-3 group-hover:bg-purple-600 group-hover:text-white transition">
+                        <i data-lucide="shield-check" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base mb-1">Bergaransi & Maintenance</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">Setiap aplikasi didukung garansi bebas bug dan SLA pemeliharaan teknis responsif tanpa was-was.</p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-[#090e24]/90 border border-indigo-950/80 hover:border-indigo-500/50 hover:shadow-xl transition group">
+                    <div class="w-10 h-10 rounded-xl bg-amber-950/80 text-amber-400 border border-amber-800/60 flex items-center justify-center mb-3 group-hover:bg-amber-600 group-hover:text-white transition">
+                        <i data-lucide="history" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base mb-1">Berpengalaman 15+ Tahun</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">Berhasil mengimplementasikan ratusan proyek IT enterprise, perbankan, manufaktur, dan pemda.</p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-[#090e24]/90 border border-indigo-950/80 hover:border-indigo-500/50 hover:shadow-xl transition group">
+                    <div class="w-10 h-10 rounded-xl bg-cyan-950/80 text-cyan-400 border border-cyan-800/60 flex items-center justify-center mb-3 group-hover:bg-cyan-600 group-hover:text-white transition">
+                        <i data-lucide="users" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base mb-1">Tim Ahli Profesional</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">Didukung talenta bersertifikasi internasional di bidang arsitektur cloud, keamanan siber, dan UI/UX.</p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-[#090e24]/90 border border-indigo-950/80 hover:border-indigo-500/50 hover:shadow-xl transition group">
+                    <div class="w-10 h-10 rounded-xl bg-rose-950/80 text-rose-400 border border-rose-800/60 flex items-center justify-center mb-3 group-hover:bg-rose-600 group-hover:text-white transition">
+                        <i data-lucide="clock" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base mb-1">Project On-Time Delivery</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">Pengerjaan dengan metode Agile Scrum dengan sprint transparan dan kepastian tanggal serah terima.</p>
+                </div>
+
+                <div class="p-5 rounded-2xl bg-[#090e24]/90 border border-indigo-950/80 hover:border-indigo-500/50 hover:shadow-xl transition group">
+                    <div class="w-10 h-10 rounded-xl bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 flex items-center justify-center mb-3 group-hover:bg-emerald-600 group-hover:text-white transition">
+                        <i data-lucide="key" class="w-5 h-5"></i>
+                    </div>
+                    <h4 class="font-bold text-white text-base mb-1">100% Hak Milik Source Code</h4>
+                    <p class="text-xs text-slate-300 leading-relaxed">Seluruh kode sumber dan aset diserahkan tuntas kepada Anda tanpa kewajiban biaya langganan kaku.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- 5. FEATURED PORTFOLIO SHOWCASE (DEPTECH DARK THEME WITH VIOLET GLOW) -->
+<section class="py-20 bg-[#020617] text-white relative overflow-hidden">
+    <!-- Ambient glow circles -->
+    <div class="absolute top-1/4 right-0 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute bottom-10 left-0 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between mb-12">
+            <div>
+                <span class="text-xs font-bold text-indigo-400 deptech-badge px-3 py-1 rounded-full uppercase tracking-wider">Studi Kasus Unggulan</span>
+                <h2 class="text-3xl sm:text-4xl font-extrabold text-white mt-2">Solusi Nyata Dari Berbagai Proyek</h2>
+                <p class="text-slate-400 text-sm mt-2 max-w-xl">
+                    Lihat bagaimana aplikasi yang kami rancang berhasil mentransformasikan tantangan operasional menjadi efisiensi terukur bagi klien kami.
+                </p>
+            </div>
+            <div class="mt-4 md:mt-0">
+                <a href="{{ url_for('portfolio') }}" class="inline-flex items-center space-x-2 text-indigo-400 hover:text-indigo-300 font-bold text-sm transition">
+                    <span>Lihat Semua Portofolio</span>
+                    <i data-lucide="arrow-right" class="w-4 h-4"></i>
+                </a>
+            </div>
+        </div>
+
+        <!-- Portfolio Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for item in featured_portfolios %}
+            <div class="deptech-card-dark overflow-hidden flex flex-col justify-between group">
+                <div>
+                    <!-- Image mockup -->
+                    <div class="overflow-hidden bg-[#070913] aspect-video relative">
+                        <img src="{{ item.image_url }}" alt="{{ item.title }}" class="w-full h-full object-cover transition transform duration-500 group-hover:scale-105">
+                        <div class="absolute top-3 left-3 bg-[#020617]/85 backdrop-blur-md px-2.5 py-1 rounded-md text-[11px] font-bold text-indigo-300 border border-indigo-950">
+                            {{ item.category }}
+                        </div>
+                    </div>
+
+                    <div class="p-6">
+                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{{ item.client_name }}</p>
+                        <h3 class="text-lg font-bold text-white group-hover:text-indigo-400 transition mb-3">
+                            <a href="{{ url_for('portfolio_detail', slug=item.slug) }}">{{ item.title }}</a>
+                        </h3>
+                        <p class="text-xs text-slate-300 line-clamp-3 leading-relaxed mb-4">
+                            {{ item.summary }}
+                        </p>
+
+                        <!-- Key Metrics pills -->
+                        <div class="pt-3 border-t border-indigo-950/80 grid grid-cols-2 gap-2 text-xs">
+                            {% for m_key, m_val in item.metrics.items() %}
+                            <div class="bg-[#070913] p-2 rounded-xl border border-indigo-950/60">
+                                <span class="block text-[10px] text-slate-400 font-medium">{{ m_key }}</span>
+                                <span class="block text-xs font-bold text-purple-400">{{ m_val }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="px-6 pb-6 pt-2">
+                    <a href="{{ url_for('portfolio_detail', slug=item.slug) }}" class="inline-flex items-center text-xs font-bold text-indigo-400 hover:text-white transition">
+                        <span>Baca Studi Kasus Lengkap</span>
+                        <i data-lucide="chevron-right" class="w-3.5 h-3.5 ml-1"></i>
+                    </a>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 5. INTERACTIVE PROJECT COST ESTIMATOR CALCULATOR -->
+<section class="py-24 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#020617] text-white border-t border-indigo-950/40 relative overflow-hidden">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="bg-[#0a0f26] rounded-3xl p-8 sm:p-12 shadow-2xl border border-indigo-900/60">
+            <div class="text-center max-w-2xl mx-auto mb-10">
+                <span class="text-xs font-bold text-indigo-400 deptech-badge px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">Kalkulator Estimasi Proyek</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-3">Hitung Simulasi Anggaran & Waktu Pengerjaan</h2>
+                <p class="text-slate-300 text-xs sm:text-sm mt-2">
+                    Pilih kategori solusi dan skala kebutuhan sistem untuk melihat estimasi kasar investasi dan jadwal pengerjaan secara instan.
+                </p>
+            </div>
+
+            <form id="project-estimator-form" class="space-y-8">
+                <!-- Step 1: Type -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">1. Kategori Solusi yang Ingin Dibangun</label>
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_type" value="mobile" class="peer sr-only">
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
+                                <i data-lucide="smartphone" class="w-5 h-5 mx-auto mb-1 text-indigo-400"></i>
+                                <span class="text-xs font-bold block text-slate-200">Mobile Apps</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_type" value="web" checked class="peer sr-only">
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
+                                <i data-lucide="globe" class="w-5 h-5 mx-auto mb-1 text-cyan-400"></i>
+                                <span class="text-xs font-bold block text-slate-200">Sistem Informasi</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_type" value="erp" class="peer sr-only">
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
+                                <i data-lucide="layers" class="w-5 h-5 mx-auto mb-1 text-purple-400"></i>
+                                <span class="text-xs font-bold block text-slate-200">Aplikasi ERP</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_type" value="egov" class="peer sr-only">
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
+                                <i data-lucide="shield" class="w-5 h-5 mx-auto mb-1 text-emerald-400"></i>
+                                <span class="text-xs font-bold block text-slate-200">E-Government</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Step 2: Scale -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">2. Skala Pengguna & Kompleksitas Alur</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_scale" value="standard" class="peer sr-only">
+                            <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
+                                <span class="text-xs font-bold block text-slate-200">Standar / Tim Tunggal</span>
+                                <span class="text-[11px] text-slate-400 block mt-0.5">Hingga 50 pengguna aktif harian</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_scale" value="medium" checked class="peer sr-only">
+                            <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
+                                <span class="text-xs font-bold block text-slate-200">Menengah / Multi-Divisi</span>
+                                <span class="text-[11px] text-slate-400 block mt-0.5">50 - 500 pengguna & multi-cabang</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_scale" value="enterprise" class="peer sr-only">
+                            <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
+                                <span class="text-xs font-bold block text-slate-200">Enterprise / Skala Publik</span>
+                                <span class="text-[11px] text-slate-400 block mt-0.5">> 1.000 pengguna & integrasi API masif</span>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Result Box (Deptech Dark Gradient) -->
+                <div class="p-6 bg-gradient-to-r from-[#020617] via-[#0f172a] to-[#1e1b4b] text-white rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 border border-indigo-950">
+                    <div class="text-center sm:text-left">
+                        <span class="text-xs font-semibold text-slate-400">Perkiraan Nilai Investasi & Timeline:</span>
+                        <div id="est-result-price" class="text-2xl sm:text-3xl font-extrabold text-deptech-gradient mt-1">
+                            Rp 25 Juta - Rp 45 Juta*
+                        </div>
+                        <p class="text-xs text-slate-400 mt-1">Estimasi Jadwal Pengerjaan: <strong id="est-result-timeline" class="text-white">8 - 12 Minggu</strong></p>
+                    </div>
+                    <div class="shrink-0 w-full sm:w-auto">
+                        <button type="button" onclick="openConsultationModal()" class="w-full sm:w-auto deptech-btn-primary px-7 py-3 text-xs font-bold uppercase tracking-wider">
+                            Konsultasikan RAB Rinci Gratis →
+                        </button>
+                    </div>
+                </div>
+            </form>
+            <p class="text-[11px] text-slate-400 text-center mt-3">*Biaya di atas merupakan simulasi perkiraan. Biaya final disesuaikan dengan Software Requirement Specification (SRS) hasil discovery.</p>
+        </div>
+    </div>
+</section>
+
+<!-- 6. FAQ SECTION (PERTANYAAN YANG SERING DITANYAKAN) -->
+<section class="py-24 bg-gradient-to-b from-[#020617] via-[#060b1e] to-[#080d24] text-white border-t border-indigo-950/40 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="text-center mb-14">
+            <span class="text-xs font-bold text-indigo-400 deptech-badge px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">Tanya Jawab</span>
+            <h2 class="text-3xl font-extrabold text-white mt-3">Pertanyaan yang Sering Ditanyakan</h2>
+            <p class="text-slate-300 text-sm mt-3">Hal-hal mendasar seputar proses kerja sama, metodologi garansi, dan hak cipta software.</p>
+        </div>
+
+        <div class="space-y-4">
+            {% for faq in faqs %}
+            <details class="group bg-[#0d1330] rounded-2xl border border-indigo-950/80 p-5 transition [&_summary::-webkit-details-marker]:hidden shadow-md hover:border-indigo-500/50">
+                <summary class="flex items-center justify-between cursor-pointer font-bold text-white text-sm sm:text-base">
+                    <span>{{ faq.question }}</span>
+                    <span class="ml-4 flex-shrink-0 transition duration-300 group-open:-rotate-180 text-indigo-400">
+                        <i data-lucide="chevron-down" class="w-5 h-5"></i>
+                    </span>
+                </summary>
+                <div class="mt-4 pt-4 border-t border-indigo-950/60 text-xs sm:text-sm text-slate-300 leading-relaxed">
+                    {{ faq.answer }}
+                </div>
+            </details>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- 7. FINAL CALL TO ACTION (DEPTECH SIGNATURE CLOSING BANNER) -->
+<section class="deptech-closing-banner py-24 text-white relative">
+    <div class="deptech-closing-grid"></div>
+
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-6">
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-4 py-1.5 rounded-full uppercase tracking-wider inline-block">
+            Solusi Transformasi Tanpa Risiko
+        </span>
+        <h2 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight leading-tight">
+            Masih Bertahan dengan Sistem yang Rumit & Manual?
+        </h2>
+        <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto leading-relaxed">
+            Saatnya mengotomatiskan alur kerja operasional perusahaan Anda. Tim konsultan senior PT. Aksara Cipta Digital siap berdiskusi, memetakan proses bisnis, dan memberikan rancangan sistem bergaransi.
+        </p>
+        <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button onclick="openConsultationModal()" class="w-full sm:w-auto deptech-btn-primary px-9 py-4 font-bold text-sm tracking-wide">
+                <i data-lucide="calendar" class="w-5 h-5 inline-block mr-1"></i>
+                <span>Jadwalkan Konsultasi Gratis Sekarang</span>
+            </button>
+            <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-8 py-4 rounded-full shadow-lg transition">
+                <i data-lucide="message-circle" class="w-5 h-5"></i>
+                <span>Chat Langsung via WhatsApp</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}{{ career.title }} - Karir ACD Digital Consulting{% endblock %}
+
+{% block content %}
+<div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
+    <!-- Interactive Particle Constellation Canvas -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <div class="deptech-grid-pattern"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <a href="{{ url_for('career') }}" class="inline-flex items-center space-x-1.5 text-xs text-indigo-300 hover:text-white transition mb-4 animate-fade-in-up delay-100">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Kembali ke Lowongan Karir</span>
+        </a>
+        <div class="flex items-center space-x-3 mb-2 animate-fade-in-up delay-200">
+            <span class="text-xs font-bold text-indigo-300 deptech-badge px-3 py-1 rounded-full uppercase tracking-wider">
+                {{ career.department }}
+            </span>
+            <span class="text-xs text-slate-400">{{ career.job_type }}</span>
+            <span class="text-xs text-slate-400">&bull; {{ career.location }}</span>
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight mb-3 animate-fade-in-up delay-300">
+            {{ career.title }}
+        </h1>
+        <p class="text-xs text-slate-300 animate-fade-in-up delay-400">Pengalaman yang dibutuhkan: <strong>{{ career.experience }}</strong></p>
+    </div>
+</div>
+
+<div class="py-20 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        <!-- Overview -->
+        <div class="p-6 deptech-card-dark rounded-2xl">
+            <h3 class="text-base font-bold text-white mb-2">Gambaran Pekerjaan</h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">{{ career.description }}</p>
+        </div>
+
+        <!-- Responsibilities -->
+        <div class="p-6 deptech-card-dark rounded-2xl">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
+                <i data-lucide="briefcase" class="w-5 h-5 text-indigo-400"></i>
+                <span>Tanggung Jawab Utama</span>
+            </h3>
+            <ul class="space-y-2.5">
+                {% for r in career.responsibilities %}
+                <li class="flex items-start space-x-3 text-xs sm:text-sm text-slate-300">
+                    <i data-lucide="check" class="w-4 h-4 text-emerald-400 mt-1 shrink-0"></i>
+                    <span>{{ r }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- Requirements -->
+        <div class="p-6 deptech-card-dark rounded-2xl">
+            <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
+                <i data-lucide="user-check" class="w-5 h-5 text-indigo-400"></i>
+                <span>Kualifikasi yang Dicari</span>
+            </h3>
+            <ul class="space-y-2.5">
+                {% for req in career.requirements %}
+                <li class="flex items-start space-x-3 text-xs sm:text-sm text-slate-300">
+                    <i data-lucide="check" class="w-4 h-4 text-indigo-400 mt-1 shrink-0"></i>
+                    <span>{{ req }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <!-- How to apply box -->
+        <div class="p-8 rounded-2xl bg-[#070c24] border border-indigo-900/60 text-white space-y-4 shadow-xl">
+            <h3 class="text-lg font-bold text-white">Cara Mengirimkan Lamaran</h3>
+            <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Kirimkan CV terbaru dan tautan portofolio / GitHub Anda ke email <a href="mailto:karir@acd.co.id" class="text-accent-cyan font-bold hover:underline">karir@acd.co.id</a> dengan subjek email <code class="px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/60">[LAMARAN] {{ career.title }} - [Nama Anda]</code>.
+            </p>
+            <div class="pt-2">
+                <a href="mailto:karir@acd.co.id?subject=[LAMARAN]%20{{ career.title | urlencode }}" class="inline-flex items-center space-x-2 deptech-btn-primary text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl transition">
+                    <i data-lucide="send" class="w-4 h-4"></i>
+                    <span>Kirim Email Lamaran Sekarang</span>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block title %}Katalog Layanan & Solusi Software - PT. Aksara Cipta Digital (ACD){% endblock %}
+
+{% block content %}
+<!-- Header Banner -->
+<div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
+    <!-- Interactive Particle Constellation Canvas -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <div class="deptech-grid-pattern"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">Solusi Terpadu</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Layanan Pengembangan Software Enterprise</h1>
+        <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2.5 animate-fade-in-up delay-300">
+            Dari aplikasi mobile, otomasi proses bisnis ERP, hingga ekosistem smart governance e-Government yang bergaransi dan berstandar internasional.
+        </p>
+    </div>
+</div>
+
+<!-- Category Tabs Navigation (Modern Eye-Friendly Dark Bar) -->
+<div class="bg-[#030718]/95 backdrop-blur-xl border-b border-indigo-950/80 sticky top-20 z-30 shadow-lg shadow-black/40 animate-fade-in-up delay-400">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex overflow-x-auto space-x-2 sm:space-x-4 py-3 text-xs sm:text-sm font-bold no-scrollbar">
+            <a href="{{ url_for('services') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md shadow-indigo-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                Semua Layanan
+            </a>
+            <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi & Website' %}text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                Aplikasi & Website
+            </a>
+            <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi Bisnis ERP' %}text-white bg-gradient-to-r from-purple-600 to-violet-600 shadow-md shadow-purple-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                Aplikasi Bisnis ERP
+            </a>
+            <a href="{{ url_for('services_category', category='Aplikasi E-Government') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi E-Government' %}text-white bg-gradient-to-r from-cyan-600 to-emerald-600 shadow-md shadow-cyan-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                Aplikasi E-Government
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Services Grid with Adaptive Sub-Menu Color Gradients (Sejuk & Nyaman di Mata) -->
+<div class="py-20 relative overflow-hidden min-h-[60vh] {% if current_category == 'Aplikasi & Website' %}bg-gradient-to-b from-[#020617] via-[#050d24] to-[#081333]{% elif current_category == 'Aplikasi Bisnis ERP' %}bg-gradient-to-b from-[#020617] via-[#0d0926] to-[#120a30]{% elif current_category == 'Aplikasi E-Government' %}bg-gradient-to-b from-[#020617] via-[#041521] to-[#061e2e]{% else %}bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030]{% endif %} text-slate-100">
+    <!-- Ambient Atmospheric Glows according to Sub-Menu -->
+    {% if current_category == 'Aplikasi & Website' %}
+        <div class="absolute -top-24 left-1/4 w-96 h-96 bg-blue-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    {% elif current_category == 'Aplikasi Bisnis ERP' %}
+        <div class="absolute -top-24 left-1/4 w-96 h-96 bg-purple-600/18 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-violet-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    {% elif current_category == 'Aplikasi E-Government' %}
+        <div class="absolute -top-24 left-1/4 w-96 h-96 bg-cyan-600/15 rounded-full blur-3xl pointer-events-none"></div>
+        <div class="absolute bottom-10 right-1/4 w-96 h-96 bg-emerald-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    {% else %}
+        <div class="absolute -top-24 left-1/3 w-[600px] h-[300px] bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+    {% endif %}
+    <div class="deptech-grid-pattern opacity-15"></div>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {% for s in services %}
+            <div class="deptech-card-dark p-7 flex flex-col justify-between group hover:border-indigo-500/60 hover:shadow-2xl hover:shadow-indigo-500/15 transition">
+                <div>
+                    <div class="flex items-center justify-between mb-4">
+                        <span class="text-[11px] font-bold text-indigo-300 deptech-badge px-3 py-1 rounded-full uppercase tracking-wider">
+                            {{ s.category }}
+                        </span>
+                        <div class="w-10 h-10 rounded-xl bg-indigo-950/70 border border-indigo-800/60 text-indigo-400 group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 group-hover:text-white flex items-center justify-center transition shadow-inner">
+                            <i data-lucide="{{ s.icon }}" class="w-5 h-5"></i>
+                        </div>
+                    </div>
+
+                    <h3 class="text-lg font-bold text-white group-hover:text-indigo-300 transition mb-2">
+                        <a href="{{ url_for('service_detail', slug=s.slug) }}">{{ s.title }}</a>
+                    </h3>
+
+                    <p class="text-xs text-indigo-300/80 font-medium leading-relaxed mb-3">
+                        {{ s.subtitle }}
+                    </p>
+
+                    <p class="text-xs text-slate-300 leading-relaxed line-clamp-3 mb-6">
+                        {{ s.summary }}
+                    </p>
+                </div>
+
+                <div class="pt-4 border-t border-indigo-950/80 flex items-center justify-between">
+                    <a href="{{ url_for('service_detail', slug=s.slug) }}" class="text-xs font-bold text-indigo-400 group-hover:text-indigo-300 inline-flex items-center space-x-1 transition">
+                        <span>Lihat Fitur & Spesifikasi</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                    <button onclick="openConsultationModal('{{ s.title }}')" class="text-xs text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-indigo-950/60 transition" title="Konsultasi Gratis">
+                        <i data-lucide="message-square" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,77 @@
+{% extends "base.html" %}
+
+{% block title %}Karir & Peluang Bergabung - PT. Aksara Cipta Digital (ACD){% endblock %}
+
+{% block content %}
+<div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
+    <!-- Interactive Particle Constellation Canvas -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <div class="deptech-grid-pattern"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">Bergabung dengan ACD</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Bangun Karir & Dampak Positif di Dunia Teknologi</h1>
+        <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2.5 animate-fade-in-up delay-300">
+            Kami mencari talenta digital berdedikasi tinggi yang haus akan tantangan arsitektur sistem skala besar dan ingin berkontribusi nyata bagi nusantara.
+        </p>
+    </div>
+</div>
+
+<div class="py-20 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100 animate-fade-in-up delay-400">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+        <!-- Culture Highlights -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="p-6 deptech-card-dark rounded-2xl text-center">
+                <div class="w-10 h-10 rounded-xl bg-blue-950/80 text-blue-400 border border-blue-800/60 mx-auto flex items-center justify-center mb-3">
+                    <i data-lucide="award" class="w-5 h-5"></i>
+                </div>
+                <h4 class="font-bold text-white text-sm mb-1">Growth & Sertifikasi</h4>
+                <p class="text-xs text-slate-400">Dukungan budget sertifikasi internasional cloud & arsitektur untuk setiap talenta.</p>
+            </div>
+            <div class="p-6 deptech-card-dark rounded-2xl text-center">
+                <div class="w-10 h-10 rounded-xl bg-cyan-950/80 text-cyan-400 border border-cyan-800/60 mx-auto flex items-center justify-center mb-3">
+                    <i data-lucide="coffee" class="w-5 h-5"></i>
+                </div>
+                <h4 class="font-bold text-white text-sm mb-1">Flexible Hybrid Work</h4>
+                <p class="text-xs text-slate-400">Skema kerja fleksibel (kantor Jakarta / Yogyakarta / remote terencana) berbasis output.</p>
+            </div>
+            <div class="p-6 deptech-card-dark rounded-2xl text-center">
+                <div class="w-10 h-10 rounded-xl bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 mx-auto flex items-center justify-center mb-3">
+                    <i data-lucide="heart" class="w-5 h-5"></i>
+                </div>
+                <h4 class="font-bold text-white text-sm mb-1">Kompensasi Kompetitif</h4>
+                <p class="text-xs text-slate-400">Gaji menarik, BPJS Lengkap, asuransi kesehatan swasta, dan bonus kinerja proyek.</p>
+            </div>
+        </div>
+
+        <!-- Open Positions List -->
+        <div>
+            <h2 class="text-2xl font-extrabold text-white mb-6">Lowongan Terbuka Saat Ini</h2>
+            <div class="space-y-4">
+                {% for job in careers %}
+                <div class="deptech-card-dark p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4 hover:border-indigo-500/50 transition-all">
+                    <div>
+                        <div class="flex items-center space-x-2 text-xs mb-1">
+                            <span class="font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-2.5 py-0.5 rounded-full">{{ job.department }}</span>
+                            <span class="text-slate-400">&bull; {{ job.job_type }}</span>
+                            <span class="text-slate-400">&bull; Exp: {{ job.experience }}</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white">{{ job.title }}</h3>
+                        <p class="text-xs text-slate-400 mt-0.5 flex items-center space-x-1">
+                            <i data-lucide="map-pin" class="w-3.5 h-3.5 text-indigo-400"></i>
+                            <span>{{ job.location }}</span>
+                        </p>
+                    </div>
+                    <div class="shrink-0">
+                        <a href="{{ url_for('career_detail', slug=job.slug) }}" class="inline-flex items-center space-x-1.5 deptech-btn-primary px-5 py-2.5 text-xs font-bold">
+                            <span>Lihat Kualifikasi & Lamar</span>
+                            <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                        </a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

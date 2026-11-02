@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block title %}{{ portfolio.title }} - Portofolio ACD Digital Consulting{% endblock %}
+{% block meta_desc %}{{ portfolio.summary }}{% endblock %}
+
+{% block content %}
+<div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
+    <!-- Interactive Particle Constellation Canvas -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <div class="deptech-grid-pattern"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+        <a href="{{ url_for('portfolio') }}" class="inline-flex items-center space-x-1.5 text-xs text-indigo-300 hover:text-white transition mb-4 animate-fade-in-up delay-100">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Kembali ke Semua Portofolio</span>
+        </a>
+        <div class="flex items-center space-x-3 mb-2 animate-fade-in-up delay-200">
+            <span class="text-xs font-bold text-indigo-300 deptech-badge px-3 py-1 rounded-full uppercase tracking-wider">
+                {{ portfolio.category }}
+            </span>
+            <span class="text-xs text-slate-400">Tahun Implementasi: {{ portfolio.year }}</span>
+        </div>
+        <h1 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight mb-3 animate-fade-in-up delay-300">
+            {{ portfolio.title }}
+        </h1>
+        <p class="text-sm font-semibold text-indigo-300 animate-fade-in-up delay-400">
+            Klien: {{ portfolio.client_name }} ({{ portfolio.client_type }})
+        </p>
+    </div>
+</div>
+
+<div class="py-20 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100 relative overflow-hidden">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+        <!-- Project Hero Card Mockup -->
+        <div class="rounded-2xl overflow-hidden border border-indigo-950/80 shadow-2xl bg-[#070913]">
+            <img src="{{ portfolio.image_url }}" alt="{{ portfolio.title }}" class="w-full h-auto">
+        </div>
+
+        <!-- Key Metrics Highlights -->
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {% for m_key, m_val in portfolio.metrics.items() %}
+            <div class="p-5 rounded-2xl bg-[#090e24]/90 border border-indigo-950/80 text-center shadow-lg">
+                <span class="block text-xs font-bold text-slate-400 uppercase">{{ m_key }}</span>
+                <span class="block text-2xl font-extrabold text-purple-400 mt-1">{{ m_val }}</span>
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Problem, Solution, Impact Narrative -->
+        <div class="space-y-6 text-slate-200">
+            <!-- 1. Background & Challenge -->
+            <div class="p-6 rounded-2xl bg-[#1a1208]/80 border border-amber-950/70">
+                <h3 class="text-lg font-bold text-amber-400 mb-2 flex items-center space-x-2">
+                    <i data-lucide="alert-circle" class="w-5 h-5 text-amber-400"></i>
+                    <span>Tantangan & Kendala Awal (Before)</span>
+                </h3>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    {{ portfolio.challenge }}
+                </p>
+            </div>
+
+            <!-- 2. ACD Solution -->
+            <div class="p-6 rounded-2xl bg-[#071328]/80 border border-indigo-950/70">
+                <h3 class="text-lg font-bold text-indigo-400 mb-2 flex items-center space-x-2">
+                    <i data-lucide="cpu" class="w-5 h-5 text-indigo-400"></i>
+                    <span>Solusi yang Dikembangkan ACD (Action)</span>
+                </h3>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    {{ portfolio.solution }}
+                </p>
+            </div>
+
+            <!-- 3. Measurable Impact -->
+            <div class="p-6 rounded-2xl bg-[#061817]/80 border border-emerald-950/70">
+                <h3 class="text-lg font-bold text-emerald-400 mb-2 flex items-center space-x-2">
+                    <i data-lucide="trending-up" class="w-5 h-5 text-emerald-400"></i>
+                    <span>Hasil & Dampak Terukur (After / Impact)</span>
+                </h3>
+                <p class="text-sm text-slate-300 leading-relaxed">
+                    {{ portfolio.impact }}
+                </p>
+            </div>
+        </div>
+
+        <!-- Tech Stack Used -->
+        <div>
+            <h3 class="text-base font-bold text-white mb-3">Teknologi yang Digunakan dalam Proyek Ini</h3>
+            <div class="flex flex-wrap gap-2">
+                {% for t in portfolio.tech_stack %}
+                <span class="px-3.5 py-1.5 bg-[#080d24] text-indigo-300 text-xs font-semibold rounded-lg border border-indigo-900/60">
+                    {{ t }}
+                </span>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- Consultation Banner -->
+        <div class="deptech-closing-banner p-10 rounded-3xl text-white text-center space-y-4">
+            <div class="deptech-closing-grid"></div>
+            <div class="relative z-10 space-y-4">
+                <h3 class="text-xl font-bold">Menghadapi Kendala Serupa di Perusahaan Anda?</h3>
+                <p class="text-xs text-slate-300 max-w-lg mx-auto">
+                    Diskusikan bersama konsultan sistem ACD. Kami bantu memetakan alur kerja dan merancang sistem yang menyelesaikan masalah hingga ke akar.
+                </p>
+                <div class="pt-2">
+                    <button onclick="openConsultationModal('{{ portfolio.title }}')" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-8 py-3.5 shadow-lg shadow-indigo-500/25">
+                        Jadwalkan Konsultasi Teknis Gratis
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

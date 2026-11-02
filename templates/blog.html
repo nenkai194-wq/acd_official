@@ -1,0 +1,78 @@
+{% extends "base.html" %}
+
+{% block title %}Blog & Wawasan Teknologi - PT. Aksara Cipta Digital (ACD){% endblock %}
+
+{% block content %}
+<div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
+    <!-- Interactive Particle Constellation Canvas -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <div class="deptech-grid-pattern"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">ACD Insights</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Wawasan, Panduan & Berita Teknologi</h1>
+        <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2.5 animate-fade-in-up delay-300">
+            Artikel praktis seputar pengembangan aplikasi enterprise, sistem ERP, dan akselerasi SPBE e-Government.
+        </p>
+
+        <!-- Search Bar -->
+        <div class="max-w-md mx-auto mt-6 animate-fade-in-up delay-400">
+            <form action="{{ url_for('blog') }}" method="GET" class="relative">
+                <input type="text" name="search" value="{{ search_query or '' }}" placeholder="Cari artikel, topik ERP, atau e-Gov..." class="w-full px-4 py-3 pl-11 text-xs rounded-full bg-[#0a0f1d] border border-indigo-950/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg">
+                <i data-lucide="search" class="w-4 h-4 text-indigo-400 absolute left-4 top-3.5"></i>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="py-20 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        {% if search_query %}
+        <div class="mb-6 flex items-center justify-between">
+            <p class="text-xs text-slate-300">Menampilkan hasil pencarian untuk: <strong class="text-white">"{{ search_query }}"</strong></p>
+            <a href="{{ url_for('blog') }}" class="text-xs text-indigo-400 font-semibold hover:underline">Hapus Filter Pencarian</a>
+        </div>
+        {% endif %}
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {% for post in posts %}
+            <article class="deptech-card-dark overflow-hidden flex flex-col justify-between group hover:border-indigo-500/50 transition-all">
+                <div>
+                    <div class="aspect-video overflow-hidden bg-[#0a0f1d] relative">
+                        <img src="{{ post.image_url }}" alt="{{ post.title }}" class="w-full h-full object-cover transition transform duration-500 group-hover:scale-105">
+                        <span class="absolute top-3 left-3 bg-[#020617]/90 backdrop-blur-md px-2.5 py-1 rounded text-[11px] font-bold text-indigo-300 border border-indigo-950">
+                            {{ post.category }}
+                        </span>
+                    </div>
+
+                    <div class="p-6">
+                        <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
+                            <span>Waktu Baca: {{ post.read_time }}</span>
+                            <span>{{ post.published_date }}</span>
+                        </div>
+                        <h3 class="text-base font-bold text-white group-hover:text-indigo-400 transition mb-2">
+                            <a href="{{ url_for('blog_detail', slug=post.slug) }}">{{ post.title }}</a>
+                        </h3>
+                        <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed mb-4">
+                            {{ post.summary }}
+                        </p>
+                    </div>
+                </div>
+
+                <div class="px-6 pb-6 pt-2 border-t border-indigo-950/60 flex items-center justify-between">
+                    <span class="text-xs text-slate-400 font-medium">Oleh: {{ post.author }}</span>
+                    <a href="{{ url_for('blog_detail', slug=post.slug) }}" class="text-xs font-bold text-indigo-400 hover:text-indigo-300 inline-flex items-center space-x-1">
+                        <span>Baca Selengkapnya</span>
+                        <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+                    </a>
+                </div>
+            </article>
+            {% else %}
+            <div class="col-span-3 text-center py-12 text-slate-400 text-sm">
+                Tidak ada artikel yang cocok dengan pencarian Anda. Silakan coba kata kunci lain.
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,206 @@
+{% extends "base.html" %}
+
+{% block title %}Tentang Kami - PT. Aksara Cipta Digital (ACD Digital Consulting){% endblock %}
+
+{% block content %}
+<!-- Hero Header -->
+<div class="deptech-hero-bg text-white py-16 lg:py-24 relative overflow-hidden">
+    <!-- Interactive Particle Constellation Canvas -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+
+    <div class="deptech-grid-pattern"></div>
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">Company Profile</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Tentang ACD Digital Consulting</h1>
+        <p class="text-slate-300 text-sm sm:text-lg max-w-2xl mx-auto mt-3 animate-fade-in-up delay-300">
+            Membangun masa depan Indonesia melalui perangkat lunak inovatif, konsultasi proses bisnis mendalam, dan komitmen mutu tanpa kompromi.
+        </p>
+    </div>
+</div>
+
+<!-- Story & Profile Section -->
+<div class="py-16 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100 border-b border-indigo-950/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            <div class="lg:col-span-6 space-y-4 text-slate-300">
+                <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">Siapa Kami</span>
+                <h2 class="text-3xl font-extrabold text-white leading-tight">
+                    Mitra Terpercaya Transformasi Digital Bisnis & Pemerintahan
+                </h2>
+                <p class="text-sm leading-relaxed">
+                    Berangkat dari cita-cita memajukan ekosistem teknologi nasional, <strong class="text-white">PT. Aksara Cipta Digital (ACD)</strong> telah sukses merancang dan mengimplementasikan lebih dari 300 proyek sistem informasi, ERP, aplikasi mobile, dan solusi e-Government di seluruh penjuru Indonesia.
+                </p>
+                <p class="text-sm leading-relaxed">
+                    Kami paham betul bahwa setiap institusi memiliki dinamika unik. Dari pemahaman inilah, ACD hadir bukan sekadar sebagai vendor koding konvensional, melainkan sebagai <em class="text-indigo-300">Strategic IT Consultant</em> yang mendiagnosis hambatan alur kerja Anda dan merumuskan arsitektur software yang terbukti meningkatkan efisiensi biaya dan produktivitas tim.
+                </p>
+                <div class="pt-4 grid grid-cols-3 gap-4 border-t border-indigo-950/60">
+                    <div>
+                        <span class="block text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">20+</span>
+                        <span class="text-xs text-slate-400 font-medium">Klien Aktif</span>
+                    </div>
+                    <div>
+                        <span class="block text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">38</span>
+                        <span class="text-xs text-slate-400 font-medium">Provinsi Terjangkau</span>
+                    </div>
+                    <div>
+                        <span class="block text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-400">99.9%</span>
+                        <span class="text-xs text-slate-400 font-medium">SLA Kepuasan</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="lg:col-span-6 space-y-6">
+                <div class="bg-[#070c24] p-5 rounded-3xl border border-indigo-900/60 shadow-xl overflow-hidden text-center">
+                    <img src="{{ url_for('static', filename='images/logo_acd_full.jpg') }}" alt="Identitas Resmi PT. Aksara Cipta Digital" class="w-full max-w-md mx-auto h-auto rounded-2xl">
+                    <p class="text-[11px] text-slate-400 font-medium mt-2">Identitas Korporat Resmi PT. Aksara Cipta Digital (ACD)</p>
+                </div>
+
+                <div class="bg-gradient-to-tr from-brand-600 to-accent-cyan rounded-3xl p-1 shadow-xl">
+                    <div class="bg-[#05091e] rounded-[22px] p-8 text-white space-y-6">
+                        <div class="flex items-center space-x-2 text-accent-cyan font-bold text-xs uppercase tracking-wider">
+                            <i data-lucide="compass" class="w-4 h-4"></i>
+                            <span>Visi & Misi Perusahaan</span>
+                        </div>
+                        <div>
+                            <h3 class="text-lg font-bold text-white mb-2">Visi Kami</h3>
+                            <p class="text-xs text-slate-300 leading-relaxed">
+                                Menjadi konsultan teknologi digital terdepan di Indonesia dan Asia Tenggara yang memberdayakan transformasi bisnis korporasi serta tata kelola pemerintahan yang inklusif, akuntabel, dan berkelanjutan.
+                            </p>
+                        </div>
+                        <div class="border-t border-indigo-950/80 pt-4">
+                            <h3 class="text-lg font-bold text-white mb-2">Misi Kami</h3>
+                            <ul class="text-xs text-slate-300 space-y-2">
+                                <li class="flex items-start space-x-2"><i data-lucide="check" class="w-3.5 h-3.5 text-accent-cyan shrink-0 mt-0.5"></i><span>Mengembangkan software berkualitas enterprise dengan jaminan bebas bug dan hak milik source code utuh.</span></li>
+                                <li class="flex items-start space-x-2"><i data-lucide="check" class="w-3.5 h-3.5 text-accent-cyan shrink-0 mt-0.5"></i><span>Mendampingi implementasi proses bisnis secara menyeluruh dari tahap audit hingga pelatihan staf.</span></li>
+                                <li class="flex items-start space-x-2"><i data-lucide="check" class="w-3.5 h-3.5 text-accent-cyan shrink-0 mt-0.5"></i><span>Menerapkan standar mutu keamanan siber ISO 27001 dan kepatuhan OWASP di seluruh arsitektur produk.</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Core Values: CIPTA -->
+<div class="py-20 bg-gradient-to-b from-[#0a1030] via-[#060b20] to-[#020617] border-b border-indigo-950/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <span class="text-xs font-bold text-indigo-400 bg-indigo-950/80 border border-indigo-800/60 px-3 py-1 rounded-full uppercase tracking-wider">Nilai Dasar Perusahaan</span>
+            <h2 class="text-3xl font-extrabold text-white mt-2">Core Values ACD: "CIPTA"</h2>
+            <p class="text-slate-400 text-sm mt-2">Landasan etika kerja dan profesionalitas seluruh talenta kami dalam melayani mitra klien.</p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+            <div class="deptech-card-dark p-6 text-center hover:border-indigo-500/50 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-950/80 text-indigo-400 mx-auto flex items-center justify-center font-extrabold text-lg mb-4 border border-indigo-800/60 shadow-[0_0_15px_rgba(99,102,241,0.2)]">C</div>
+                <h4 class="font-bold text-white text-base mb-1">Credible</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Dapat dipercaya, transparan dalam progres teknis, dan memegang teguh integritas data klien.</p>
+            </div>
+
+            <div class="deptech-card-dark p-6 text-center hover:border-purple-500/50 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-purple-950/80 text-purple-400 mx-auto flex items-center justify-center font-extrabold text-lg mb-4 border border-purple-800/60 shadow-[0_0_15px_rgba(168,85,247,0.2)]">I</div>
+                <h4 class="font-bold text-white text-base mb-1">Innovative</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Berpikir out of the box dan adaptif mengadopsi teknologi cloud & AI terkini untuk efisiensi bisnis.</p>
+            </div>
+
+            <div class="deptech-card-dark p-6 text-center hover:border-blue-500/50 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-blue-950/80 text-blue-400 mx-auto flex items-center justify-center font-extrabold text-lg mb-4 border border-blue-800/60 shadow-[0_0_15px_rgba(59,130,246,0.2)]">P</div>
+                <h4 class="font-bold text-white text-base mb-1">Professional</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Menjunjung tinggi standar mutu rekayasa perangkat lunak, testing ketat, dan ketepatan waktu.</p>
+            </div>
+
+            <div class="deptech-card-dark p-6 text-center hover:border-emerald-500/50 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-emerald-950/80 text-emerald-400 mx-auto flex items-center justify-center font-extrabold text-lg mb-4 border border-emerald-800/60 shadow-[0_0_15px_rgba(16,185,129,0.2)]">T</div>
+                <h4 class="font-bold text-white text-base mb-1">Transformative</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Fokus menghadirkan dampak nyata (ROI) yang merombak inefisiensi manual menjadi otomatis.</p>
+            </div>
+
+            <div class="deptech-card-dark p-6 text-center hover:border-amber-500/50 transition-all">
+                <div class="w-12 h-12 rounded-2xl bg-amber-950/80 text-amber-400 mx-auto flex items-center justify-center font-extrabold text-lg mb-4 border border-amber-800/60 shadow-[0_0_15px_rgba(245,158,11,0.2)]">A</div>
+                <h4 class="font-bold text-white text-base mb-1">Agile</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Cepat beradaptasi terhadap perubahan skala usaha klien dan pembaruan regulasi hukum pemerintah.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 6-Stage Development Methodology -->
+<div class="py-20 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] border-b border-indigo-950/60">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-2xl mx-auto mb-14">
+            <span class="text-xs font-bold text-indigo-400 bg-indigo-950/80 border border-indigo-800/60 px-3 py-1 rounded-full uppercase tracking-wider">Standar Mutu Proyek</span>
+            <h2 class="text-3xl font-extrabold text-white mt-2">Metodologi Pengembangan Software ACD</h2>
+            <p class="text-slate-400 text-sm mt-2">Setiap proyek melalui 6 tahapan terstruktur dengan verifikasi berkala bersama klien.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div class="p-6 rounded-2xl deptech-card-dark">
+                <span class="text-xs font-mono font-bold text-indigo-400">01 / TAHAP PERTAMA</span>
+                <h4 class="text-base font-bold text-white mt-2 mb-1">Discovery & Process Mapping</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Wawancara mendalam, analisis alur kerja saat ini, penyusunan SRS (Software Requirement Specification) dan BPMN flow.</p>
+            </div>
+            <div class="p-6 rounded-2xl deptech-card-dark">
+                <span class="text-xs font-mono font-bold text-indigo-400">02 / TAHAP KEDUA</span>
+                <h4 class="text-base font-bold text-white mt-2 mb-1">System Architecture & UI/UX</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Perancangan skema database relasional teroptimasi, arsitektur API gateway, dan clickable interactive prototype di Figma.</p>
+            </div>
+            <div class="p-6 rounded-2xl deptech-card-dark">
+                <span class="text-xs font-mono font-bold text-indigo-400">03 / TAHAP KETIGA</span>
+                <h4 class="text-base font-bold text-white mt-2 mb-1">Agile Sprint Development</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Koding modular menggunakan sprint 2 mingguan. Klien dapat mencoba demo fitur dan memberikan feedback secara berkala.</p>
+            </div>
+            <div class="p-6 rounded-2xl deptech-card-dark">
+                <span class="text-xs font-mono font-bold text-indigo-400">04 / TAHAP KEEMPAT</span>
+                <h4 class="text-base font-bold text-white mt-2 mb-1">Quality Assurance & Security Pentest</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Uji coba fungsionalitas menyeluruh, load testing simulasi ribuan user, dan vulnerability assessment keamanan standar OWASP.</p>
+            </div>
+            <div class="p-6 rounded-2xl deptech-card-dark">
+                <span class="text-xs font-mono font-bold text-indigo-400">05 / TAHAP KELIMA</span>
+                <h4 class="text-base font-bold text-white mt-2 mb-1">Deployment & User Training</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Pemasangan di cloud/server on-premise klien, migrasi data lama, pelatihan staf admin & pengguna, serta penyerahan buku manual.</p>
+            </div>
+            <div class="p-6 rounded-2xl deptech-card-dark">
+                <span class="text-xs font-mono font-bold text-indigo-400">06 / TAHAP KEENAM</span>
+                <h4 class="text-base font-bold text-white mt-2 mb-1">SLA Warranty & Maintenance</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">Jaminan garansi bebas bug, monitoring performa server 24/7, dan tim support tanggap darurat yang siap mendampingi Anda.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Office Locations -->
+<div class="py-16 bg-gradient-to-b from-[#0a1030] via-[#060b20] to-[#020617]">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-xl mx-auto mb-10">
+            <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">Keberadaan Kami</span>
+            <h2 class="text-2xl font-extrabold text-white mt-1">Kantor Operasional & Cabang Teknis</h2>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div class="p-6 rounded-2xl deptech-card-dark">
+                <span class="text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-2.5 py-1 rounded-md">Head Office Jakarta</span>
+                <h4 class="text-base font-bold text-white mt-3 mb-1">Cyber 2 Tower Lt. 18</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                    {{ config.COMPANY_ADDRESS }}
+                </p>
+                <div class="text-xs text-slate-300 space-y-1">
+                    <p>Telepon: <span class="text-white">{{ config.COMPANY_PHONE }}</span></p>
+                    <p>Email: <span class="text-white">{{ config.COMPANY_EMAIL }}</span></p>
+                </div>
+            </div>
+
+            <div class="p-6 rounded-2xl deptech-card-dark">
+                <span class="text-xs font-bold text-cyan-300 bg-cyan-950/80 border border-cyan-800/60 px-2.5 py-1 rounded-md">Engineering & Delivery Center</span>
+                <h4 class="text-base font-bold text-white mt-3 mb-1">Graha Cipta Technopark Kav. 8</h4>
+                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+                    {{ config.COMPANY_BRANCH }}
+                </p>
+                <div class="text-xs text-slate-300 space-y-1">
+                    <p>Hotline WhatsApp: <span class="text-white">+62 812-8888-2510</span></p>
+                    <p>Jam Kerja: <span class="text-white">Senin - Jumat (08:30 - 17:00 WIB)</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
