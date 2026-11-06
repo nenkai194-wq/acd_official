@@ -76,27 +76,72 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // 5. AJAX Consultation Form Submission
+    // 5. Real-Time Indonesian Phone Input Sanitizer (No letters allowed)
+    const phoneInputs = document.querySelectorAll('input[name="phone"]');
+    phoneInputs.forEach(input => {
+        input.addEventListener('input', (e) => {
+            let val = e.target.value;
+            // Strictly strip any letters and non-phone characters
+            let cleaned = val.replace(/[^0-9+]/g, '');
+            // Only allow + at the very beginning
+            if (cleaned.indexOf('+') > 0) {
+                cleaned = cleaned.charAt(0) === '+' ? '+' + cleaned.replace(/\+/g, '') : cleaned.replace(/\+/g, '');
+            }
+            if (val !== cleaned) {
+                e.target.value = cleaned;
+            }
+        });
+    });
+
+    // 5b. AJAX Consultation Form Submission (with 2x/24h Anti-Spam & National Standard WA)
     const consultationForms = document.querySelectorAll('.ajax-consultation-form');
     consultationForms.forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = form.querySelector('button[type="submit"]');
             const originalText = submitBtn ? submitBtn.innerHTML : 'Kirim';
+
+            const formData = new FormData(form);
+            const name = (formData.get('name') || '').trim();
+            const email = (formData.get('email') || '').trim();
+            const phone = (formData.get('phone') || '').trim();
+            const company = (formData.get('company') || '').trim();
+            const service_type = formData.get('service_type');
+            const budget_range = formData.get('budget_range') || '';
+            const message = (formData.get('message') || '').trim();
+
+            // Client-Side Validation
+            if (!name || !email || !phone || !message) {
+                alert('Mohon lengkapi semua kolom wajib bertanda bintang (*).');
+                return;
+            }
+
+            // WhatsApp National Standard Check
+            if (/[a-zA-Z]/.test(phone)) {
+                alert('Nomor WhatsApp tidak boleh mengandung huruf. Harap masukkan nomor telepon yang valid.');
+                return;
+            }
+
+            const cleanPhone = phone.replace(/[^0-9+]/g, '');
+            const waRegex = /^(\+62|62|0)8[0-9]{8,12}$/;
+            if (!waRegex.test(cleanPhone)) {
+                alert('Format nomor WhatsApp tidak sesuai standar nasional Indonesia.\n\nContoh yang benar: 08123456789 atau 628123456789 (10-14 digit angka diawali 08/628).');
+                return;
+            }
+
             if (submitBtn) {
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<span class="inline-block animate-spin mr-2">⟳</span> Mengirim Data...';
             }
 
-            const formData = new FormData(form);
             const payload = {
-                name: formData.get('name'),
-                email: formData.get('email'),
-                phone: formData.get('phone'),
-                company: formData.get('company') || '',
-                service_type: formData.get('service_type'),
-                budget_range: formData.get('budget_range') || '',
-                message: formData.get('message')
+                name,
+                email,
+                phone,
+                company,
+                service_type,
+                budget_range,
+                message
             };
 
             try {
@@ -106,20 +151,73 @@ document.addEventListener('DOMContentLoaded', () => {
                     body: JSON.stringify(payload)
                 });
                 const data = await res.json();
-                if (data.status === 'success') {
-                    alert('Terima kasih! Tim Konsultan PT. Aksara Cipta Digital (ACD) telah menerima konsultasi Anda. Kami akan segera menghubungi dalam 1x24 jam.');
+                if (res.status === 200 && data.status === 'success') {
+                    let successMsg = 'Terima kasih ' + name + '!\n\nPermintaan konsultasi Anda telah berhasil dikirim ke tim ACD. Kami akan segera menghubungi dalam 1x24 jam.';
+                    if (typeof data.remaining_submissions !== 'undefined') {
+                        successMsg += '\n\n(Sisa kuota pengiriman Anda: ' + data.remaining_submissions + ' kali dalam 24 jam ini)';
+                    }
+                    alert(successMsg);
                     form.reset();
                     if (window.closeConsultationModal) window.closeConsultationModal();
+                } else if (res.status === 429) {
+                    alert('⚠️ KUOTA PENGIRIMAN MAKSIMAL TERCAPAI\n\n' + data.message);
                 } else {
-                    alert(data.message || 'Terjadi kendala saat mengirim. Silakan hubungi langsung WhatsApp kami.');
+                    alert(data.message || 'Terjadi kendala saat mengirim data. Silakan periksa kembali formulir Anda.');
                 }
             } catch (err) {
-                alert('Gagal terhubung ke server. Silakan hubungi WhatsApp kami langsung.');
+                alert('Gagal terhubung ke server. Silakan periksa koneksi internet Anda atau hubungi kami langsung.');
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
                 }
+            }
+        });
+    });
+
+    // 5c. WhatsApp Message Click Rate Limiter (Maksimal 2x Pengiriman / 24 Jam)
+    function getLocalWAClicks() {
+        try {
+            const raw = localStorage.getItem('acd_wa_click_timestamps');
+            const arr = raw ? JSON.parse(raw) : [];
+            const cutoff = Date.now() - (24 * 60 * 60 * 1000);
+            return arr.filter(t => t > cutoff);
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function recordLocalWAClick() {
+        try {
+            const list = getLocalWAClicks();
+            list.push(Date.now());
+            localStorage.setItem('acd_wa_click_timestamps', JSON.stringify(list));
+        } catch (e) {}
+    }
+
+    const waLinks = document.querySelectorAll('a[href*="wa.me"], .track-wa-btn, .floating-wa-btn');
+    waLinks.forEach(link => {
+        link.addEventListener('click', async (e) => {
+            const recentClicks = getLocalWAClicks();
+            if (recentClicks.length >= 2) {
+                e.preventDefault();
+                alert('⚠️ BATAS PENGIRIMAN PESAN WHATSAPP TERCAPAI\n\nAnda telah mencapai batas maksimal 2x pengiriman pesan WhatsApp dalam waktu 1 x 24 jam untuk kenyamanan bersama dan mencegah spam.\n\nSilakan hubungi kami via email resmi info@acd.co.id atau coba kembali besok.');
+                return false;
+            }
+
+            // Sync with server rate limiter
+            try {
+                const res = await fetch('/api/v1/track-wa-click?source=user_click', { method: 'POST' });
+                const data = await res.json();
+                if (!data.allowed) {
+                    e.preventDefault();
+                    alert('⚠️ ' + (data.message || 'Batas maksimal 2x pengiriman pesan WhatsApp dalam 24 jam telah tercapai.'));
+                    return false;
+                }
+                recordLocalWAClick();
+            } catch (err) {
+                // Fallback to local tracker
+                recordLocalWAClick();
             }
         });
     });

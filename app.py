@@ -3,6 +3,7 @@ import json
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort
 from config import Config
 from database import init_db, seed_db
+import re
 from models import (
     ServiceModel,
     PortfolioModel,
@@ -10,7 +11,8 @@ from models import (
     CareerModel,
     TestimonialModel,
     FAQModel,
-    InquiryModel
+    InquiryModel,
+    WALogModel
 )
 
 app = Flask(__name__)
@@ -146,14 +148,14 @@ def contact():
 
 @app.route('/api/v1/consultation', methods=['POST'])
 def api_consultation():
-    data = request.get_json() or request.form
-    name = data.get('name')
-    email = data.get('email')
-    phone = data.get('phone')
-    company = data.get('company', '')
-    service_type = data.get('service_type')
-    budget_range = data.get('budget_range', '')
-    message = data.get('message')
+    data = request.get_json(silent=True) or request.form
+    name = (data.get('name') or '').strip()
+    email = (data.get('email') or '').strip()
+    phone = (data.get('phone') or '').strip()
+    company = (data.get('company') or '').strip()
+    service_type = (data.get('service_type') or 'Aplikasi & Website').strip()
+    budget_range = (data.get('budget_range') or '').strip()
+    message = (data.get('message') or '').strip()
 
     if not name or not email or not phone or not message:
         return jsonify({
@@ -161,20 +163,89 @@ def api_consultation():
             'message': 'Mohon lengkapi nama, email, nomor WhatsApp, dan deskripsi kebutuhan.'
         }), 400
 
+    # 1. Validasi Standar Nasional Nomor WhatsApp (tidak boleh ada huruf)
+    is_phone_valid, normalized_phone, phone_err = InquiryModel.validate_and_normalize_phone(phone)
+    if not is_phone_valid:
+        return jsonify({
+            'status': 'error',
+            'message': phone_err
+        }), 400
+
+    # 2. Validasi Format Email
+    if not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):
+        return jsonify({
+            'status': 'error',
+            'message': 'Format email tidak valid. Harap masukkan alamat email yang benar (contoh: nama@perusahaan.co.id).'
+        }), 400
+
+    # 3. Pembatasan Anti-Spam: Maksimal 2x kirim dalam 1x24 jam per Nomor WA dan Email
+    email_count = InquiryModel.count_recent_by_email(email, hours=24)
+    if email_count >= 2:
+        return jsonify({
+            'status': 'error',
+            'message': f'Email "{email}" telah mencapai batas maksimal 2x pengiriman dalam 1 x 24 jam untuk pencegahan spam. Silakan coba kembali besok atau hubungi hotline kami langsung.'
+        }), 429
+
+    phone_count = InquiryModel.count_recent_by_phone(normalized_phone, hours=24)
+    if phone_count >= 2:
+        return jsonify({
+            'status': 'error',
+            'message': f'Nomor WhatsApp "{normalized_phone}" telah mencapai batas maksimal 2x pengiriman dalam 1 x 24 jam untuk pencegahan spam. Silakan coba kembali besok atau hubungi hotline kami langsung.'
+        }), 429
+
+    # Ambil IP Pengunjung
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if ip_address and ',' in ip_address:
+        ip_address = ip_address.split(',')[0].strip()
+
     inquiry_id = InquiryModel.create(
         name=name,
         email=email,
-        phone=phone,
+        phone=normalized_phone,
         company=company,
-        service_type=service_type or 'Aplikasi & Website',
+        service_type=service_type,
         budget_range=budget_range,
-        message=message
+        message=message,
+        ip_address=ip_address
     )
 
+    remaining = max(0, 2 - (max(email_count, phone_count) + 1))
     return jsonify({
         'status': 'success',
         'message': 'Permintaan konsultasi berhasil dikirim! Tim konsultan ACD akan segera menghubungi Anda.',
-        'inquiry_id': inquiry_id
+        'inquiry_id': inquiry_id,
+        'remaining_submissions': remaining
+    })
+
+@app.route('/api/v1/track-wa-click', methods=['POST', 'GET'])
+def api_track_wa_click():
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if ip_address and ',' in ip_address:
+        ip_address = ip_address.split(',')[0].strip()
+    
+    source = request.args.get('source') or (request.get_json(silent=True) or {}).get('source', 'whatsapp_button')
+    
+    # Cek batas maksimal pengiriman pesan via WA (maksimal 2x per 24 jam per IP / device)
+    wa_count = WALogModel.count_recent_by_ip(ip_address, hours=24)
+    if wa_count >= 2:
+        return jsonify({
+            'status': 'error',
+            'allowed': False,
+            'count': wa_count,
+            'max': 2,
+            'message': 'Pemberitahuan: Anda telah mencapai batas maksimal 2x pengiriman pesan WhatsApp dalam waktu 1 x 24 jam untuk kenyamanan bersama dan mencegah spam. Silakan hubungi kami via email resmi info@acd.co.id atau coba kembali besok.'
+        }), 429
+
+    WALogModel.record_click(ip_address, source)
+    new_count = wa_count + 1
+    remaining = max(0, 2 - new_count)
+
+    return jsonify({
+        'status': 'success',
+        'allowed': True,
+        'count': new_count,
+        'remaining': remaining,
+        'message': f'Pengiriman pesan WhatsApp ke-{new_count} dari kuota maksimal 2x dalam 24 jam.'
     })
 
 @app.route('/api/v1/estimate', methods=['POST'])

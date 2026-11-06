@@ -1,5 +1,7 @@
 import json
 import sqlite3
+import re
+from datetime import datetime, timedelta
 from database import get_db_connection
 
 class ServiceModel:
@@ -143,13 +145,86 @@ class FAQModel:
 
 class InquiryModel:
     @staticmethod
-    def create(name, email, phone, company, service_type, budget_range, message):
+    def validate_and_normalize_phone(phone_raw):
+        """
+        Validasi nomor WhatsApp standar nasional Indonesia:
+        - Tidak boleh ada huruf
+        - Harus diawali 08... atau 628... / +628...
+        - Panjang digit valid 10-14 digit
+        - Dinormalisasi ke format standar '08xxxxxxxxxx'
+        """
+        if not phone_raw:
+            return False, None, 'Nomor WhatsApp wajib diisi.'
+        
+        phone_str = str(phone_raw).strip()
+        
+        # 1. Cek apakah ada huruf
+        if re.search(r'[a-zA-Z]', phone_str):
+            return False, None, 'Nomor WhatsApp tidak boleh mengandung huruf. Harap masukkan nomor WhatsApp yang valid.'
+        
+        # 2. Bersihkan karakter spasi, tanda hubung, titik, kurung
+        cleaned = re.sub(r'[\s\-\.\(\)]', '', phone_str)
+        if cleaned.startswith('+'):
+            cleaned = cleaned[1:]
+            
+        # 3. Harus murni angka
+        if not cleaned.isdigit():
+            return False, None, 'Nomor WhatsApp hanya boleh berisi angka tanpa karakter aneh atau simbol.'
+            
+        # 4. Standarisasi awalan ke format nasional 08...
+        if cleaned.startswith('628'):
+            normalized = '08' + cleaned[3:]
+        elif cleaned.startswith('08'):
+            normalized = cleaned
+        elif cleaned.startswith('8'):
+            normalized = '08' + cleaned[1:]
+        else:
+            return False, None, 'Nomor WhatsApp harus mengikuti standar nasional Indonesia (diawali dengan 08... atau 628...).'
+            
+        # 5. Panjang digit nomor HP di Indonesia antara 10 hingga 14 digit
+        if len(normalized) < 10 or len(normalized) > 14:
+            return False, None, f'Panjang nomor WhatsApp tidak valid ({len(normalized)} digit). Standar nasional adalah 10-14 digit (contoh: 08123456789).'
+            
+        return True, normalized, None
+
+    @staticmethod
+    def count_recent_by_email(email, hours=24):
+        """Menghitung berapa kali email mengirim dalam kurun waktu X jam terakhir."""
+        if not email:
+            return 0
+        cutoff = (datetime.now() - timedelta(hours=hours)).strftime('%Y-%m-%d %H:%M:%S')
+        conn = get_db_connection()
+        row = conn.execute(
+            'SELECT COUNT(*) as cnt FROM inquiries WHERE LOWER(email) = LOWER(?) AND created_at >= ?',
+            (email.strip(), cutoff)
+        ).fetchone()
+        conn.close()
+        return row['cnt'] if row else 0
+
+    @staticmethod
+    def count_recent_by_phone(normalized_phone, hours=24):
+        """Menghitung berapa kali no WA mengirim dalam kurun waktu X jam terakhir."""
+        if not normalized_phone:
+            return 0
+        cutoff = (datetime.now() - timedelta(hours=hours)).strftime('%Y-%m-%d %H:%M:%S')
+        conn = get_db_connection()
+        # Mencocokkan nomor ternormalisasi (misal 0812...) dan varian 628...
+        alt_phone = '62' + normalized_phone[1:] if normalized_phone.startswith('08') else normalized_phone
+        row = conn.execute(
+            'SELECT COUNT(*) as cnt FROM inquiries WHERE (phone = ? OR phone = ?) AND created_at >= ?',
+            (normalized_phone, alt_phone, cutoff)
+        ).fetchone()
+        conn.close()
+        return row['cnt'] if row else 0
+
+    @staticmethod
+    def create(name, email, phone, company, service_type, budget_range, message, ip_address=None):
         conn = get_db_connection()
         cursor = conn.cursor()
         cursor.execute('''
-        INSERT INTO inquiries (name, email, phone, company, service_type, budget_range, message)
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-        ''', (name, email, phone, company, service_type, budget_range, message))
+        INSERT INTO inquiries (name, email, phone, company, service_type, budget_range, message, ip_address)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (name, email, phone, company, service_type, budget_range, message, ip_address))
         inquiry_id = cursor.lastrowid
         conn.commit()
         conn.close()
@@ -169,6 +244,35 @@ class InquiryModel:
             conn.execute('UPDATE inquiries SET status = ?, notes = ? WHERE id = ?', (status, notes, inquiry_id))
         else:
             conn.execute('UPDATE inquiries SET status = ? WHERE id = ?', (status, inquiry_id))
+        conn.commit()
+        conn.close()
+        return True
+
+
+class WALogModel:
+    @staticmethod
+    def count_recent_by_ip(ip_address, hours=24):
+        """Menghitung berapa kali IP melakukan pengiriman / klik WhatsApp dalam X jam."""
+        if not ip_address:
+            return 0
+        cutoff = (datetime.now() - timedelta(hours=hours)).strftime('%Y-%m-%d %H:%M:%S')
+        conn = get_db_connection()
+        row = conn.execute(
+            'SELECT COUNT(*) as cnt FROM wa_logs WHERE ip_address = ? AND created_at >= ?',
+            (ip_address, cutoff)
+        ).fetchone()
+        conn.close()
+        return row['cnt'] if row else 0
+
+    @staticmethod
+    def record_click(ip_address, source='floating_wa'):
+        """Mencatat interaksi pengiriman / klik WhatsApp."""
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute(
+            'INSERT INTO wa_logs (ip_address, source) VALUES (?, ?)',
+            (ip_address or 'unknown', source)
+        )
         conn.commit()
         conn.close()
         return True

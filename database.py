@@ -25,6 +25,23 @@ def init_db():
         message TEXT NOT NULL,
         status TEXT DEFAULT 'Baru',
         notes TEXT,
+        ip_address TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+
+    # Ensure ip_address column exists if table was previously created
+    cursor.execute("PRAGMA table_info(inquiries)")
+    cols = [col[1] for col in cursor.fetchall()]
+    if 'ip_address' not in cols:
+        cursor.execute("ALTER TABLE inquiries ADD COLUMN ip_address TEXT")
+
+    # Table for tracking WhatsApp message click events (Rate Limiting anti-spam)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS wa_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT,
+        source TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )
     ''')
