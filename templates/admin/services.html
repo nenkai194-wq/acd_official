@@ -1,0 +1,112 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'services' %}
+
+{% block title %}Kelola Layanan Solusi IT{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Katalog Layanan IT & Solusi Digital</h1>
+            <p class="text-xs text-slate-400 mt-1">Kelola daftar layanan resmi ACD yang tampil pada navigasi, beranda, dan halaman detail layanan</p>
+        </div>
+        <a href="{{ url_for('admin_service_add') }}" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Tambah Layanan Baru</span>
+        </a>
+    </div>
+
+    <!-- Category Filter Tabs -->
+    <div class="flex items-center space-x-2 overflow-x-auto pb-2">
+        <a href="{{ url_for('admin_services') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+            Semua Layanan ({{ services | length }})
+        </a>
+        {% for cat in categories %}
+        <a href="{{ url_for('admin_services', category=cat) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if current_category == cat %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+            {{ cat }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Services Table / Cards -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-[#020617] border-b border-indigo-950/70 text-slate-400 font-semibold uppercase text-[10px] tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4">Layanan</th>
+                        <th class="px-6 py-4">Kategori</th>
+                        <th class="px-6 py-4">Fitur Utama</th>
+                        <th class="px-6 py-4">Tech Stack</th>
+                        <th class="px-6 py-4 text-center">Status</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-indigo-950/50">
+                    {% for s in services %}
+                    <tr class="hover:bg-slate-900/40 transition">
+                        <td class="px-6 py-4">
+                            <div class="flex items-center space-x-3">
+                                <div class="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                                    <i data-lucide="{{ s.icon or 'layers' }}" class="w-4 h-4"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-white text-xs">{{ s.title }}</h4>
+                                    <span class="text-[10px] text-slate-500 font-mono">/layanan/{{ s.slug }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/60 text-indigo-300 border border-indigo-900/60">
+                                {{ s.category }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-300 max-w-xs">
+                            <span class="text-[11px] line-clamp-1">{{ s.features_list | length }} Fitur Terdata</span>
+                            <span class="text-[10px] text-slate-500 line-clamp-1">{{ s.summary }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-400">
+                            <div class="flex flex-wrap gap-1 max-w-[200px]">
+                                {% for tech in s.tech_stack_list[:3] %}
+                                <span class="px-1.5 py-0.5 rounded text-[9px] bg-slate-950 text-slate-400 border border-slate-800">{{ tech }}</span>
+                                {% endfor %}
+                                {% if s.tech_stack_list | length > 3 %}
+                                <span class="text-[9px] text-slate-500">+{{ (s.tech_stack_list | length) - 3 }}</span>
+                                {% endif %}
+                            </div>
+                        </td>
+                        <td class="px-6 py-4 text-center">
+                            {% if s.is_featured %}
+                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                Featured
+                            </span>
+                            {% else %}
+                            <span class="px-2 py-0.5 rounded text-[10px] text-slate-500">
+                                Standar
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end space-x-2">
+                                <a href="{{ url_for('service_detail', slug=s.slug) }}" target="_blank" class="p-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition" title="Lihat Halaman Publik">
+                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                </a>
+                                <a href="{{ url_for('admin_service_edit', service_id=s.id) }}" class="p-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-600/30 transition" title="Edit Layanan">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </a>
+                                <form method="POST" action="{{ url_for('admin_service_delete', service_id=s.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus layanan \'{{ s.title }}\'?');" class="inline">
+                                    <button type="submit" class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Layanan">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

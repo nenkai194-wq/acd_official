@@ -1,0 +1,100 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'blogs' %}
+
+{% block title %}{{ 'Edit Artikel Blog' if post else 'Tulis Artikel Baru' }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">{{ 'Edit Artikel Blog' if post else 'Tulis Artikel Wawasan Baru' }}</h1>
+            <p class="text-xs text-slate-400 mt-1">Tulis dan publikasikan konten artikel berbobot untuk meningkatkan otoritas SEO dan edukasi klien</p>
+        </div>
+        <a href="{{ url_for('admin_blogs') }}" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Kembali ke Daftar Blog</span>
+        </a>
+    </div>
+
+    <!-- Form Container -->
+    <form method="POST" class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Title -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Judul Artikel <span class="text-rose-400">*</span></label>
+                <input type="text" name="title" required value="{{ post.title if post else '' }}" placeholder="Contoh: Tren Arsitektur Cloud-Native untuk Sistem Informasi BUMN di Tahun 2025" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Slug -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Slug URL <span class="text-slate-500 font-normal">(Opsional - otomatis jika kosong)</span></label>
+                <input type="text" name="slug" value="{{ post.slug if post else '' }}" placeholder="tren-arsitektur-cloud-native-2025" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Category -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Kategori Artikel <span class="text-rose-400">*</span></label>
+                <select name="category" required class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <option value="Transformasi Digital" {% if post and post.category == 'Transformasi Digital' %}selected{% endif %}>Transformasi Digital</option>
+                    <option value="Teknologi & Solusi IT" {% if post and post.category == 'Teknologi & Solusi IT' %}selected{% endif %}>Teknologi & Solusi IT</option>
+                    <option value="E-Government & Smart City" {% if post and post.category == 'E-Government & Smart City' %}selected{% endif %}>E-Government & Smart City</option>
+                    <option value="ERP & Bisnis" {% if post and post.category == 'ERP & Bisnis' %}selected{% endif %}>ERP & Bisnis</option>
+                </select>
+            </div>
+
+            <!-- Author -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Nama Penulis / Tim Ahli</label>
+                <input type="text" name="author" value="{{ post.author if post else 'Tim Konsultan ACD' }}" placeholder="Tim Konsultan ACD" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Read Time -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Estimasi Waktu Baca</label>
+                <input type="text" name="read_time" value="{{ post.read_time if post else '5 Menit' }}" placeholder="5 Menit" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Published Date -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Tanggal Publikasi</label>
+                <input type="text" name="published_date" value="{{ post.published_date if post else '' }}" placeholder="Contoh: 08 November 2026" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Image URL -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">URL Gambar Cover Artikel</label>
+                <input type="text" name="image_url" value="{{ post.image_url if post else '' }}" placeholder="https://images.unsplash.com/... atau /static/images/..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono">
+            </div>
+
+            <!-- Tags (Comma separated) -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Tagar Topik <span class="text-slate-500 font-normal">(Pisahkan dengan tanda koma)</span></label>
+                <input type="text" name="tags" value="{{ post.tags if post else '' }}" placeholder="Cloud, Microservices, BUMN, Enterprise Architecture, API" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono">
+            </div>
+
+            <!-- Summary -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Ringkasan Singkat (Lead Paragraph) <span class="text-rose-400">*</span></label>
+                <textarea name="summary" rows="3" required placeholder="Ringkasan isi artikel dalam 2-3 kalimat menarik..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ post.summary if post else '' }}</textarea>
+            </div>
+
+            <!-- Content -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Isi Konten Lengkap Artikel <span class="text-rose-400">*</span></label>
+                <textarea name="content" rows="12" required placeholder="Tuliskan isi artikel lengkap di sini (dapat menggunakan paragraf atau format teks bebas)..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ post.content if post else '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="pt-4 border-t border-indigo-950/70 flex items-center justify-end space-x-3">
+            <a href="{{ url_for('admin_blogs') }}" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition">
+                Batal
+            </a>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30">
+                {{ 'Simpan Perubahan' if post else 'Publikasikan Artikel' }}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

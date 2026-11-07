@@ -1,0 +1,115 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'settings' %}
+
+{% block title %}Pengaturan Website & Profil Perusahaan{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Pengaturan Website & Profil Perusahaan</h1>
+            <p class="text-xs text-slate-400 mt-1">Kelola identitas resmi PT. Aksara Cipta Digital, kontak hotline, alamat kantor, dan keamanan akun</p>
+        </div>
+    </div>
+
+    <form method="POST" action="{{ url_for('admin_settings') }}" class="space-y-6">
+        <!-- Section 1: Profil Perusahaan -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <i data-lucide="building" class="w-5 h-5 text-indigo-400"></i>
+                <h3 class="text-sm font-bold text-white">Identitas & Informasi Perusahaan</h3>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Nama Resmi Perusahaan</label>
+                    <input type="text" name="company_name" value="{{ settings.get('company_name', config.COMPANY_NAME) }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Nama Singkat / Brand</label>
+                    <input type="text" name="company_short_name" value="{{ settings.get('company_short_name', config.COMPANY_SHORT_NAME) }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Tagline Utama Perusahaan</label>
+                    <input type="text" name="company_tagline" value="{{ settings.get('company_tagline', config.COMPANY_TAGLINE) }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Sub-Tagline / Deskripsi Singkat</label>
+                    <input type="text" name="company_subtagline" value="{{ settings.get('company_subtagline', config.COMPANY_SUBTAGLINE) }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 2: Kontak & Alamat -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <i data-lucide="phone-call" class="w-5 h-5 text-emerald-400"></i>
+                <h3 class="text-sm font-bold text-white">Kontak Resmi & Lokasi Kantor</h3>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Nomor WhatsApp Hotline (Standar Nasional)</label>
+                    <input type="text" name="company_whatsapp" value="{{ settings.get('company_whatsapp', config.COMPANY_WHATSAPP) }}" placeholder="6281288882510" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-emerald-400 font-mono font-bold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Telepon Kantor (PABX / Hotline)</label>
+                    <input type="text" name="company_phone" value="{{ settings.get('company_phone', config.COMPANY_PHONE) }}" placeholder="+62 21 8299 8765" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Email Umum Perusahaan</label>
+                    <input type="email" name="company_email" value="{{ settings.get('company_email', config.COMPANY_EMAIL) }}" placeholder="info@acd.co.id" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Email Khusus Konsultasi Leads</label>
+                    <input type="email" name="company_consultation_email" value="{{ settings.get('company_consultation_email', config.COMPANY_CONSULTATION_EMAIL) }}" placeholder="konsultasi@acd.co.id" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Alamat Kantor Pusat (Jakarta)</label>
+                    <textarea name="company_address" rows="2" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ settings.get('company_address', config.COMPANY_ADDRESS) }}</textarea>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Alamat Kantor R&D / Cabang (Yogyakarta)</label>
+                    <textarea name="company_branch" rows="2" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ settings.get('company_branch', config.COMPANY_BRANCH) }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 3: Keamanan Akun Staf / Admin -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <i data-lucide="lock" class="w-5 h-5 text-rose-400"></i>
+                <h3 class="text-sm font-bold text-white">Keamanan Akun Administrator</h3>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Username Login Admin</label>
+                    <input type="text" name="admin_username" value="{{ settings.get('admin_username', config.ADMIN_USERNAME) }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Kata Sandi Baru <span class="text-slate-500 font-normal">(Kosongkan jika tidak ingin diubah)</span></label>
+                    <input type="password" name="admin_password" placeholder="••••••••" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Button -->
+        <div class="flex justify-end pt-2">
+            <button type="submit" class="px-8 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30">
+                Simpan Seluruh Pengaturan
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

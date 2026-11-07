@@ -140,6 +140,32 @@ def init_db():
     )
     ''')
 
+    # Settings table
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS settings (
+        key TEXT PRIMARY KEY,
+        value TEXT
+    )
+    ''')
+
+    # Seed default settings if empty
+    default_settings = [
+        ('company_name', Config.COMPANY_NAME),
+        ('company_short_name', Config.COMPANY_SHORT_NAME),
+        ('company_tagline', Config.COMPANY_TAGLINE),
+        ('company_subtagline', Config.COMPANY_SUBTAGLINE),
+        ('company_email', Config.COMPANY_EMAIL),
+        ('company_consultation_email', Config.COMPANY_CONSULTATION_EMAIL),
+        ('company_phone', Config.COMPANY_PHONE),
+        ('company_whatsapp', Config.COMPANY_WHATSAPP),
+        ('company_address', Config.COMPANY_ADDRESS),
+        ('company_branch', Config.COMPANY_BRANCH),
+        ('admin_username', Config.ADMIN_USERNAME),
+        ('admin_password', Config.ADMIN_PASSWORD),
+    ]
+    for k, v in default_settings:
+        cursor.execute('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)', (k, v))
+
     conn.commit()
     conn.close()
 

@@ -1,9 +1,10 @@
 import os
 import json
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort
+import re
+from functools import wraps
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort, flash
 from config import Config
 from database import init_db, seed_db
-import re
 from models import (
     ServiceModel,
     PortfolioModel,
@@ -12,7 +13,8 @@ from models import (
     TestimonialModel,
     FAQModel,
     InquiryModel,
-    WALogModel
+    WALogModel,
+    SettingModel
 )
 
 app = Flask(__name__)
@@ -24,6 +26,15 @@ from translations import TRANSLATIONS
 with app.app_context():
     init_db()
     seed_db()
+
+def admin_required(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if not session.get('admin_logged_in'):
+            flash('Sesi login telah berakhir. Silakan login kembali.', 'warning')
+            return redirect(url_for('admin_login'))
+        return f(*args, **kwargs)
+    return decorated_function
 
 @app.before_request
 def handle_language_preference():
@@ -44,12 +55,20 @@ def inject_global_data():
     def set_lang_url(target_lang):
         return url_for('set_language', lang=target_lang)
 
+    badge_new = 0
+    if session.get('admin_logged_in'):
+        try:
+            badge_new = InquiryModel.get_stats().get('baru', 0)
+        except Exception:
+            badge_new = 0
+
     return {
         'config': Config,
         'nav_services': services_by_cat,
         'current_lang': current_lang,
         't': t,
-        'set_lang_url': set_lang_url
+        'set_lang_url': set_lang_url,
+        'badge_new_inquiries': badge_new
     }
 
 @app.route('/set-language/<lang>')
@@ -255,38 +274,75 @@ def api_estimate():
     scale = data.get('scale', 'medium')
     timeline = data.get('timeline', 'standard')
 
-    base_min = 25
+    base_min = 20
     base_max = 45
 
-    if project_type == 'mobile':
-        base_min, base_max = 45, 85
+    if project_type == 'website':
+        base_min, base_max = 10, 25
+    elif project_type == 'web':
+        base_min, base_max = 20, 45
+    elif project_type == 'mobile':
+        base_min, base_max = 35, 65
     elif project_type == 'erp':
-        base_min, base_max = 75, 160
+        base_min, base_max = 65, 120
     elif project_type == 'egov':
-        base_min, base_max = 80, 200
-    elif project_type == 'website':
-        base_min, base_max = 12, 25
+        base_min, base_max = 80, 180
 
     mult = 1.0
-    if scale == 'large':
-        mult = 1.7
+    if scale == 'medium':
+        mult = 1.6
     elif scale == 'enterprise':
         mult = 2.5
 
     if timeline == 'express':
-        mult *= 1.25
+        mult *= 1.2
 
     final_min = round(base_min * mult)
     final_max = round(base_max * mult)
+
+    # Estimasi timeline
+    est_weeks = '6 - 10 Minggu'
+    if project_type == 'website':
+        if scale == 'standard':
+            est_weeks = '2 - 4 Minggu'
+        elif scale == 'medium':
+            est_weeks = '4 - 6 Minggu'
+        else:
+            est_weeks = '6 - 10 Minggu'
+    elif project_type == 'web':
+        if scale == 'standard':
+            est_weeks = '4 - 8 Minggu'
+        elif scale == 'medium':
+            est_weeks = '8 - 12 Minggu'
+        else:
+            est_weeks = '14 - 20 Minggu'
+    elif project_type == 'mobile':
+        if scale == 'standard':
+            est_weeks = '6 - 10 Minggu'
+        elif scale == 'medium':
+            est_weeks = '10 - 14 Minggu'
+        else:
+            est_weeks = '16 - 22 Minggu'
+    elif project_type in ('erp', 'egov'):
+        if scale == 'standard':
+            est_weeks = '8 - 12 Minggu'
+        elif scale == 'medium':
+            est_weeks = '12 - 18 Minggu'
+        else:
+            est_weeks = '18 - 26 Minggu'
+
+    if timeline == 'express':
+        est_weeks += ' (Fast-Track Prioritas)'
 
     return jsonify({
         'status': 'success',
         'estimated_min_idr_million': final_min,
         'estimated_max_idr_million': final_max,
-        'formatted': f'Rp {final_min} Juta - Rp {final_max} Juta*'
+        'formatted': f'Rp {final_min} Juta - Rp {final_max} Juta*',
+        'timeline': est_weeks
     })
 
-# --- ADMIN CMS PORTAL ---
+# --- ADMIN CMS PORTAL ROUTES ---
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
@@ -295,57 +351,622 @@ def admin_login():
 
     error = None
     if request.method == 'POST':
-        user = request.form.get('username')
-        pwd = request.form.get('password')
-        if user == Config.ADMIN_USERNAME and pwd == Config.ADMIN_PASSWORD:
+        user = (request.form.get('username') or '').strip()
+        pwd = (request.form.get('password') or '').strip()
+        
+        valid_user = SettingModel.get('admin_username', Config.ADMIN_USERNAME)
+        valid_pass = SettingModel.get('admin_password', Config.ADMIN_PASSWORD)
+        
+        if user == valid_user and pwd == valid_pass:
             session['admin_logged_in'] = True
+            session['admin_user'] = user
+            flash('Selamat datang kembali di Panel Manajemen ACD!', 'success')
             return redirect(url_for('admin_dashboard'))
         else:
-            error = 'Username atau password yang Anda masukkan salah.'
+            error = 'Username atau kata sandi yang Anda masukkan salah.'
 
     return render_template('admin/login.html', error=error)
 
 @app.route('/admin/logout')
 def admin_logout():
     session.pop('admin_logged_in', None)
+    session.pop('admin_user', None)
+    flash('Anda telah berhasil keluar dari panel manajemen.', 'info')
     return redirect(url_for('admin_login'))
 
 @app.route('/admin')
 @app.route('/admin/dashboard')
+@admin_required
 def admin_dashboard():
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('admin_login'))
-
     inquiries = InquiryModel.get_all()
-    services_count = len(ServiceModel.get_all())
-    portfolios_count = len(PortfolioModel.get_all())
-    blogs_count = len(BlogModel.get_all())
+    inquiry_stats = InquiryModel.get_stats()
+    services = ServiceModel.get_all()
+    portfolios = PortfolioModel.get_all()
+    blogs = BlogModel.get_all()
+    recent_wa_logs = WALogModel.get_all(limit=10)
 
     return render_template(
         'admin/dashboard.html',
         inquiries=inquiries,
+        inquiry_stats=inquiry_stats,
         total_inquiries=len(inquiries),
-        total_services=services_count,
-        total_portfolios=portfolios_count,
-        total_blogs=blogs_count
+        total_services=len(services),
+        total_portfolios=len(portfolios),
+        total_blogs=len(blogs),
+        total_wa_logs=len(recent_wa_logs),
+        recent_wa_logs=recent_wa_logs
     )
 
-@app.route('/admin/inquiries')
-def admin_inquiries():
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('admin_login'))
+# --- 1. KELOLA LEADS / INQUIRIES ---
 
-    inquiries = InquiryModel.get_all()
-    return render_template('admin/inquiries.html', inquiries=inquiries)
+@app.route('/admin/inquiries')
+@admin_required
+def admin_inquiries():
+    status = request.args.get('status')
+    search = request.args.get('search')
+    inquiries = InquiryModel.get_all(status=status, search=search)
+    stats = InquiryModel.get_stats()
+    return render_template(
+        'admin/inquiries.html',
+        inquiries=inquiries,
+        stats=stats,
+        current_status=status or 'Semua',
+        search_query=search
+    )
 
 @app.route('/admin/inquiries/<int:inquiry_id>/status', methods=['POST'])
+@admin_required
 def admin_update_inquiry_status(inquiry_id):
-    if not session.get('admin_logged_in'):
-        return redirect(url_for('admin_login'))
-
-    new_status = request.form.get('status', 'Baru')
-    InquiryModel.update_status(inquiry_id, new_status)
+    status = request.form.get('status', 'Baru')
+    notes = request.form.get('notes')
+    InquiryModel.update_status(inquiry_id, status, notes)
+    flash(f'Status permintaan #{inquiry_id} berhasil diperbarui menjadi "{status}".', 'success')
+    
+    redirect_to = request.form.get('redirect_to')
+    if redirect_to == 'admin_dashboard':
+        return redirect(url_for('admin_dashboard'))
     return redirect(url_for('admin_inquiries'))
+
+@app.route('/admin/inquiries/<int:inquiry_id>/delete', methods=['POST'])
+@admin_required
+def admin_delete_inquiry(inquiry_id):
+    InquiryModel.delete(inquiry_id)
+    flash(f'Data konsultasi #{inquiry_id} berhasil dihapus.', 'info')
+    return redirect(url_for('admin_inquiries'))
+
+# --- 2. KELOLA LAYANAN (SERVICES) ---
+
+@app.route('/admin/services')
+@admin_required
+def admin_services():
+    category = request.args.get('category')
+    services = ServiceModel.get_all(category=category)
+    categories = [
+        'Aplikasi & Website',
+        'Aplikasi Bisnis ERP',
+        'Aplikasi E-Government',
+        'Konsultasi & Audit IT',
+        'Infrastruktur & Keamanan Cyber'
+    ]
+    return render_template(
+        'admin/services.html',
+        services=services,
+        categories=categories,
+        current_category=category or 'Semua'
+    )
+
+@app.route('/admin/services/add', methods=['GET', 'POST'])
+@admin_required
+def admin_service_add():
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        slug = request.form.get('slug', '').strip()
+        category = request.form.get('category', '').strip()
+        subtitle = request.form.get('subtitle', '').strip()
+        icon = request.form.get('icon', 'layers').strip()
+        summary = request.form.get('summary', '').strip()
+        features = request.form.get('features', '').strip()
+        tech_stack = request.form.get('tech_stack', '').strip()
+        benefits = request.form.get('benefits', '').strip()
+        is_featured = bool(request.form.get('is_featured'))
+
+        if not title or not category or not summary:
+            flash('Harap lengkapi judul, kategori, dan ringkasan layanan.', 'danger')
+            return render_template('admin/service_form.html', service=None)
+
+        try:
+            ServiceModel.create(
+                slug=slug,
+                category=category,
+                title=title,
+                subtitle=subtitle,
+                icon=icon,
+                summary=summary,
+                features=features,
+                tech_stack=tech_stack,
+                benefits=benefits,
+                is_featured=is_featured
+            )
+            flash(f'Layanan "{title}" berhasil ditambahkan!', 'success')
+            return redirect(url_for('admin_services'))
+        except Exception as e:
+            flash(f'Gagal menambahkan layanan: {e}', 'danger')
+
+    return render_template('admin/service_form.html', service=None)
+
+@app.route('/admin/services/<int:service_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_service_edit(service_id):
+    service = ServiceModel.get_by_id(service_id)
+    if not service:
+        flash('Layanan tidak ditemukan.', 'danger')
+        return redirect(url_for('admin_services'))
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        slug = request.form.get('slug', '').strip()
+        category = request.form.get('category', '').strip()
+        subtitle = request.form.get('subtitle', '').strip()
+        icon = request.form.get('icon', 'layers').strip()
+        summary = request.form.get('summary', '').strip()
+        features = request.form.get('features', '').strip()
+        tech_stack = request.form.get('tech_stack', '').strip()
+        benefits = request.form.get('benefits', '').strip()
+        is_featured = bool(request.form.get('is_featured'))
+
+        if not title or not category or not summary:
+            flash('Harap lengkapi judul, kategori, dan ringkasan layanan.', 'danger')
+            return render_template('admin/service_form.html', service=service)
+
+        try:
+            ServiceModel.update(
+                service_id=service_id,
+                slug=slug,
+                category=category,
+                title=title,
+                subtitle=subtitle,
+                icon=icon,
+                summary=summary,
+                features=features,
+                tech_stack=tech_stack,
+                benefits=benefits,
+                is_featured=is_featured
+            )
+            flash(f'Layanan "{title}" berhasil diperbarui!', 'success')
+            return redirect(url_for('admin_services'))
+        except Exception as e:
+            flash(f'Gagal memperbarui layanan: {e}', 'danger')
+
+    return render_template('admin/service_form.html', service=service)
+
+@app.route('/admin/services/<int:service_id>/delete', methods=['POST'])
+@admin_required
+def admin_service_delete(service_id):
+    ServiceModel.delete(service_id)
+    flash('Layanan berhasil dihapus dari sistem.', 'info')
+    return redirect(url_for('admin_services'))
+
+# --- 3. KELOLA PORTOFOLIO (PORTFOLIOS) ---
+
+@app.route('/admin/portfolios')
+@admin_required
+def admin_portfolios():
+    category = request.args.get('category')
+    portfolios = PortfolioModel.get_all(category=category)
+    return render_template('admin/portfolios.html', portfolios=portfolios, current_category=category or 'Semua')
+
+@app.route('/admin/portfolios/add', methods=['GET', 'POST'])
+@admin_required
+def admin_portfolio_add():
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        slug = request.form.get('slug', '').strip()
+        category = request.form.get('category', '').strip()
+        client_name = request.form.get('client_name', '').strip()
+        client_type = request.form.get('client_type', 'BUMN').strip()
+        year = request.form.get('year', '2025').strip()
+        summary = request.form.get('summary', '').strip()
+        challenge = request.form.get('challenge', '').strip()
+        solution = request.form.get('solution', '').strip()
+        impact = request.form.get('impact', '').strip()
+        tech_stack = request.form.get('tech_stack', '').strip()
+        image_url = request.form.get('image_url', '').strip()
+
+        if not title or not client_name or not summary:
+            flash('Harap lengkapi nama proyek, nama klien, dan ringkasan studi kasus.', 'danger')
+            return render_template('admin/portfolio_form.html', portfolio=None)
+
+        try:
+            PortfolioModel.create(
+                slug=slug,
+                title=title,
+                category=category,
+                client_name=client_name,
+                client_type=client_type,
+                year=year,
+                summary=summary,
+                challenge=challenge,
+                solution=solution,
+                impact=impact,
+                tech_stack=tech_stack,
+                image_url=image_url,
+                metrics={}
+            )
+            flash(f'Portofolio "{title}" berhasil ditambahkan!', 'success')
+            return redirect(url_for('admin_portfolios'))
+        except Exception as e:
+            flash(f'Gagal menambahkan portofolio: {e}', 'danger')
+
+    return render_template('admin/portfolio_form.html', portfolio=None)
+
+@app.route('/admin/portfolios/<int:portfolio_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_portfolio_edit(portfolio_id):
+    portfolio = PortfolioModel.get_by_id(portfolio_id)
+    if not portfolio:
+        flash('Portofolio tidak ditemukan.', 'danger')
+        return redirect(url_for('admin_portfolios'))
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        slug = request.form.get('slug', '').strip()
+        category = request.form.get('category', '').strip()
+        client_name = request.form.get('client_name', '').strip()
+        client_type = request.form.get('client_type', 'BUMN').strip()
+        year = request.form.get('year', '2025').strip()
+        summary = request.form.get('summary', '').strip()
+        challenge = request.form.get('challenge', '').strip()
+        solution = request.form.get('solution', '').strip()
+        impact = request.form.get('impact', '').strip()
+        tech_stack = request.form.get('tech_stack', '').strip()
+        image_url = request.form.get('image_url', '').strip()
+
+        if not title or not client_name or not summary:
+            flash('Harap lengkapi nama proyek, nama klien, dan ringkasan studi kasus.', 'danger')
+            return render_template('admin/portfolio_form.html', portfolio=portfolio)
+
+        try:
+            PortfolioModel.update(
+                portfolio_id=portfolio_id,
+                slug=slug,
+                title=title,
+                category=category,
+                client_name=client_name,
+                client_type=client_type,
+                year=year,
+                summary=summary,
+                challenge=challenge,
+                solution=solution,
+                impact=impact,
+                tech_stack=tech_stack,
+                image_url=image_url,
+                metrics=portfolio.get('metrics', {})
+            )
+            flash(f'Portofolio "{title}" berhasil diperbarui!', 'success')
+            return redirect(url_for('admin_portfolios'))
+        except Exception as e:
+            flash(f'Gagal memperbarui portofolio: {e}', 'danger')
+
+    return render_template('admin/portfolio_form.html', portfolio=portfolio)
+
+@app.route('/admin/portfolios/<int:portfolio_id>/delete', methods=['POST'])
+@admin_required
+def admin_portfolio_delete(portfolio_id):
+    PortfolioModel.delete(portfolio_id)
+    flash('Portofolio berhasil dihapus dari sistem.', 'info')
+    return redirect(url_for('admin_portfolios'))
+
+# --- 4. KELOLA BLOG & ARTIKEL ---
+
+@app.route('/admin/blogs')
+@admin_required
+def admin_blogs():
+    category = request.args.get('category')
+    blogs = BlogModel.get_all(category=category)
+    return render_template('admin/blogs.html', blogs=blogs, current_category=category or 'Semua')
+
+@app.route('/admin/blogs/add', methods=['GET', 'POST'])
+@admin_required
+def admin_blog_add():
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        slug = request.form.get('slug', '').strip()
+        category = request.form.get('category', 'Transformasi Digital').strip()
+        author = request.form.get('author', 'Tim Konsultan ACD').strip()
+        read_time = request.form.get('read_time', '5 Menit').strip()
+        published_date = request.form.get('published_date', '').strip()
+        image_url = request.form.get('image_url', '').strip()
+        tags = request.form.get('tags', '').strip()
+        summary = request.form.get('summary', '').strip()
+        content = request.form.get('content', '').strip()
+
+        if not title or not summary or not content:
+            flash('Harap lengkapi judul, ringkasan, dan konten artikel.', 'danger')
+            return render_template('admin/blog_form.html', post=None)
+
+        try:
+            BlogModel.create(
+                slug=slug,
+                title=title,
+                category=category,
+                author=author,
+                read_time=read_time,
+                summary=summary,
+                content=content,
+                tags=tags,
+                image_url=image_url,
+                published_date=published_date
+            )
+            flash(f'Artikel "{title}" berhasil dipublikasikan!', 'success')
+            return redirect(url_for('admin_blogs'))
+        except Exception as e:
+            flash(f'Gagal menambahkan artikel: {e}', 'danger')
+
+    return render_template('admin/blog_form.html', post=None)
+
+@app.route('/admin/blogs/<int:blog_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_blog_edit(blog_id):
+    post = BlogModel.get_by_id(blog_id)
+    if not post:
+        flash('Artikel blog tidak ditemukan.', 'danger')
+        return redirect(url_for('admin_blogs'))
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        slug = request.form.get('slug', '').strip()
+        category = request.form.get('category', 'Transformasi Digital').strip()
+        author = request.form.get('author', 'Tim Konsultan ACD').strip()
+        read_time = request.form.get('read_time', '5 Menit').strip()
+        published_date = request.form.get('published_date', '').strip()
+        image_url = request.form.get('image_url', '').strip()
+        tags = request.form.get('tags', '').strip()
+        summary = request.form.get('summary', '').strip()
+        content = request.form.get('content', '').strip()
+
+        if not title or not summary or not content:
+            flash('Harap lengkapi judul, ringkasan, dan konten artikel.', 'danger')
+            return render_template('admin/blog_form.html', post=post)
+
+        try:
+            BlogModel.update(
+                blog_id=blog_id,
+                slug=slug,
+                title=title,
+                category=category,
+                author=author,
+                read_time=read_time,
+                summary=summary,
+                content=content,
+                tags=tags,
+                image_url=image_url,
+                published_date=published_date
+            )
+            flash(f'Artikel "{title}" berhasil diperbarui!', 'success')
+            return redirect(url_for('admin_blogs'))
+        except Exception as e:
+            flash(f'Gagal memperbarui artikel: {e}', 'danger')
+
+    return render_template('admin/blog_form.html', post=post)
+
+@app.route('/admin/blogs/<int:blog_id>/delete', methods=['POST'])
+@admin_required
+def admin_blog_delete(blog_id):
+    BlogModel.delete(blog_id)
+    flash('Artikel blog berhasil dihapus.', 'info')
+    return redirect(url_for('admin_blogs'))
+
+# --- 5. KELOLA TESTIMONI ---
+
+@app.route('/admin/testimonials', methods=['GET', 'POST'])
+@admin_required
+def admin_testimonials():
+    if request.method == 'POST':
+        client_name = request.form.get('client_name', '').strip()
+        client_title = request.form.get('client_title', '').strip()
+        company_name = request.form.get('company_name', '').strip()
+        rating = int(request.form.get('rating', 5))
+        project_name = request.form.get('project_name', '').strip()
+        content = request.form.get('content', '').strip()
+
+        if not client_name or not company_name or not content:
+            flash('Harap lengkapi nama klien, perusahaan, dan isi testimoni.', 'danger')
+        else:
+            TestimonialModel.create(client_name, client_title, company_name, content, rating, project_name)
+            flash('Testimoni klien berhasil ditambahkan!', 'success')
+        return redirect(url_for('admin_testimonials'))
+
+    testimonials = TestimonialModel.get_all()
+    return render_template('admin/testimonials.html', testimonials=testimonials)
+
+@app.route('/admin/testimonials/<int:testimonial_id>/delete', methods=['POST'])
+@admin_required
+def admin_testimonial_delete(testimonial_id):
+    TestimonialModel.delete(testimonial_id)
+    flash('Testimoni berhasil dihapus.', 'info')
+    return redirect(url_for('admin_testimonials'))
+
+# --- 6. KELOLA KARIR & LOWONGAN ---
+
+@app.route('/admin/careers')
+@admin_required
+def admin_careers():
+    careers = CareerModel.get_all()
+    return render_template('admin/careers.html', careers=careers)
+
+@app.route('/admin/careers/add', methods=['GET', 'POST'])
+@admin_required
+def admin_career_add():
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        slug = request.form.get('slug', '').strip()
+        department = request.form.get('department', '').strip()
+        location = request.form.get('location', 'Jakarta / Yogyakarta / Hybrid').strip()
+        job_type = request.form.get('job_type', 'Full-time').strip()
+        experience = request.form.get('experience', '').strip()
+        description = request.form.get('description', '').strip()
+        requirements = request.form.get('requirements', '').strip()
+        responsibilities = request.form.get('responsibilities', '').strip()
+
+        if not title or not department or not description:
+            flash('Harap lengkapi posisi, departemen, dan deskripsi pekerjaan.', 'danger')
+            return render_template('admin/career_form.html', career=None)
+
+        try:
+            CareerModel.create(
+                slug=slug,
+                title=title,
+                department=department,
+                location=location,
+                job_type=job_type,
+                experience=experience,
+                description=description,
+                requirements=requirements,
+                responsibilities=responsibilities
+            )
+            flash(f'Lowongan "{title}" berhasil dibuka!', 'success')
+            return redirect(url_for('admin_careers'))
+        except Exception as e:
+            flash(f'Gagal menambahkan lowongan: {e}', 'danger')
+
+    return render_template('admin/career_form.html', career=None)
+
+@app.route('/admin/careers/<int:career_id>/edit', methods=['GET', 'POST'])
+@admin_required
+def admin_career_edit(career_id):
+    career = CareerModel.get_by_id(career_id)
+    if not career:
+        flash('Lowongan tidak ditemukan.', 'danger')
+        return redirect(url_for('admin_careers'))
+
+    if request.method == 'POST':
+        title = request.form.get('title', '').strip()
+        slug = request.form.get('slug', '').strip()
+        department = request.form.get('department', '').strip()
+        location = request.form.get('location', '').strip()
+        job_type = request.form.get('job_type', 'Full-time').strip()
+        experience = request.form.get('experience', '').strip()
+        description = request.form.get('description', '').strip()
+        requirements = request.form.get('requirements', '').strip()
+        responsibilities = request.form.get('responsibilities', '').strip()
+
+        if not title or not department or not description:
+            flash('Harap lengkapi posisi, departemen, dan deskripsi pekerjaan.', 'danger')
+            return render_template('admin/career_form.html', career=career)
+
+        try:
+            CareerModel.update(
+                career_id=career_id,
+                slug=slug,
+                title=title,
+                department=department,
+                location=location,
+                job_type=job_type,
+                experience=experience,
+                description=description,
+                requirements=requirements,
+                responsibilities=responsibilities
+            )
+            flash(f'Lowongan "{title}" berhasil diperbarui!', 'success')
+            return redirect(url_for('admin_careers'))
+        except Exception as e:
+            flash(f'Gagal memperbarui lowongan: {e}', 'danger')
+
+    return render_template('admin/career_form.html', career=career)
+
+@app.route('/admin/careers/<int:career_id>/delete', methods=['POST'])
+@admin_required
+def admin_career_delete(career_id):
+    CareerModel.delete(career_id)
+    flash('Lowongan karir berhasil dihapus.', 'info')
+    return redirect(url_for('admin_careers'))
+
+# --- 7. KELOLA TANYA JAWAB (FAQ) ---
+
+@app.route('/admin/faqs', methods=['GET', 'POST'])
+@admin_required
+def admin_faqs():
+    if request.method == 'POST':
+        category = request.form.get('category', 'Umum').strip()
+        question = request.form.get('question', '').strip()
+        answer = request.form.get('answer', '').strip()
+        sort_order = int(request.form.get('sort_order', 0))
+
+        if not question or not answer:
+            flash('Harap lengkapi pertanyaan dan jawaban FAQ.', 'danger')
+        else:
+            FAQModel.create(category, question, answer, sort_order)
+            flash('Pertanyaan FAQ berhasil ditambahkan!', 'success')
+        return redirect(url_for('admin_faqs'))
+
+    faqs = FAQModel.get_all()
+    return render_template('admin/faqs.html', faqs=faqs)
+
+@app.route('/admin/faqs/<int:faq_id>/delete', methods=['POST'])
+@admin_required
+def admin_faq_delete(faq_id):
+    FAQModel.delete(faq_id)
+    flash('Pertanyaan FAQ berhasil dihapus.', 'info')
+    return redirect(url_for('admin_faqs'))
+
+# --- 8. LOG WHATSAPP & ANTI-SPAM ---
+
+@app.route('/admin/wa-logs')
+@admin_required
+def admin_wa_logs():
+    logs = WALogModel.get_all(limit=150)
+    return render_template('admin/wa_logs.html', logs=logs)
+
+@app.route('/admin/wa-logs/clear', methods=['POST'])
+@admin_required
+def admin_wa_logs_clear():
+    WALogModel.clear_all()
+    flash('Seluruh riwayat log WhatsApp berhasil dikosongkan.', 'success')
+    return redirect(url_for('admin_wa_logs'))
+
+@app.route('/admin/wa-logs/<int:log_id>/delete', methods=['POST'])
+@admin_required
+def admin_wa_logs_delete(log_id):
+    WALogModel.delete(log_id)
+    flash('Log interaksi berhasil dihapus.', 'info')
+    return redirect(url_for('admin_wa_logs'))
+
+# --- 9. PENGATURAN WEBSITE & PROFIL PERUSAHAAN ---
+
+@app.route('/admin/settings', methods=['GET', 'POST'])
+@admin_required
+def admin_settings():
+    if request.method == 'POST':
+        update_data = {
+            'company_name': request.form.get('company_name', '').strip(),
+            'company_short_name': request.form.get('company_short_name', '').strip(),
+            'company_tagline': request.form.get('company_tagline', '').strip(),
+            'company_subtagline': request.form.get('company_subtagline', '').strip(),
+            'company_email': request.form.get('company_email', '').strip(),
+            'company_consultation_email': request.form.get('company_consultation_email', '').strip(),
+            'company_phone': request.form.get('company_phone', '').strip(),
+            'company_whatsapp': request.form.get('company_whatsapp', '').strip(),
+            'company_address': request.form.get('company_address', '').strip(),
+            'company_branch': request.form.get('company_branch', '').strip(),
+            'admin_username': request.form.get('admin_username', '').strip(),
+        }
+
+        new_password = request.form.get('admin_password', '').strip()
+        if new_password:
+            update_data['admin_password'] = new_password
+
+        # Filter out empty keys
+        valid_updates = {k: v for k, v in update_data.items() if v}
+        SettingModel.update_many(valid_updates)
+
+        if valid_updates.get('admin_username'):
+            session['admin_user'] = valid_updates['admin_username']
+
+        flash('Pengaturan website dan profil perusahaan berhasil disimpan!', 'success')
+        return redirect(url_for('admin_settings'))
+
+    settings = SettingModel.get_all()
+    return render_template('admin/settings.html', settings=settings)
 
 # Error Handlers
 @app.errorhandler(404)

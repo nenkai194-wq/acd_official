@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Panel Manajemen CMS{% endblock %} - PT. Aksara Cipta Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#eef2ff',
+                            100: '#e0e7ff',
+                            500: '#6366f1',
+                            600: '#4f46e5',
+                            700: '#4338ca',
+                            900: '#312e81',
+                            950: '#1e1b4b',
+                        },
+                        darkbg: '#020617',
+                        cardbg: '#0a0f1d',
+                        sidebarbg: '#070a14',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <style>
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+    </style>
+</head>
+<body class="bg-[#020617] text-slate-100 min-h-screen flex flex-col md:flex-row antialiased font-sans">
+
+    <!-- Mobile Topbar -->
+    <div class="md:hidden flex items-center justify-between p-4 bg-[#0a0f1d] border-b border-indigo-950/80 sticky top-0 z-50">
+        <div class="flex items-center space-x-2.5">
+            <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-8 w-auto">
+            <span class="font-extrabold text-white text-xs">ACD CMS</span>
+        </div>
+        <button id="mobileMenuBtn" class="p-2 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+            <i data-lucide="menu" class="w-5 h-5"></i>
+        </button>
+    </div>
+
+    <!-- Sidebar Navigation -->
+    <aside id="sidebar" class="hidden md:flex flex-col w-full md:w-64 bg-[#070a14] border-r border-indigo-950/70 p-4 justify-between shrink-0 sticky top-0 h-screen overflow-y-auto custom-scrollbar z-40">
+        <div class="space-y-6">
+            <!-- Brand Info -->
+            <div class="flex items-center space-x-3 px-2 py-1">
+                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-10 w-auto drop-shadow-md">
+                <div class="flex flex-col">
+                    <span class="font-black text-white text-xs tracking-wider">ACD CONSULTING</span>
+                    <span class="text-[10px] text-indigo-400 font-medium">Internal CMS Portal</span>
+                </div>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="space-y-1 text-xs">
+                <div class="px-3 pt-2 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Ringkasan & Leads</div>
+                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'dashboard' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+                    <span>Dashboard Metrik</span>
+                </a>
+                <a href="{{ url_for('admin_inquiries') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'inquiries' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <div class="flex items-center space-x-2.5">
+                        <i data-lucide="inbox" class="w-4 h-4"></i>
+                        <span>Permintaan Klien</span>
+                    </div>
+                    {% if badge_new_inquiries and badge_new_inquiries > 0 %}
+                    <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">{{ badge_new_inquiries }}</span>
+                    {% endif %}
+                </a>
+                <a href="{{ url_for('admin_wa_logs') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'wa_logs' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                    <span>Log WA & Anti-Spam</span>
+                </a>
+
+                <div class="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Konten Website</div>
+                <a href="{{ url_for('admin_services') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'services' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    <span>Kelola Layanan</span>
+                </a>
+                <a href="{{ url_for('admin_portfolios') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'portfolios' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="briefcase" class="w-4 h-4"></i>
+                    <span>Kelola Portofolio</span>
+                </a>
+                <a href="{{ url_for('admin_blogs') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'blogs' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <span>Kelola Blog & Berita</span>
+                </a>
+                <a href="{{ url_for('admin_testimonials') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'testimonials' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="star" class="w-4 h-4"></i>
+                    <span>Kelola Testimoni</span>
+                </a>
+                <a href="{{ url_for('admin_careers') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'careers' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <span>Karir & Lowongan</span>
+                </a>
+                <a href="{{ url_for('admin_faqs') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'faqs' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="help-circle" class="w-4 h-4"></i>
+                    <span>Tanya Jawab (FAQ)</span>
+                </a>
+
+                <div class="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Sistem & Profil</div>
+                <a href="{{ url_for('admin_settings') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'settings' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="settings" class="w-4 h-4"></i>
+                    <span>Pengaturan Website</span>
+                </a>
+            </nav>
+        </div>
+
+        <!-- Bottom User & Website Links -->
+        <div class="pt-4 border-t border-slate-800/80 space-y-1 text-xs">
+            <a href="{{ url_for('index') }}" target="_blank" class="flex items-center justify-between px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900 transition">
+                <span class="flex items-center space-x-2">
+                    <i data-lucide="globe" class="w-4 h-4 text-emerald-400"></i>
+                    <span>Buka Web Publik</span>
+                </span>
+                <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-500"></i>
+            </a>
+            <a href="{{ url_for('admin_logout') }}" class="flex items-center space-x-2 px-3 py-2 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 transition">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+                <span>Keluar (Logout)</span>
+            </a>
+            <div class="px-3 pt-2 text-[10px] text-slate-500">
+                Logged as: <strong class="text-slate-300">{{ session.get('admin_user', 'admin') }}</strong>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col min-w-0 overflow-y-auto custom-scrollbar">
+        <!-- Top Header Bar -->
+        <header class="hidden md:flex items-center justify-between px-8 py-4 bg-[#0a0f1d]/80 backdrop-blur-md border-b border-indigo-950/60 sticky top-0 z-30">
+            <div class="flex items-center space-x-3">
+                <span class="text-xs font-semibold text-slate-400">Panel Kendali Administrator</span>
+                <span class="text-slate-600">•</span>
+                <span class="text-xs text-indigo-400 font-medium">PT. Aksara Cipta Digital</span>
+            </div>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span>Database & Server Online</span>
+                </div>
+                <a href="{{ url_for('index') }}" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition inline-flex items-center space-x-1.5 border border-slate-700">
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400"></i>
+                    <span>Pratinjau Web</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Flash Notifications -->
+        <div class="px-4 md:px-8 pt-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="p-4 mb-4 rounded-xl text-xs font-medium border flex items-center justify-between {% if category == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-300{% elif category == 'danger' or category == 'error' %}bg-rose-500/10 border-rose-500/30 text-rose-300{% elif category == 'warning' %}bg-amber-500/10 border-amber-500/30 text-amber-300{% else %}bg-indigo-500/10 border-indigo-500/30 text-indigo-300{% endif %}">
+                        <div class="flex items-center space-x-2">
+                            {% if category == 'success' %}
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                            {% elif category == 'danger' or category == 'error' %}
+                            <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400"></i>
+                            {% else %}
+                            <i data-lucide="info" class="w-4 h-4 text-indigo-400"></i>
+                            {% endif %}
+                            <span>{{ message }}</span>
+                        </div>
+                        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white">&times;</button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Page Main Block -->
+        <main class="p-4 md:p-8 flex-1">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Script Lucide & Mobile Menu Toggle -->
+    <script>
+        lucide.createIcons();
+
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const sidebar = document.getElementById('sidebar');
+        if (mobileBtn && sidebar) {
+            mobileBtn.addEventListener('click', () => {
+                sidebar.classList.toggle('hidden');
+            });
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

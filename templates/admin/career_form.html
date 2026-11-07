@@ -1,0 +1,104 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'careers' %}
+
+{% block title %}{{ 'Edit Lowongan' if career else 'Buka Lowongan Baru' }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">{{ 'Edit Lowongan Karir' if career else 'Buka Lowongan Baru' }}</h1>
+            <p class="text-xs text-slate-400 mt-1">Lengkapi posisi jabatan, kualifikasi teknis, tanggung jawab, dan lokasi penempatan kerja</p>
+        </div>
+        <a href="{{ url_for('admin_careers') }}" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Kembali ke Karir</span>
+        </a>
+    </div>
+
+    <!-- Form Container -->
+    <form method="POST" class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Title -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Posisi / Judul Lowongan <span class="text-rose-400">*</span></label>
+                <input type="text" name="title" required value="{{ career.title if career else '' }}" placeholder="Contoh: Senior Full Stack Engineer (Python & Vue.js)" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Slug -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Slug URL <span class="text-slate-500 font-normal">(Opsional - otomatis jika kosong)</span></label>
+                <input type="text" name="slug" value="{{ career.slug if career else '' }}" placeholder="senior-full-stack-engineer" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Department -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Departemen / Divisi <span class="text-rose-400">*</span></label>
+                <select name="department" required class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <option value="Engineering & Development" {% if career and career.department == 'Engineering & Development' %}selected{% endif %}>Engineering & Development</option>
+                    <option value="Product & UI/UX" {% if career and career.department == 'Product & UI/UX' %}selected{% endif %}>Product & UI/UX</option>
+                    <option value="Quality Assurance & Security" {% if career and career.department == 'Quality Assurance & Security' %}selected{% endif %}>Quality Assurance & Security</option>
+                    <option value="Business Development & Sales" {% if career and career.department == 'Business Development & Sales' %}selected{% endif %}>Business Development & Sales</option>
+                    <option value="Project Management" {% if career and career.department == 'Project Management' %}selected{% endif %}>Project Management</option>
+                </select>
+            </div>
+
+            <!-- Location -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Lokasi Penempatan</label>
+                <input type="text" name="location" value="{{ career.location if career else 'Jakarta / Yogyakarta / Hybrid' }}" placeholder="Jakarta / Yogyakarta / Hybrid" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Job Type -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Tipe Pekerjaan</label>
+                <select name="job_type" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <option value="Full-time" {% if not career or career.job_type == 'Full-time' %}selected{% endif %}>Full-time</option>
+                    <option value="Contract / Project" {% if career and career.job_type == 'Contract / Project' %}selected{% endif %}>Contract / Project</option>
+                    <option value="Part-time" {% if career and career.job_type == 'Part-time' %}selected{% endif %}>Part-time</option>
+                    <option value="Internship" {% if career and career.job_type == 'Internship' %}selected{% endif %}>Internship (Magang)</option>
+                </select>
+            </div>
+
+            <!-- Experience -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Pengalaman Kerja yang Dibutuhkan</label>
+                <input type="text" name="experience" value="{{ career.experience if career else 'Minimal 3 tahun pengalaman di bidang terkait' }}" placeholder="Minimal 3 tahun pengalaman di bidang terkait" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Description -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Deskripsi Peran & Gambaran Pekerjaan <span class="text-rose-400">*</span></label>
+                <textarea name="description" rows="3" required placeholder="Jelaskan peran pekerjaan dan dampaknya pada tim..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ career.description if career else '' }}</textarea>
+            </div>
+
+            <!-- Requirements (One per line) -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Kualifikasi & Persyaratan <span class="text-slate-500 font-normal">(Tulis 1 poin per baris)</span></label>
+                <textarea name="requirements" rows="5" placeholder="Menguasai bahasa pemrograman Python dan framework web modern
+Familiar dengan PostgreSQL, Docker, dan arsitektur microservices
+Mampu berkomunikasi dengan baik dan bekerja sama dalam tim agile" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ '\n'.join(career.requirements) if career and career.requirements else '' }}</textarea>
+            </div>
+
+            <!-- Responsibilities (One per line) -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Tanggung Jawab Pekerjaan <span class="text-slate-500 font-normal">(Tulis 1 poin per baris)</span></label>
+                <textarea name="responsibilities" rows="5" placeholder="Merancang arsitektur software berkinerja tinggi dan aman
+Mengembangkan modul backend/frontend sesuai spesifikasi PRD
+Melakukan code review dan unit testing bersama tim" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ '\n'.join(career.responsibilities) if career and career.responsibilities else '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="pt-4 border-t border-indigo-950/70 flex items-center justify-end space-x-3">
+            <a href="{{ url_for('admin_careers') }}" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition">
+                Batal
+            </a>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30">
+                {{ 'Simpan Perubahan' if career else 'Buka Lowongan Sekarang' }}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

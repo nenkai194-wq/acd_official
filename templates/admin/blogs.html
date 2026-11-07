@@ -1,0 +1,97 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'blogs' %}
+
+{% block title %}Kelola Artikel & Berita Blog{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Katalog Artikel, Berita & Wawasan IT</h1>
+            <p class="text-xs text-slate-400 mt-1">Publikasikan panduan teknologi, tips transformasi digital, dan perkembangan industri software</p>
+        </div>
+        <a href="{{ url_for('admin_blog_add') }}" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Tulis Artikel Baru</span>
+        </a>
+    </div>
+
+    <!-- Category Tabs -->
+    <div class="flex items-center space-x-2 overflow-x-auto pb-2">
+        <a href="{{ url_for('admin_blogs') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+            Semua Artikel ({{ blogs | length }})
+        </a>
+        {% for cat in ['Transformasi Digital', 'Teknologi & Solusi IT', 'E-Government & Smart City', 'ERP & Bisnis'] %}
+        <a href="{{ url_for('admin_blogs', category=cat) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if current_category == cat %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+            {{ cat }}
+        </a>
+        {% endfor %}
+    </div>
+
+    <!-- Articles Table -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-[#020617] border-b border-indigo-950/70 text-slate-400 font-semibold uppercase text-[10px] tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4">Judul Artikel</th>
+                        <th class="px-6 py-4">Kategori</th>
+                        <th class="px-6 py-4">Penulis</th>
+                        <th class="px-6 py-4">Tanggal Rilis</th>
+                        <th class="px-6 py-4 text-right">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-indigo-950/50">
+                    {% for b in blogs %}
+                    <tr class="hover:bg-slate-900/40 transition">
+                        <td class="px-6 py-4 max-w-md">
+                            <div class="flex items-center space-x-3">
+                                {% if b.image_url %}
+                                <img src="{{ b.image_url }}" alt="{{ b.title }}" class="w-12 h-10 rounded-lg object-cover bg-slate-900 shrink-0 border border-slate-800">
+                                {% else %}
+                                <div class="w-12 h-10 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
+                                    <i data-lucide="file-text" class="w-5 h-5"></i>
+                                </div>
+                                {% endif %}
+                                <div>
+                                    <h4 class="font-bold text-white text-xs leading-snug line-clamp-1">{{ b.title }}</h4>
+                                    <span class="text-[10px] text-slate-500 font-mono">/blog/{{ b.slug }}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td class="px-6 py-4">
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/60 text-indigo-300 border border-indigo-900/60">
+                                {{ b.category }}
+                            </span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-300">
+                            <span class="font-medium text-xs">{{ b.author }}</span>
+                            <span class="text-[10px] text-slate-500 block">Waktu baca: {{ b.read_time }}</span>
+                        </td>
+                        <td class="px-6 py-4 text-slate-400 font-mono text-[11px]">
+                            {{ b.published_date }}
+                        </td>
+                        <td class="px-6 py-4 text-right">
+                            <div class="flex items-center justify-end space-x-2">
+                                <a href="{{ url_for('blog_detail', slug=b.slug) }}" target="_blank" class="p-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition" title="Lihat Artikel Publik">
+                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                                </a>
+                                <a href="{{ url_for('admin_blog_edit', blog_id=b.id) }}" class="p-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-600/30 transition" title="Edit Artikel">
+                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                </a>
+                                <form method="POST" action="{{ url_for('admin_blog_delete', blog_id=b.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus artikel \'{{ b.title }}\'?');" class="inline">
+                                    <button type="submit" class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Artikel">
+                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

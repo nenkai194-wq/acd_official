@@ -316,33 +316,45 @@
                 <!-- Step 1: Type -->
                 <div>
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">1. Kategori Solusi yang Ingin Dibangun</label>
-                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                         <label class="cursor-pointer">
-                            <input type="radio" name="est_type" value="mobile" class="peer sr-only">
-                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
-                                <i data-lucide="smartphone" class="w-5 h-5 mx-auto mb-1 text-indigo-400"></i>
-                                <span class="text-xs font-bold block text-slate-200">Mobile Apps</span>
+                            <input type="radio" name="est_type" value="website" class="peer sr-only">
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition h-full flex flex-col justify-center items-center">
+                                <i data-lucide="layout" class="w-5 h-5 mb-1.5 text-blue-400"></i>
+                                <span class="text-xs font-bold block text-slate-200">Website & Portal</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">Korporat / Landing</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="est_type" value="web" checked class="peer sr-only">
-                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
-                                <i data-lucide="globe" class="w-5 h-5 mx-auto mb-1 text-cyan-400"></i>
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition h-full flex flex-col justify-center items-center">
+                                <i data-lucide="globe" class="w-5 h-5 mb-1.5 text-cyan-400"></i>
                                 <span class="text-xs font-bold block text-slate-200">Sistem Informasi</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">Web Base Custom</span>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_type" value="mobile" class="peer sr-only">
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition h-full flex flex-col justify-center items-center">
+                                <i data-lucide="smartphone" class="w-5 h-5 mb-1.5 text-indigo-400"></i>
+                                <span class="text-xs font-bold block text-slate-200">Mobile Apps</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">Android & iOS</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="est_type" value="erp" class="peer sr-only">
-                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
-                                <i data-lucide="layers" class="w-5 h-5 mx-auto mb-1 text-purple-400"></i>
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition h-full flex flex-col justify-center items-center">
+                                <i data-lucide="layers" class="w-5 h-5 mb-1.5 text-purple-400"></i>
                                 <span class="text-xs font-bold block text-slate-200">Aplikasi ERP</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">Bisnis & Operasional</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="est_type" value="egov" class="peer sr-only">
-                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
-                                <i data-lucide="shield" class="w-5 h-5 mx-auto mb-1 text-emerald-400"></i>
+                            <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition h-full flex flex-col justify-center items-center">
+                                <i data-lucide="shield" class="w-5 h-5 mb-1.5 text-emerald-400"></i>
                                 <span class="text-xs font-bold block text-slate-200">E-Government</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">Smart City & SPBE</span>
                             </div>
                         </label>
                     </div>
@@ -376,14 +388,41 @@
                     </div>
                 </div>
 
+                <!-- Step 3: Priority Timeline -->
+                <div>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">3. Prioritas & Kecepatan Target Rilis</label>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_timeline" value="standard" checked class="peer sr-only">
+                            <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition flex items-start gap-3">
+                                <i data-lucide="clock" class="w-5 h-5 text-indigo-400 shrink-0 mt-0.5"></i>
+                                <div>
+                                    <span class="text-xs font-bold block text-slate-200">Reguler / Agile Sprint</span>
+                                    <span class="text-[11px] text-slate-400 block mt-0.5">Jadwal pengerjaan standar berurutan sesuai roadmap discovery</span>
+                                </div>
+                            </div>
+                        </label>
+                        <label class="cursor-pointer">
+                            <input type="radio" name="est_timeline" value="express" class="peer sr-only">
+                            <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition flex items-start gap-3">
+                                <i data-lucide="zap" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
+                                <div>
+                                    <span class="text-xs font-bold block text-slate-200">Fast-Track / Dedicated Priority</span>
+                                    <span class="text-[11px] text-slate-400 block mt-0.5">Alokasi tim dedikasi penuh untuk percepatan rilis & go-live</span>
+                                </div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
                 <!-- Result Box (Deptech Dark Gradient) -->
                 <div class="p-6 bg-gradient-to-r from-[#020617] via-[#0f172a] to-[#1e1b4b] text-white rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 border border-indigo-950">
                     <div class="text-center sm:text-left">
                         <span class="text-xs font-semibold text-slate-400">Perkiraan Nilai Investasi & Timeline:</span>
                         <div id="est-result-price" class="text-2xl sm:text-3xl font-extrabold text-deptech-gradient mt-1">
-                            Rp 25 Juta - Rp 45 Juta*
+                            Rp 35 Juta - Rp 65 Juta*
                         </div>
-                        <p class="text-xs text-slate-400 mt-1">Estimasi Jadwal Pengerjaan: <strong id="est-result-timeline" class="text-white">8 - 12 Minggu</strong></p>
+                        <p class="text-xs text-slate-400 mt-1">Estimasi Jadwal Pengerjaan: <strong id="est-result-timeline" class="text-white">6 - 10 Minggu</strong></p>
                     </div>
                     <div class="shrink-0 w-full sm:w-auto">
                         <button type="button" onclick="openConsultationModal()" class="w-full sm:w-auto deptech-btn-primary px-7 py-3 text-xs font-bold uppercase tracking-wider">

@@ -230,24 +230,39 @@ document.addEventListener('DOMContentLoaded', () => {
             const scale = document.querySelector('input[name="est_scale"]:checked')?.value || 'medium';
             const timeline = document.querySelector('input[name="est_timeline"]:checked')?.value || 'standard';
             
-            let baseMin = 25;
+            // Base Prices untuk Skala Standar (dalam Juta Rupiah)
+            let baseMin = 20;
             let baseMax = 45;
 
-            if (projectType === 'mobile') {
-                baseMin = 45; baseMax = 85;
+            if (projectType === 'website') {
+                baseMin = 10;
+                baseMax = 25;
+            } else if (projectType === 'web') {
+                baseMin = 20;
+                baseMax = 45;
+            } else if (projectType === 'mobile') {
+                baseMin = 35;
+                baseMax = 65;
             } else if (projectType === 'erp') {
-                baseMin = 75; baseMax = 160;
+                baseMin = 65;
+                baseMax = 120;
             } else if (projectType === 'egov') {
-                baseMin = 80; baseMax = 200;
-            } else if (projectType === 'website') {
-                baseMin = 12; baseMax = 25;
+                baseMin = 80;
+                baseMax = 180;
             }
 
+            // Pengali Skala Kompleksitas
             let multiplier = 1.0;
-            if (scale === 'large') multiplier = 1.7;
-            if (scale === 'enterprise') multiplier = 2.5;
+            if (scale === 'medium') {
+                multiplier = 1.6;
+            } else if (scale === 'enterprise') {
+                multiplier = 2.5;
+            }
 
-            if (timeline === 'express') multiplier *= 1.25;
+            // Pengali Fast-Track / Prioritas Cepat
+            if (timeline === 'express') {
+                multiplier *= 1.2;
+            }
 
             const finalMin = Math.round(baseMin * multiplier);
             const finalMax = Math.round(baseMax * multiplier);
@@ -258,10 +273,32 @@ document.addEventListener('DOMContentLoaded', () => {
             if (resultDisplay) {
                 resultDisplay.innerText = `Rp ${finalMin} Juta - Rp ${finalMax} Juta*`;
             }
+
+            // Timeline Dinamis Proporsional
             if (resultTimeline) {
-                let estWeeks = '8 - 12 Minggu';
-                if (projectType === 'erp' || projectType === 'egov') estWeeks = '12 - 20 Minggu';
-                if (timeline === 'express') estWeeks += ' (Prioritas Cepat)';
+                let estWeeks = '6 - 10 Minggu';
+                
+                if (projectType === 'website') {
+                    if (scale === 'standard') estWeeks = '2 - 4 Minggu';
+                    else if (scale === 'medium') estWeeks = '4 - 6 Minggu';
+                    else estWeeks = '6 - 10 Minggu';
+                } else if (projectType === 'web') {
+                    if (scale === 'standard') estWeeks = '4 - 8 Minggu';
+                    else if (scale === 'medium') estWeeks = '8 - 12 Minggu';
+                    else estWeeks = '14 - 20 Minggu';
+                } else if (projectType === 'mobile') {
+                    if (scale === 'standard') estWeeks = '6 - 10 Minggu';
+                    else if (scale === 'medium') estWeeks = '10 - 14 Minggu';
+                    else estWeeks = '16 - 22 Minggu';
+                } else if (projectType === 'erp' || projectType === 'egov') {
+                    if (scale === 'standard') estWeeks = '8 - 12 Minggu';
+                    else if (scale === 'medium') estWeeks = '12 - 18 Minggu';
+                    else estWeeks = '18 - 26 Minggu';
+                }
+
+                if (timeline === 'express') {
+                    estWeeks += ' (Fast-Track Prioritas)';
+                }
                 resultTimeline.innerText = estWeeks;
             }
         };

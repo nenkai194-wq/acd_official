@@ -1,0 +1,119 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'portfolios' %}
+
+{% block title %}{{ 'Edit Portofolio' if portfolio else 'Tambah Portofolio Baru' }}{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <!-- Header -->
+    <div class="flex items-center justify-between pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">{{ 'Edit Portofolio Studi Kasus' if portfolio else 'Tambah Portofolio Baru' }}</h1>
+            <p class="text-xs text-slate-400 mt-1">Lengkapi nama proyek, profil klien, tantangan teknis, solusi implementasi, dan metrik dampak bisnis</p>
+        </div>
+        <a href="{{ url_for('admin_portfolios') }}" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
+            <i data-lucide="arrow-left" class="w-4 h-4"></i>
+            <span>Kembali ke Portofolio</span>
+        </a>
+    </div>
+
+    <!-- Form Container -->
+    <form method="POST" class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <!-- Title -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Nama Proyek / Judul Studi Kasus <span class="text-rose-400">*</span></label>
+                <input type="text" name="title" required value="{{ portfolio.title if portfolio else '' }}" placeholder="Contoh: Sistem Informasi Enterprise PT Pertamina Hulu Energi" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Slug -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Slug URL <span class="text-slate-500 font-normal">(Opsional - otomatis jika kosong)</span></label>
+                <input type="text" name="slug" value="{{ portfolio.slug if portfolio else '' }}" placeholder="sistem-informasi-pertamina" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Category -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Kategori Proyek <span class="text-rose-400">*</span></label>
+                <select name="category" required class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <option value="Sistem Informasi" {% if portfolio and portfolio.category == 'Sistem Informasi' %}selected{% endif %}>Sistem Informasi</option>
+                    <option value="Aplikasi Mobile" {% if portfolio and portfolio.category == 'Aplikasi Mobile' %}selected{% endif %}>Aplikasi Mobile</option>
+                    <option value="Website Korporat" {% if portfolio and portfolio.category == 'Website Korporat' %}selected{% endif %}>Website Korporat</option>
+                    <option value="ERP & HRIS" {% if portfolio and portfolio.category == 'ERP & HRIS' %}selected{% endif %}>ERP & HRIS</option>
+                    <option value="E-Government" {% if portfolio and portfolio.category == 'E-Government' %}selected{% endif %}>E-Government</option>
+                    <option value="GIS Geoportal" {% if portfolio and portfolio.category == 'GIS Geoportal' %}selected{% endif %}>GIS Geoportal</option>
+                </select>
+            </div>
+
+            <!-- Client Name -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Nama Instansi / Klien <span class="text-rose-400">*</span></label>
+                <input type="text" name="client_name" required value="{{ portfolio.client_name if portfolio else '' }}" placeholder="Contoh: PT Pertamina (Persero)" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Client Type -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Tipe Klien <span class="text-rose-400">*</span></label>
+                <select name="client_type" required class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                    <option value="BUMN" {% if portfolio and portfolio.client_type == 'BUMN' %}selected{% endif %}>BUMN</option>
+                    <option value="Pemerintahan" {% if portfolio and portfolio.client_type == 'Pemerintahan' %}selected{% endif %}>Pemerintahan</option>
+                    <option value="Swasta" {% if portfolio and portfolio.client_type == 'Swasta' %}selected{% endif %}>Swasta</option>
+                    <option value="Industri" {% if portfolio and portfolio.client_type == 'Industri' %}selected{% endif %}>Industri</option>
+                </select>
+            </div>
+
+            <!-- Year -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Tahun Rilis Proyek</label>
+                <input type="text" name="year" value="{{ portfolio.year if portfolio else '2025' }}" placeholder="2025" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <!-- Image URL -->
+            <div>
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">URL Gambar Mockup / Thumbnail</label>
+                <input type="text" name="image_url" value="{{ portfolio.image_url if portfolio else '' }}" placeholder="https://images.unsplash.com/... atau /static/images/..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono">
+            </div>
+
+            <!-- Tech Stack (Comma separated) -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Teknologi yang Digunakan <span class="text-slate-500 font-normal">(Pisahkan dengan tanda koma)</span></label>
+                <input type="text" name="tech_stack" value="{{ ', '.join(portfolio.tech_stack) if portfolio and portfolio.tech_stack else '' }}" placeholder="Python, FastAPI, Flutter, PostgreSQL, Docker, Redis" class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono">
+            </div>
+
+            <!-- Summary -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Ringkasan Studi Kasus (Overview) <span class="text-rose-400">*</span></label>
+                <textarea name="summary" rows="3" required placeholder="Deskripsi ringkas mengenai solusi yang dibangun untuk klien..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ portfolio.summary if portfolio else '' }}</textarea>
+            </div>
+
+            <!-- Challenge -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Tantangan Klien (The Challenge)</label>
+                <textarea name="challenge" rows="3" placeholder="Kendala atau hambatan operasional yang dihadapi sebelum sistem dibangun..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ portfolio.challenge if portfolio else '' }}</textarea>
+            </div>
+
+            <!-- Solution -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Solusi Arsitektur ACD (The Solution)</label>
+                <textarea name="solution" rows="3" placeholder="Arsitektur, inovasi modul, dan teknologi yang diimplementasikan oleh tim ACD..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ portfolio.solution if portfolio else '' }}</textarea>
+            </div>
+
+            <!-- Impact -->
+            <div class="sm:col-span-2">
+                <label class="block text-xs font-bold text-slate-300 mb-1.5">Dampak & Hasil Nyata (The Impact)</label>
+                <textarea name="impact" rows="3" placeholder="Peningkatan efisiensi waktu, penghematan biaya, atau akurasi data..." class="w-full px-4 py-2.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ portfolio.impact if portfolio else '' }}</textarea>
+            </div>
+        </div>
+
+        <!-- Buttons -->
+        <div class="pt-4 border-t border-indigo-950/70 flex items-center justify-end space-x-3">
+            <a href="{{ url_for('admin_portfolios') }}" class="px-5 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition">
+                Batal
+            </a>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30">
+                {{ 'Simpan Perubahan' if portfolio else 'Publikasikan Portofolio' }}
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

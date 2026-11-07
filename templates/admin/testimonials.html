@@ -1,0 +1,129 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'testimonials' %}
+
+{% block title %}Kelola Testimoni Klien{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Kelola Testimoni & Ulasan Klien</h1>
+            <p class="text-xs text-slate-400 mt-1">Ulasan kepuasan dari pimpinan BUMN, instansi pemerintah, dan perusahaan swasta mitra ACD</p>
+        </div>
+        <button onclick="document.getElementById('addModal').classList.remove('hidden')" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span>Tambah Testimoni</span>
+        </button>
+    </div>
+
+    <!-- Testimonials Grid -->
+    {% if testimonials %}
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {% for t in testimonials %}
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 flex flex-col justify-between hover:border-indigo-600/40 transition group">
+            <div class="space-y-4">
+                <!-- Rating Stars -->
+                <div class="flex items-center space-x-1 text-amber-400">
+                    {% for i in range(t.rating) %}
+                    <i data-lucide="star" class="w-4 h-4 fill-amber-400 text-amber-400"></i>
+                    {% endfor %}
+                </div>
+
+                <!-- Quote Text -->
+                <p class="text-xs text-slate-300 leading-relaxed italic">
+                    "{{ t.content }}"
+                </p>
+
+                {% if t.project_name %}
+                <div class="pt-2 text-[10px] text-indigo-400 font-semibold">
+                    Proyek: {{ t.project_name }}
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Client Info & Actions -->
+            <div class="pt-4 mt-4 border-t border-indigo-950/60 flex items-center justify-between">
+                <div>
+                    <h4 class="text-xs font-bold text-white">{{ t.client_name }}</h4>
+                    <span class="text-[10px] text-slate-400">{{ t.client_title }}, {{ t.company_name }}</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <form method="POST" action="{{ url_for('admin_testimonial_delete', testimonial_id=t.id) }}" onsubmit="return confirm('Hapus testimoni dari {{ t.client_name }}?');">
+                        <button type="submit" class="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Testimoni">
+                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-12 text-center text-slate-400 space-y-3">
+        <i data-lucide="star" class="w-12 h-12 text-slate-600 mx-auto"></i>
+        <h4 class="text-sm font-bold text-white">Belum Ada Testimoni</h4>
+        <p class="text-xs text-slate-500">Tambahkan ulasan klien untuk meningkatkan kepercayaan calon pelanggan baru.</p>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Modal Tambah Testimoni -->
+<div id="addModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl max-w-lg w-full p-6 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-indigo-950/70">
+            <h3 class="text-sm font-bold text-white">Tambah Testimoni Klien Baru</h3>
+            <button onclick="document.getElementById('addModal').classList.add('hidden')" class="text-slate-400 hover:text-white">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <form method="POST" action="{{ url_for('admin_testimonials') }}" class="space-y-4 text-xs">
+            <div>
+                <label class="block font-bold text-slate-300 mb-1">Nama Klien / Pejabat <span class="text-rose-400">*</span></label>
+                <input type="text" name="client_name" required placeholder="Contoh: Ir. Bambang Wicaksono, M.Eng" class="w-full px-3 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Jabatan / Posisi</label>
+                    <input type="text" name="client_title" placeholder="Contoh: Kepala Biro TI & Data" class="w-full px-3 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nama Perusahaan / Instansi <span class="text-rose-400">*</span></label>
+                    <input type="text" name="company_name" required placeholder="Contoh: Kementerian PUPR" class="w-full px-3 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Rating Bintang (1 - 5)</label>
+                    <select name="rating" class="w-full px-3 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                        <option value="5" selected>5 Bintang (Sangat Puas)</option>
+                        <option value="4">4 Bintang (Puas)</option>
+                        <option value="3">3 Bintang (Cukup)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1">Nama Proyek Terkait</label>
+                    <input type="text" name="project_name" placeholder="Contoh: E-Government Portal" class="w-full px-3 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+            </div>
+
+            <div>
+                <label class="block font-bold text-slate-300 mb-1">Isi Testimoni / Ulasan <span class="text-rose-400">*</span></label>
+                <textarea name="content" rows="4" required placeholder="Tuliskan ulasan klien mengenai kepuasan kerja sama dengan ACD..." class="w-full px-3 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed"></textarea>
+            </div>
+
+            <div class="pt-2 flex items-center justify-end space-x-2">
+                <button type="button" onclick="document.getElementById('addModal').classList.add('hidden')" class="px-4 py-2 rounded-xl bg-slate-900 text-slate-300 hover:bg-slate-800 transition">
+                    Batal
+                </button>
+                <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold transition shadow-lg shadow-indigo-600/30">
+                    Simpan Testimoni
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
