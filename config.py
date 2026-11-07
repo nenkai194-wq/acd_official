@@ -21,8 +21,8 @@ class Config:
     
     # Admin Credentials & Security
     ADMIN_USERNAME = os.environ.get('ADMIN_USER') or 'admin'
-    ADMIN_PASSWORD = os.environ.get('ADMIN_PASS') or 'acd2025super'
-    ADMIN_PIN = os.environ.get('ADMIN_PIN') or '992811'
+    ADMIN_PASSWORD = os.environ.get('ADMIN_PASS') or 'Cipta!2345'
+    ADMIN_PIN = os.environ.get('ADMIN_PIN') or '555556'
     
     # Session & Cookie Security
     SESSION_COOKIE_HTTPONLY = True
