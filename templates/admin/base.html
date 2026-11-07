@@ -124,6 +124,10 @@
                     <i data-lucide="settings" class="w-4 h-4"></i>
                     <span>Pengaturan Website</span>
                 </a>
+                <a href="{{ url_for('admin_security') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'security' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                    <span>Keamanan & Audit Log</span>
+                </a>
             </nav>
         </div>
 

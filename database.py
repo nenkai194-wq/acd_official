@@ -140,6 +140,30 @@ def init_db():
     )
     ''')
 
+    # Admin Security & Audit Logs Table
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS admin_security_logs (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT NOT NULL,
+        username TEXT,
+        event_type TEXT NOT NULL,
+        details TEXT,
+        user_agent TEXT,
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+
+    # Login Lockouts & Rate Limiting Table (Anti Brute-Force)
+    cursor.execute('''
+    CREATE TABLE IF NOT EXISTS login_lockouts (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ip_address TEXT UNIQUE NOT NULL,
+        failed_count INTEGER DEFAULT 1,
+        locked_until TIMESTAMP,
+        last_attempt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )
+    ''')
+
     # Settings table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS settings (
@@ -162,6 +186,9 @@ def init_db():
         ('company_branch', Config.COMPANY_BRANCH),
         ('admin_username', Config.ADMIN_USERNAME),
         ('admin_password', Config.ADMIN_PASSWORD),
+        ('admin_pin', Config.ADMIN_PIN),
+        ('security_lockout_minutes', '15'),
+        ('security_max_attempts', '3')
     ]
     for k, v in default_settings:
         cursor.execute('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)', (k, v))

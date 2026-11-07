@@ -1,7 +1,9 @@
 import os
 import json
 import re
+import random
 from functools import wraps
+from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort, flash
 from config import Config
 from database import init_db, seed_db
@@ -14,7 +16,8 @@ from models import (
     FAQModel,
     InquiryModel,
     WALogModel,
-    SettingModel
+    SettingModel,
+    SecurityModel
 )
 
 app = Flask(__name__)
@@ -27,11 +30,27 @@ with app.app_context():
     init_db()
     seed_db()
 
+def get_client_ip():
+    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
+    if ip_address and ',' in ip_address:
+        ip_address = ip_address.split(',')[0].strip()
+    return ip_address or '127.0.0.1'
+
+# Security Headers (OWASP Top 10 Hardening)
+@app.after_request
+def add_security_headers(response):
+    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
+    response.headers['X-Content-Type-Options'] = 'nosniff'
+    response.headers['X-XSS-Protection'] = '1; mode=block'
+    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
+    response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+    return response
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not session.get('admin_logged_in'):
-            flash('Sesi login telah berakhir. Silakan login kembali.', 'warning')
+            flash('Sesi login telah berakhir atau belum terautentikasi. Silakan login kembali.', 'warning')
             return redirect(url_for('admin_login'))
         return f(*args, **kwargs)
     return decorated_function
@@ -212,10 +231,7 @@ def api_consultation():
             'message': f'Nomor WhatsApp "{normalized_phone}" telah mencapai batas maksimal 2x pengiriman dalam 1 x 24 jam untuk pencegahan spam. Silakan coba kembali besok atau hubungi hotline kami langsung.'
         }), 429
 
-    # Ambil IP Pengunjung
-    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
-    if ip_address and ',' in ip_address:
-        ip_address = ip_address.split(',')[0].strip()
+    ip_address = get_client_ip()
 
     inquiry_id = InquiryModel.create(
         name=name,
@@ -238,10 +254,7 @@ def api_consultation():
 
 @app.route('/api/v1/track-wa-click', methods=['POST', 'GET'])
 def api_track_wa_click():
-    ip_address = request.headers.get('X-Forwarded-For', request.remote_addr)
-    if ip_address and ',' in ip_address:
-        ip_address = ip_address.split(',')[0].strip()
-    
+    ip_address = get_client_ip()
     source = request.args.get('source') or (request.get_json(silent=True) or {}).get('source', 'whatsapp_button')
     
     # Cek batas maksimal pengiriman pesan via WA (maksimal 2x per 24 jam per IP / device)
@@ -300,7 +313,6 @@ def api_estimate():
     final_min = round(base_min * mult)
     final_max = round(base_max * mult)
 
-    # Estimasi timeline
     est_weeks = '6 - 10 Minggu'
     if project_type == 'website':
         if scale == 'standard':
@@ -342,35 +354,164 @@ def api_estimate():
         'timeline': est_weeks
     })
 
-# --- ADMIN CMS PORTAL ROUTES ---
+# --- ADMIN CMS PORTAL WITH STRICT ENTERPRISE SECURITY ---
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
     if session.get('admin_logged_in'):
         return redirect(url_for('admin_dashboard'))
 
-    error = None
+    ip_address = get_client_ip()
+    user_agent = request.headers.get('User-Agent', '')
+
+    # 1. Cek apakah IP sedang terkunci / diblokir (Anti Brute-Force)
+    is_locked, remaining_mins, failed_count = SecurityModel.check_lockout(ip_address)
+    if is_locked:
+        num1, num2 = random.randint(2, 9), random.randint(1, 9)
+        session['sec_captcha_res'] = num1 + num2
+        return render_template(
+            'admin/login.html',
+            is_locked=True,
+            lockout_remaining=remaining_mins,
+            captcha_num1=num1,
+            captcha_num2=num2
+        ), 429
+
     if request.method == 'POST':
+        # 2. Cek Invisible Honeypot Trap (Deteksi Bot / Crawler Otomatis)
+        trap_value = (request.form.get('admin_sec_trap') or '').strip()
+        if trap_value:
+            SecurityModel.record_security_event(
+                ip_address, 'bot_crawler', 'BOT_HONEYPOT',
+                f'Bot scanner terdeteksi mengisi honeypot trap: "{trap_value}"', user_agent
+            )
+            SecurityModel.record_failed_attempt(ip_address, 'bot_crawler', user_agent, reason='Honeypot Trap Triggered')
+            num1, num2 = random.randint(2, 9), random.randint(1, 9)
+            session['sec_captcha_res'] = num1 + num2
+            return render_template(
+                'admin/login.html',
+                is_locked=False,
+                error='Permintaan ditolak oleh sistem pertahanan firewall.',
+                captcha_num1=num1,
+                captcha_num2=num2
+            ), 403
+
+        # 3. Cek Dynamic Anti-Bot Math Challenge
+        captcha_ans = (request.form.get('captcha_answer') or '').strip()
+        expected_ans = session.get('sec_captcha_res')
+        try:
+            if not expected_ans or int(captcha_ans) != int(expected_ans):
+                is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
+                    ip_address, request.form.get('username'), user_agent, reason='Jawaban Anti-Bot Salah'
+                )
+                num1, num2 = random.randint(2, 9), random.randint(1, 9)
+                session['sec_captcha_res'] = num1 + num2
+                if is_now_locked:
+                    return render_template('admin/login.html', is_locked=True, lockout_remaining=lock_mins, captcha_num1=num1, captcha_num2=num2), 429
+                return render_template(
+                    'admin/login.html',
+                    is_locked=False,
+                    error='Jawaban verifikasi anti-bot salah. Silakan hitung kembali.',
+                    remaining_attempts=max(0, 3 - f_cnt),
+                    last_username=request.form.get('username'),
+                    captcha_num1=num1,
+                    captcha_num2=num2
+                ), 400
+        except (ValueError, TypeError):
+            is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
+                ip_address, request.form.get('username'), user_agent, reason='Format Anti-Bot Tidak Valid'
+            )
+            num1, num2 = random.randint(2, 9), random.randint(1, 9)
+            session['sec_captcha_res'] = num1 + num2
+            return render_template(
+                'admin/login.html',
+                is_locked=False,
+                error='Jawaban verifikasi anti-bot harus berupa angka.',
+                remaining_attempts=max(0, 3 - f_cnt),
+                last_username=request.form.get('username'),
+                captcha_num1=num1,
+                captcha_num2=num2
+            ), 400
+
+        # 4. Verifikasi Kredensial (Username, Password, dan PIN Keamanan Otorisasi 2FA)
         user = (request.form.get('username') or '').strip()
         pwd = (request.form.get('password') or '').strip()
-        
+        pin = (request.form.get('security_pin') or '').strip()
+
         valid_user = SettingModel.get('admin_username', Config.ADMIN_USERNAME)
         valid_pass = SettingModel.get('admin_password', Config.ADMIN_PASSWORD)
-        
-        if user == valid_user and pwd == valid_pass:
+        valid_pin = SettingModel.get('admin_pin', Config.ADMIN_PIN)
+
+        is_user_ok = (user == valid_user)
+        is_pass_ok = SecurityModel.verify_password(pwd, valid_pass)
+        is_pin_ok = (pin == valid_pin)
+
+        if is_user_ok and is_pass_ok and is_pin_ok:
+            # Login Berhasil!
+            SecurityModel.record_successful_login(ip_address, user, user_agent)
+
+            # Upgrade plaintext password ke PBKDF2/SHA256 salted hash secara otomatis
+            if not str(valid_pass).startswith(('scrypt:', 'pbkdf2:')):
+                SettingModel.set('admin_password', SecurityModel.hash_password(valid_pass))
+
+            # Prevent Session Fixation
+            session.clear()
             session['admin_logged_in'] = True
             session['admin_user'] = user
-            flash('Selamat datang kembali di Panel Manajemen ACD!', 'success')
+            session['login_ip'] = ip_address
+
+            flash('Autentikasi keamanan berhasil! Selamat datang di Panel CMS ACD.', 'success')
             return redirect(url_for('admin_dashboard'))
         else:
-            error = 'Username atau kata sandi yang Anda masukkan salah.'
+            fail_reasons = []
+            if not is_user_ok: fail_reasons.append('Username Salah')
+            if not is_pass_ok: fail_reasons.append('Password Salah')
+            if not is_pin_ok: fail_reasons.append('PIN Otorisasi 2FA Salah')
+            reason_str = ', '.join(fail_reasons) if fail_reasons else 'Kredensial Tidak Valid'
 
-    return render_template('admin/login.html', error=error)
+            is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
+                ip_address, user, user_agent, max_attempts=3, lockout_minutes=15, reason=reason_str
+            )
+            num1, num2 = random.randint(2, 9), random.randint(1, 9)
+            session['sec_captcha_res'] = num1 + num2
+
+            if is_now_locked:
+                return render_template(
+                    'admin/login.html',
+                    is_locked=True,
+                    lockout_remaining=lock_mins,
+                    captcha_num1=num1,
+                    captcha_num2=num2
+                ), 429
+            else:
+                rem = max(0, 3 - f_cnt)
+                return render_template(
+                    'admin/login.html',
+                    is_locked=False,
+                    error='Username, kata sandi, atau PIN otorisasi yang Anda masukkan salah.',
+                    remaining_attempts=rem,
+                    last_username=user,
+                    captcha_num1=num1,
+                    captcha_num2=num2
+                ), 401
+
+    # GET Request: Generate challenge
+    num1, num2 = random.randint(2, 9), random.randint(1, 9)
+    session['sec_captcha_res'] = num1 + num2
+    return render_template(
+        'admin/login.html',
+        is_locked=False,
+        error=None,
+        captcha_num1=num1,
+        captcha_num2=num2
+    )
 
 @app.route('/admin/logout')
 def admin_logout():
-    session.pop('admin_logged_in', None)
-    session.pop('admin_user', None)
+    user = session.get('admin_user', 'admin')
+    ip = get_client_ip()
+    SecurityModel.record_security_event(ip, user, 'LOGOUT', 'Sesi staf keluar secara normal', request.headers.get('User-Agent', ''))
+    session.clear()
     flash('Anda telah berhasil keluar dari panel manajemen.', 'info')
     return redirect(url_for('admin_login'))
 
@@ -931,7 +1072,36 @@ def admin_wa_logs_delete(log_id):
     flash('Log interaksi berhasil dihapus.', 'info')
     return redirect(url_for('admin_wa_logs'))
 
-# --- 9. PENGATURAN WEBSITE & PROFIL PERUSAHAAN ---
+# --- 9. PUSAT KEAMANAN & AUDIT LOG SISTEM ---
+
+@app.route('/admin/security')
+@admin_required
+def admin_security():
+    logs = SecurityModel.get_recent_logs(limit=100)
+    lockouts = SecurityModel.get_active_lockouts()
+    return render_template('admin/security.html', logs=logs, lockouts=lockouts)
+
+@app.route('/admin/security/unlock-ip', methods=['POST'])
+@admin_required
+def admin_security_unlock_ip():
+    ip_address = (request.form.get('ip_address') or '').strip()
+    if ip_address:
+        SecurityModel.unlock_ip(ip_address)
+        SecurityModel.record_security_event(
+            get_client_ip(), session.get('admin_user'), 'ADMIN_UNLOCKED_IP',
+            f'Administrator membuka blokir IP: {ip_address}', request.headers.get('User-Agent', '')
+        )
+        flash(f'Blokir untuk IP {ip_address} berhasil dibuka.', 'success')
+    return redirect(url_for('admin_security'))
+
+@app.route('/admin/security/clear-logs', methods=['POST'])
+@admin_required
+def admin_security_clear_logs():
+    SecurityModel.clear_security_logs()
+    flash('Seluruh riwayat audit keamanan berhasil dibersihkan.', 'success')
+    return redirect(url_for('admin_security'))
+
+# --- 10. PENGATURAN WEBSITE & PROFIL PERUSAHAAN ---
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 @admin_required
@@ -953,16 +1123,19 @@ def admin_settings():
 
         new_password = request.form.get('admin_password', '').strip()
         if new_password:
-            update_data['admin_password'] = new_password
+            update_data['admin_password'] = SecurityModel.hash_password(new_password)
 
-        # Filter out empty keys
+        new_pin = request.form.get('admin_pin', '').strip()
+        if new_pin:
+            update_data['admin_pin'] = new_pin
+
         valid_updates = {k: v for k, v in update_data.items() if v}
         SettingModel.update_many(valid_updates)
 
         if valid_updates.get('admin_username'):
             session['admin_user'] = valid_updates['admin_username']
 
-        flash('Pengaturan website dan profil perusahaan berhasil disimpan!', 'success')
+        flash('Pengaturan website, profil perusahaan, dan keamanan akun berhasil disimpan!', 'success')
         return redirect(url_for('admin_settings'))
 
     settings = SettingModel.get_all()

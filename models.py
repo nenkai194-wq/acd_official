@@ -2,6 +2,7 @@ import json
 import sqlite3
 import re
 from datetime import datetime, timedelta
+from werkzeug.security import generate_password_hash, check_password_hash
 from database import get_db_connection
 
 def slugify(text):
@@ -714,3 +715,150 @@ class SettingModel:
         conn.commit()
         conn.close()
         return True
+
+
+class SecurityModel:
+    @staticmethod
+    def hash_password(password):
+        return generate_password_hash(password)
+
+    @staticmethod
+    def verify_password(raw_password, stored_password):
+        if not raw_password or not stored_password:
+            return False
+        if str(stored_password).startswith(('scrypt:', 'pbkdf2:')):
+            return check_password_hash(stored_password, raw_password)
+        # Plain-text legacy fallback
+        return raw_password == stored_password
+
+    @staticmethod
+    def check_lockout(ip_address):
+        """Cek apakah IP sedang terkunci akibat gagal login beruntun."""
+        conn = get_db_connection()
+        row = conn.execute(
+            'SELECT failed_count, locked_until FROM login_lockouts WHERE ip_address = ?',
+            (ip_address,)
+        ).fetchone()
+        conn.close()
+
+        if not row:
+            return False, 0, 0
+
+        failed_count = row['failed_count'] or 0
+        locked_until_str = row['locked_until']
+
+        if locked_until_str:
+            try:
+                locked_until = datetime.strptime(locked_until_str, '%Y-%m-%d %H:%M:%S')
+                now = datetime.now()
+                if locked_until > now:
+                    diff_seconds = (locked_until - now).total_seconds()
+                    remaining_mins = max(1, int(diff_seconds // 60) + 1)
+                    return True, remaining_mins, failed_count
+                else:
+                    SecurityModel.unlock_ip(ip_address)
+                    return False, 0, 0
+            except Exception:
+                pass
+
+        return False, 0, failed_count
+
+    @staticmethod
+    def record_failed_attempt(ip_address, username, user_agent='', max_attempts=3, lockout_minutes=15, reason='Kredensial Tidak Cocok'):
+        conn = get_db_connection()
+        row = conn.execute('SELECT failed_count FROM login_lockouts WHERE ip_address = ?', (ip_address,)).fetchone()
+        now = datetime.now()
+
+        if row:
+            new_count = row['failed_count'] + 1
+        else:
+            new_count = 1
+
+        is_now_locked = (new_count >= max_attempts)
+        locked_until_str = None
+
+        if is_now_locked:
+            locked_until = now + timedelta(minutes=lockout_minutes)
+            locked_until_str = locked_until.strftime('%Y-%m-%d %H:%M:%S')
+            event_type = 'LOCKED_OUT'
+            details = f'IP diblokir {lockout_minutes} menit karena {new_count}x gagal login. Username: {username or "-"}'
+        else:
+            event_type = 'LOGIN_FAILED'
+            details = f'Percobaan ke-{new_count} dari {max_attempts}. Username: {username or "-"}, Alasan: {reason}'
+
+        conn.execute('''
+        INSERT INTO login_lockouts (ip_address, failed_count, locked_until, last_attempt)
+        VALUES (?, ?, ?, ?)
+        ON CONFLICT(ip_address) DO UPDATE SET
+            failed_count = ?,
+            locked_until = ?,
+            last_attempt = ?
+        ''', (
+            ip_address, new_count, locked_until_str, now.strftime('%Y-%m-%d %H:%M:%S'),
+            new_count, locked_until_str, now.strftime('%Y-%m-%d %H:%M:%S')
+        ))
+
+        # Catat ke admin_security_logs
+        conn.execute('''
+        INSERT INTO admin_security_logs (ip_address, username, event_type, details, user_agent)
+        VALUES (?, ?, ?, ?, ?)
+        ''', (ip_address, username or 'unknown', event_type, details, user_agent or ''))
+
+        conn.commit()
+        conn.close()
+        return is_now_locked, lockout_minutes if is_now_locked else 0, new_count
+
+    @staticmethod
+    def record_successful_login(ip_address, username, user_agent=''):
+        conn = get_db_connection()
+        conn.execute('DELETE FROM login_lockouts WHERE ip_address = ?', (ip_address,))
+        conn.execute('''
+        INSERT INTO admin_security_logs (ip_address, username, event_type, details, user_agent)
+        VALUES (?, ?, 'LOGIN_SUCCESS', 'Autentikasi staf/admin berhasil', ?)
+        ''', (ip_address, username, user_agent or ''))
+        conn.commit()
+        conn.close()
+        return True
+
+    @staticmethod
+    def record_security_event(ip_address, username, event_type, details, user_agent=''):
+        conn = get_db_connection()
+        conn.execute('''
+        INSERT INTO admin_security_logs (ip_address, username, event_type, details, user_agent)
+        VALUES (?, ?, ?, ?, ?)
+        ''', (ip_address, username or 'unknown', event_type, details, user_agent or ''))
+        conn.commit()
+        conn.close()
+        return True
+
+    @staticmethod
+    def unlock_ip(ip_address):
+        conn = get_db_connection()
+        conn.execute('DELETE FROM login_lockouts WHERE ip_address = ?', (ip_address,))
+        conn.commit()
+        conn.close()
+        return True
+
+    @staticmethod
+    def get_recent_logs(limit=100):
+        conn = get_db_connection()
+        rows = conn.execute('SELECT * FROM admin_security_logs ORDER BY created_at DESC LIMIT ?', (limit,)).fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
+
+    @staticmethod
+    def get_active_lockouts():
+        conn = get_db_connection()
+        now_str = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+        rows = conn.execute('SELECT * FROM login_lockouts WHERE locked_until > ? ORDER BY last_attempt DESC', (now_str,)).fetchall()
+        conn.close()
+        return [dict(r) for r in rows]
+
+    @staticmethod
+    def clear_security_logs():
+        conn = get_db_connection()
+        conn.execute('DELETE FROM admin_security_logs')
+        conn.commit()
+        conn.close()
+        return True
+

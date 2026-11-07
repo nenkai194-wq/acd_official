@@ -1,0 +1,165 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'security' %}
+
+{% block title %}Pusat Keamanan & Audit Log{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Pusat Keamanan & Audit Log Sistem</h1>
+            <p class="text-xs text-slate-400 mt-1">Pemantauan proteksi brute-force, deteksi bot scanner, audit akses administrator, dan daftar blokir IP</p>
+        </div>
+        <div class="flex items-center space-x-2">
+            <form method="POST" action="{{ url_for('admin_security_clear_logs') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log audit keamanan?');">
+                <button type="submit" class="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
+                    <i data-lucide="trash-2" class="w-4 h-4"></i>
+                    <span>Bersihkan Riwayat Log</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Active Lockouts Alert (Jika ada IP yang sedang diblokir) -->
+    {% if lockouts %}
+    <div class="p-5 rounded-2xl bg-rose-500/15 border border-rose-500/40 space-y-3">
+        <div class="flex items-center space-x-2 text-rose-300 font-bold text-xs">
+            <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
+            <span>DAFTAR IP YANG SEDANG DIBLOKIR OTOMATIS (TERKUNCI BRUTE-FORCE)</span>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+            {% for l in lockouts %}
+            <div class="p-3.5 rounded-xl bg-[#020617] border border-rose-500/30 flex items-center justify-between text-xs">
+                <div>
+                    <span class="font-mono font-bold text-rose-300 block">{{ l.ip_address }}</span>
+                    <span class="text-[10px] text-slate-400 block mt-0.5">Gagal {{ l.failed_count }}x • Terkunci s/d: {{ l.locked_until }}</span>
+                </div>
+                <form method="POST" action="{{ url_for('admin_security_unlock_ip') }}">
+                    <input type="hidden" name="ip_address" value="{{ l.ip_address }}">
+                    <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition">
+                        Buka Blokir
+                    </button>
+                </form>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- 4 Security Defense Pillars Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
+            <div class="flex items-center space-x-2 text-indigo-400">
+                <i data-lucide="shield-alert" class="w-5 h-5"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-white">Anti Brute-Force</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+                Maksimal <strong>3 kali percobaan login</strong> per IP. Percobaan ke-4 otomatis memblokir IP selama <strong>15 menit</strong>.
+            </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
+            <div class="flex items-center space-x-2 text-emerald-400">
+                <i data-lucide="key" class="w-5 h-5"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-white">PIN Otorisasi 2FA</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+                Login mewajibkan <strong>PIN Master 6-Digit</strong> selain username dan password untuk otorisasi ganda.
+            </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
+            <div class="flex items-center space-x-2 text-cyan-400">
+                <i data-lucide="bot" class="w-5 h-5"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-white">Anti-Bot Captcha</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+                Kalkulasi matematika dinamis pada form login untuk menolak otomatis script hacking & automated bot scanners.
+            </p>
+        </div>
+
+        <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
+            <div class="flex items-center space-x-2 text-purple-400">
+                <i data-lucide="eye-off" class="w-5 h-5"></i>
+                <h4 class="text-xs font-bold uppercase tracking-wider text-white">Honeypot Trap</h4>
+            </div>
+            <p class="text-xs text-slate-400 leading-relaxed">
+                Jebakan field tak terlihat yang langsung mendeteksi crawler/bot otomatis dan menolaknya seketika.
+            </p>
+        </div>
+    </div>
+
+    <!-- Security Audit Logs Table -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden">
+        <div class="p-4 border-b border-indigo-950/70 flex items-center justify-between">
+            <span class="text-xs font-bold text-white">Riwayat Audit Keamanan & Percobaan Akses ({{ logs | length }} Entri)</span>
+        </div>
+        {% if logs %}
+        <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+                <thead class="bg-[#020617] border-b border-indigo-950/70 text-slate-400 font-semibold uppercase text-[10px] tracking-wider">
+                    <tr>
+                        <th class="px-6 py-4">Waktu</th>
+                        <th class="px-6 py-4">Status / Tipe Event</th>
+                        <th class="px-6 py-4">Alamat IP</th>
+                        <th class="px-6 py-4">Username</th>
+                        <th class="px-6 py-4">Detail Aktivitas</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-indigo-950/50">
+                    {% for l in logs %}
+                    <tr class="hover:bg-slate-900/40 transition">
+                        <td class="px-6 py-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">
+                            {{ l.created_at }}
+                        </td>
+                        <td class="px-6 py-4">
+                            {% if l.event_type == 'LOGIN_SUCCESS' %}
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                                BERHASIL LOGIN
+                            </span>
+                            {% elif l.event_type == 'LOCKED_OUT' %}
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                                IP DIBLOKIR
+                            </span>
+                            {% elif l.event_type == 'BOT_HONEYPOT' or l.event_type == 'BOT_DETECTED' %}
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                                BOT TERJEBAK
+                            </span>
+                            {% elif l.event_type == 'CAPTCHA_FAILED' %}
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                                CAPTCHA GAGAL
+                            </span>
+                            {% else %}
+                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                                GAGAL LOGIN
+                            </span>
+                            {% endif %}
+                        </td>
+                        <td class="px-6 py-4 font-mono font-semibold text-xs text-indigo-300">
+                            {{ l.ip_address }}
+                        </td>
+                        <td class="px-6 py-4 font-medium text-slate-300">
+                            {{ l.username or '-' }}
+                        </td>
+                        <td class="px-6 py-4 text-slate-400 text-xs max-w-md">
+                            <span>{{ l.details }}</span>
+                            {% if l.user_agent %}
+                            <span class="block text-[10px] text-slate-600 truncate mt-0.5" title="{{ l.user_agent }}">{{ l.user_agent }}</span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="p-12 text-center text-slate-400 space-y-3">
+            <i data-lucide="shield-check" class="w-12 h-12 text-emerald-500/40 mx-auto"></i>
+            <h4 class="text-sm font-bold text-white">Log Audit Masih Bersih</h4>
+            <p class="text-xs text-slate-500">Belum ada aktivitas login atau percobaan akses yang tercatat.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

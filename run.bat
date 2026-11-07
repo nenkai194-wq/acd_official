@@ -12,6 +12,7 @@ echo * Akses di HP / Tablet   : http://192.168.2.105:5000
 echo * Portal Admin           : http://192.168.2.105:5000/admin/login
 echo   - User: admin
 echo   - Pass: acd2025super
+echo   - PIN : 992811 (2FA Master PIN)
 echo.
 echo =====================================================================
 echo Menjalankan server Flask... Tekan Ctrl+C untuk berhenti.

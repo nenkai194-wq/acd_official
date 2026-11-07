@@ -19,6 +19,13 @@ class Config:
     COMPANY_ADDRESS = "Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950"
     COMPANY_BRANCH = "Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281"
     
-    # Admin Credentials
+    # Admin Credentials & Security
     ADMIN_USERNAME = os.environ.get('ADMIN_USER') or 'admin'
     ADMIN_PASSWORD = os.environ.get('ADMIN_PASS') or 'acd2025super'
+    ADMIN_PIN = os.environ.get('ADMIN_PIN') or '992811'
+    
+    # Session & Cookie Security
+    SESSION_COOKIE_HTTPONLY = True
+    SESSION_COOKIE_SAMESITE = 'Lax'
+    PERMANENT_SESSION_LIFETIME = 2700  # 45 menit auto-logout jika idle
+
