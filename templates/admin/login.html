@@ -53,10 +53,15 @@
                 <input type="text" name="username" required {% if is_locked %}disabled{% endif %} placeholder="admin" value="{{ last_username or '' }}" class="w-full px-4 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50">
             </div>
 
-            <!-- Kata Sandi -->
+            <!-- Kata Sandi dengan Tombol Lihat Password (Icon Mata) -->
             <div>
                 <label class="block text-xs font-semibold text-slate-300 mb-1">Kata Sandi</label>
-                <input type="password" name="password" required {% if is_locked %}disabled{% endif %} placeholder="••••••••" class="w-full px-4 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50">
+                <div class="relative">
+                    <input type="password" id="passwordInput" name="password" required {% if is_locked %}disabled{% endif %} placeholder="••••••••" class="w-full pl-4 pr-11 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50">
+                    <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-white transition focus:outline-none" title="Tampilkan / Sembunyikan Kata Sandi">
+                        <i data-lucide="eye" id="eyeIcon" class="w-4 h-4"></i>
+                    </button>
+                </div>
             </div>
 
             <!-- Kode CAPTCHA Gambar -->
@@ -95,6 +100,19 @@
 
     <script>
         lucide.createIcons();
+
+        function togglePasswordVisibility() {
+            const pwd = document.getElementById('passwordInput');
+            const eye = document.getElementById('eyeIcon');
+            if (pwd.type === 'password') {
+                pwd.type = 'text';
+                eye.setAttribute('data-lucide', 'eye-off');
+            } else {
+                pwd.type = 'password';
+                eye.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
 
         function refreshCaptcha() {
             const img = document.getElementById('captchaImg');

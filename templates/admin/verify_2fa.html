@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Otorisasi Ganda (Two-Factor PIN Master) - ACD CMS</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <style>
+        .pin-glow {
+            box-shadow: 0 0 30px rgba(99, 102, 241, 0.25);
+        }
+    </style>
+</head>
+<body class="deptech-hero-bg min-h-screen flex items-center justify-center p-4 text-white relative font-sans antialiased">
+    <div class="deptech-grid-pattern"></div>
+
+    <div class="max-w-md w-full bg-[#0d0f1a]/95 border border-indigo-950/80 rounded-3xl p-8 shadow-2xl relative z-10 backdrop-blur-md pin-glow space-y-6">
+        <!-- Logo & Header -->
+        <div class="text-center space-y-2">
+            <div class="inline-flex p-3 rounded-2xl bg-indigo-950/70 border border-indigo-900/60 mb-1">
+                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-14 w-auto drop-shadow-lg">
+            </div>
+            <h2 class="text-xl font-bold text-white tracking-tight">Otorisasi Ganda (Two-Factor PIN Master)</h2>
+            <p class="text-xs text-indigo-300">
+                Langkah 2: Verifikasi PIN Keamanan Staf untuk akun <strong class="text-white">{{ username }}</strong>
+            </p>
+        </div>
+
+        <!-- Lockout Notice -->
+        {% if is_locked %}
+        <div class="p-3.5 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs">
+            <div class="font-bold flex items-center space-x-1.5 mb-1">
+                <i data-lucide="lock" class="w-4 h-4 text-rose-400"></i>
+                <span>Akses Login Terkunci Sementara</span>
+            </div>
+            <p class="text-[11px] leading-relaxed">
+                Terlalu banyak percobaan PIN salah. Demi keamanan, silakan tunggu <strong>{{ lockout_remaining }} menit</strong> lagi.
+            </p>
+        </div>
+        {% endif %}
+
+        <!-- Error Alert -->
+        {% if error and not is_locked %}
+        <div class="p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs flex items-center space-x-2">
+            <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-rose-400"></i>
+            <span>{{ error }}</span>
+        </div>
+        {% endif %}
+
+        <!-- Form Verifikasi PIN 6-Digit -->
+        <form method="POST" action="{{ url_for('admin_verify_pin') }}" class="space-y-5">
+            <div>
+                <label class="block text-xs font-semibold text-slate-300 mb-2 text-center">
+                    Masukkan 6-Digit PIN Master Otorisasi
+                </label>
+                
+                <div class="relative">
+                    <input 
+                        type="password" 
+                        id="pinInput" 
+                        name="security_pin" 
+                        required 
+                        {% if is_locked %}disabled{% endif %} 
+                        maxlength="6" 
+                        inputmode="numeric" 
+                        pattern="[0-9]*"
+                        autofocus
+                        placeholder="••••••" 
+                        autocomplete="one-time-code"
+                        class="w-full py-3.5 pl-6 pr-12 text-center text-xl font-mono font-black tracking-[0.5em] bg-[#020617] border border-indigo-950 rounded-2xl text-emerald-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50"
+                    >
+                    <button type="button" onclick="togglePinVisibility()" class="absolute right-4 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-white transition focus:outline-none" title="Tampilkan / Sembunyikan PIN">
+                        <i data-lucide="eye" id="pinEyeIcon" class="w-4 h-4"></i>
+                    </button>
+                </div>
+                <span class="text-[10px] text-slate-500 text-center block mt-1.5">
+                    PIN rahasia otoritas perusahaan PT. Aksara Cipta Digital
+                </span>
+            </div>
+
+            <!-- Tombol Verifikasi -->
+            <button type="submit" {% if is_locked %}disabled{% endif %} class="w-full py-3.5 deptech-btn-primary font-bold text-xs uppercase tracking-wider shadow-lg flex items-center justify-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed">
+                <i data-lucide="shield-check" class="w-4 h-4"></i>
+                <span>Verifikasi & Masuk ke Dashboard</span>
+            </button>
+        </form>
+
+        <!-- Batal & Kembali -->
+        <div class="pt-4 border-t border-indigo-950/80 text-center">
+            <a href="{{ url_for('admin_verify_pin_cancel') }}" class="text-xs text-slate-400 hover:text-white transition inline-flex items-center space-x-1">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                <span>Batal & Kembali ke Halaman Login</span>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+
+        function togglePinVisibility() {
+            const pin = document.getElementById('pinInput');
+            const eye = document.getElementById('pinEyeIcon');
+            if (pin.type === 'password') {
+                pin.type = 'text';
+                eye.setAttribute('data-lucide', 'eye-off');
+            } else {
+                pin.type = 'password';
+                eye.setAttribute('data-lucide', 'eye');
+            }
+            lucide.createIcons();
+        }
+    </script>
+</body>
+</html>

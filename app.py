@@ -471,21 +471,14 @@ def admin_login():
         is_pass_ok = SecurityModel.verify_password(pwd, valid_pass)
 
         if is_user_ok and is_pass_ok:
-            # Login Berhasil!
-            SecurityModel.record_successful_login(ip_address, user, user_agent)
-
             # Upgrade plaintext password ke PBKDF2/SHA256 salted hash secara otomatis
             if not str(valid_pass).startswith(('scrypt:', 'pbkdf2:')):
                 SettingModel.set('admin_password', SecurityModel.hash_password(valid_pass))
 
-            # Prevent Session Fixation
-            session.clear()
-            session['admin_logged_in'] = True
-            session['admin_user'] = user
-            session['login_ip'] = ip_address
-
-            flash('Autentikasi berhasil! Selamat datang di Panel CMS ACD.', 'success')
-            return redirect(url_for('admin_dashboard'))
+            # Step 1 Lolos -> Lanjut ke Step 2: Otorisasi Ganda (Two-Factor PIN Master) 6 Digit
+            session['auth_step1_user'] = user
+            session['auth_step1_time'] = datetime.now().isoformat()
+            return redirect(url_for('admin_verify_pin'))
         else:
             is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
                 ip_address, user, user_agent, max_attempts=3, lockout_minutes=15, reason='Username atau Password Salah'
@@ -500,6 +493,71 @@ def admin_login():
             ), 401
 
     return render_template('admin/login.html', is_locked=False, error=None)
+
+@app.route('/admin/verify-pin', methods=['GET', 'POST'])
+def admin_verify_pin():
+    if session.get('admin_logged_in'):
+        return redirect(url_for('admin_dashboard'))
+
+    user = session.get('auth_step1_user')
+    if not user:
+        flash('Silakan login dengan username dan kata sandi terlebih dahulu.', 'warning')
+        return redirect(url_for('admin_login'))
+
+    ip_address = get_client_ip()
+    user_agent = request.headers.get('User-Agent', '')
+
+    # 1. Cek apakah IP sedang terkunci / diblokir (Anti Brute-Force)
+    is_locked, remaining_mins, failed_count = SecurityModel.check_lockout(ip_address)
+    if is_locked:
+        return render_template(
+            'admin/verify_2fa.html',
+            is_locked=True,
+            lockout_remaining=remaining_mins,
+            username=user
+        ), 429
+
+    error = None
+    if request.method == 'POST':
+        pin = (request.form.get('security_pin') or '').strip()
+        valid_pin = SettingModel.get('admin_pin', Config.ADMIN_PIN)
+
+        if pin == valid_pin:
+            # PIN Otorisasi Benar! Masuk ke Halaman Backend Dashboard
+            SecurityModel.record_successful_login(ip_address, user, user_agent)
+            session.clear()
+            session['admin_logged_in'] = True
+            session['admin_user'] = user
+            session['login_ip'] = ip_address
+
+            flash('Otorisasi Two-Factor PIN berhasil! Selamat datang di Panel CMS ACD.', 'success')
+            return redirect(url_for('admin_dashboard'))
+        else:
+            is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
+                ip_address, user, user_agent, max_attempts=3, lockout_minutes=15, reason='PIN Master 2FA Salah'
+            )
+            if is_now_locked:
+                return render_template(
+                    'admin/verify_2fa.html',
+                    is_locked=True,
+                    lockout_remaining=lock_mins,
+                    username=user
+                ), 429
+            else:
+                rem = max(0, 3 - f_cnt)
+                return render_template(
+                    'admin/verify_2fa.html',
+                    is_locked=False,
+                    error=f'PIN Otorisasi 6-digit salah. Tersisa {rem} kesempatan sebelum IP diblokir.',
+                    username=user
+                ), 401
+
+    return render_template('admin/verify_2fa.html', is_locked=False, error=None, username=user)
+
+@app.route('/admin/verify-pin/cancel')
+def admin_verify_pin_cancel():
+    session.pop('auth_step1_user', None)
+    return redirect(url_for('admin_login'))
 
 @app.route('/admin/logout')
 def admin_logout():

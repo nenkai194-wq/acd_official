@@ -10,9 +10,8 @@ echo.
 echo * Akses di PC ini        : http://127.0.0.1:5000
 echo * Akses di HP / Tablet   : http://192.168.2.105:5000
 echo * Portal Admin           : http://192.168.2.105:5000/admin/login
-echo   - User: admin
-echo   - Pass: acd2025super
-echo   - CAPTCHA : Masukkan kode gambar pada form login
+echo   - Tahap 1: User 'admin', Pass 'acd2025super', & Kode CAPTCHA Gambar
+echo   - Tahap 2: PIN Otorisasi Ganda 2FA '992811'
 echo.
 echo =====================================================================
 echo Menjalankan server Flask... Tekan Ctrl+C untuk berhenti.
