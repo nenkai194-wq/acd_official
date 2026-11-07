@@ -1,7 +1,9 @@
 import os
 import json
 import re
+import io
 import random
+from PIL import Image, ImageDraw, ImageFont
 from functools import wraps
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort, flash
@@ -354,7 +356,59 @@ def api_estimate():
         'timeline': est_weeks
     })
 
-# --- ADMIN CMS PORTAL WITH STRICT ENTERPRISE SECURITY ---
+# --- ADMIN CMS PORTAL & IMAGE CAPTCHA GENERATOR ---
+
+def generate_captcha_image(code):
+    width, height = 150, 44
+    img = Image.new('RGB', (width, height), color=(10, 15, 29))
+    draw = ImageDraw.Draw(img)
+
+    # Random noise lines
+    for _ in range(4):
+        draw.line(
+            [(random.randint(0, width), random.randint(0, height)),
+             (random.randint(0, width), random.randint(0, height))],
+            fill=(random.randint(50, 90), random.randint(70, 120), random.randint(140, 220)),
+            width=1
+        )
+    # Random dots
+    for _ in range(50):
+        draw.point(
+            (random.randint(0, width), random.randint(0, height)),
+            fill=(random.randint(90, 160), random.randint(110, 190), 240)
+        )
+
+    try:
+        font = ImageFont.truetype('arial.ttf', 24)
+    except Exception:
+        font = ImageFont.load_default()
+
+    for i, char in enumerate(code):
+        char_img = Image.new('RGBA', (30, 36), (0, 0, 0, 0))
+        char_draw = ImageDraw.Draw(char_img)
+        char_draw.text((5, 2), char, font=font, fill=(random.randint(210, 255), random.randint(220, 255), 255, 255))
+        angle = random.randint(-15, 15)
+        char_img = char_img.rotate(angle, expand=1)
+        x = 12 + i * 25 + random.randint(-2, 2)
+        y = (height - char_img.height) // 2 + random.randint(-2, 2)
+        img.paste(char_img, (x, y), char_img)
+
+    buf = io.BytesIO()
+    img.save(buf, format='PNG')
+    return buf.getvalue()
+
+@app.route('/admin/captcha-image')
+def admin_captcha_image():
+    chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
+    code = ''.join(random.choices(chars, k=5))
+    session['admin_captcha_code'] = code
+
+    img_bytes = generate_captcha_image(code)
+    response = app.response_class(img_bytes, mimetype='image/png')
+    response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
 
 @app.route('/admin/login', methods=['GET', 'POST'])
 def admin_login():
@@ -367,16 +421,13 @@ def admin_login():
     # 1. Cek apakah IP sedang terkunci / diblokir (Anti Brute-Force)
     is_locked, remaining_mins, failed_count = SecurityModel.check_lockout(ip_address)
     if is_locked:
-        num1, num2 = random.randint(2, 9), random.randint(1, 9)
-        session['sec_captcha_res'] = num1 + num2
         return render_template(
             'admin/login.html',
             is_locked=True,
-            lockout_remaining=remaining_mins,
-            captcha_num1=num1,
-            captcha_num2=num2
+            lockout_remaining=remaining_mins
         ), 429
 
+    error = None
     if request.method == 'POST':
         # 2. Cek Invisible Honeypot Trap (Deteksi Bot / Crawler Otomatis)
         trap_value = (request.form.get('admin_sec_trap') or '').strip()
@@ -386,67 +437,40 @@ def admin_login():
                 f'Bot scanner terdeteksi mengisi honeypot trap: "{trap_value}"', user_agent
             )
             SecurityModel.record_failed_attempt(ip_address, 'bot_crawler', user_agent, reason='Honeypot Trap Triggered')
-            num1, num2 = random.randint(2, 9), random.randint(1, 9)
-            session['sec_captcha_res'] = num1 + num2
             return render_template(
                 'admin/login.html',
                 is_locked=False,
-                error='Permintaan ditolak oleh sistem pertahanan firewall.',
-                captcha_num1=num1,
-                captcha_num2=num2
+                error='Permintaan ditolak oleh sistem keamanan.'
             ), 403
 
-        # 3. Cek Dynamic Anti-Bot Math Challenge
-        captcha_ans = (request.form.get('captcha_answer') or '').strip()
-        expected_ans = session.get('sec_captcha_res')
-        try:
-            if not expected_ans or int(captcha_ans) != int(expected_ans):
-                is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
-                    ip_address, request.form.get('username'), user_agent, reason='Jawaban Anti-Bot Salah'
-                )
-                num1, num2 = random.randint(2, 9), random.randint(1, 9)
-                session['sec_captcha_res'] = num1 + num2
-                if is_now_locked:
-                    return render_template('admin/login.html', is_locked=True, lockout_remaining=lock_mins, captcha_num1=num1, captcha_num2=num2), 429
-                return render_template(
-                    'admin/login.html',
-                    is_locked=False,
-                    error='Jawaban verifikasi anti-bot salah. Silakan hitung kembali.',
-                    remaining_attempts=max(0, 3 - f_cnt),
-                    last_username=request.form.get('username'),
-                    captcha_num1=num1,
-                    captcha_num2=num2
-                ), 400
-        except (ValueError, TypeError):
+        # 3. Verifikasi Kode CAPTCHA Gambar (Case-Insensitive)
+        user_captcha = (request.form.get('captcha_code') or '').strip().upper()
+        stored_captcha = (session.get('admin_captcha_code') or '').upper()
+
+        if not user_captcha or user_captcha != stored_captcha:
             is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
-                ip_address, request.form.get('username'), user_agent, reason='Format Anti-Bot Tidak Valid'
+                ip_address, request.form.get('username'), user_agent, reason='Kode CAPTCHA Salah'
             )
-            num1, num2 = random.randint(2, 9), random.randint(1, 9)
-            session['sec_captcha_res'] = num1 + num2
+            if is_now_locked:
+                return render_template('admin/login.html', is_locked=True, lockout_remaining=lock_mins), 429
             return render_template(
                 'admin/login.html',
                 is_locked=False,
-                error='Jawaban verifikasi anti-bot harus berupa angka.',
-                remaining_attempts=max(0, 3 - f_cnt),
-                last_username=request.form.get('username'),
-                captcha_num1=num1,
-                captcha_num2=num2
+                error='Kode verifikasi CAPTCHA gambar tidak cocok. Silakan coba lagi.',
+                last_username=request.form.get('username')
             ), 400
 
-        # 4. Verifikasi Kredensial (Username, Password, dan PIN Keamanan Otorisasi 2FA)
+        # 4. Verifikasi Kredensial (Username & Password)
         user = (request.form.get('username') or '').strip()
         pwd = (request.form.get('password') or '').strip()
-        pin = (request.form.get('security_pin') or '').strip()
 
         valid_user = SettingModel.get('admin_username', Config.ADMIN_USERNAME)
         valid_pass = SettingModel.get('admin_password', Config.ADMIN_PASSWORD)
-        valid_pin = SettingModel.get('admin_pin', Config.ADMIN_PIN)
 
         is_user_ok = (user == valid_user)
         is_pass_ok = SecurityModel.verify_password(pwd, valid_pass)
-        is_pin_ok = (pin == valid_pin)
 
-        if is_user_ok and is_pass_ok and is_pin_ok:
+        if is_user_ok and is_pass_ok:
             # Login Berhasil!
             SecurityModel.record_successful_login(ip_address, user, user_agent)
 
@@ -460,51 +484,22 @@ def admin_login():
             session['admin_user'] = user
             session['login_ip'] = ip_address
 
-            flash('Autentikasi keamanan berhasil! Selamat datang di Panel CMS ACD.', 'success')
+            flash('Autentikasi berhasil! Selamat datang di Panel CMS ACD.', 'success')
             return redirect(url_for('admin_dashboard'))
         else:
-            fail_reasons = []
-            if not is_user_ok: fail_reasons.append('Username Salah')
-            if not is_pass_ok: fail_reasons.append('Password Salah')
-            if not is_pin_ok: fail_reasons.append('PIN Otorisasi 2FA Salah')
-            reason_str = ', '.join(fail_reasons) if fail_reasons else 'Kredensial Tidak Valid'
-
             is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
-                ip_address, user, user_agent, max_attempts=3, lockout_minutes=15, reason=reason_str
+                ip_address, user, user_agent, max_attempts=3, lockout_minutes=15, reason='Username atau Password Salah'
             )
-            num1, num2 = random.randint(2, 9), random.randint(1, 9)
-            session['sec_captcha_res'] = num1 + num2
-
             if is_now_locked:
-                return render_template(
-                    'admin/login.html',
-                    is_locked=True,
-                    lockout_remaining=lock_mins,
-                    captcha_num1=num1,
-                    captcha_num2=num2
-                ), 429
-            else:
-                rem = max(0, 3 - f_cnt)
-                return render_template(
-                    'admin/login.html',
-                    is_locked=False,
-                    error='Username, kata sandi, atau PIN otorisasi yang Anda masukkan salah.',
-                    remaining_attempts=rem,
-                    last_username=user,
-                    captcha_num1=num1,
-                    captcha_num2=num2
-                ), 401
+                return render_template('admin/login.html', is_locked=True, lockout_remaining=lock_mins), 429
+            return render_template(
+                'admin/login.html',
+                is_locked=False,
+                error='Username atau kata sandi yang Anda masukkan salah.',
+                last_username=user
+            ), 401
 
-    # GET Request: Generate challenge
-    num1, num2 = random.randint(2, 9), random.randint(1, 9)
-    session['sec_captcha_res'] = num1 + num2
-    return render_template(
-        'admin/login.html',
-        is_locked=False,
-        error=None,
-        captcha_num1=num1,
-        captcha_num2=num2
-    )
+    return render_template('admin/login.html', is_locked=False, error=None)
 
 @app.route('/admin/logout')
 def admin_logout():
