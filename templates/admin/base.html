@@ -31,9 +31,14 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     <style>
+        html, body {
+            height: 100%;
+            height: 100dvh;
+        }
+
         .custom-scrollbar::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
+            width: 5px;
+            height: 5px;
         }
         .custom-scrollbar::-webkit-scrollbar-track {
             background: #020617;
@@ -48,29 +53,26 @@
 
         /* Sidebar Transition for Smooth Minimizing */
         #sidebar {
-            transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), padding 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         /* Sidebar Minimized (Rail Mode) */
         body.sidebar-collapsed #sidebar {
             width: 4.75rem !important; /* ~76px */
             min-width: 4.75rem !important;
-            padding-left: 0.5rem !important;
-            padding-right: 0.5rem !important;
         }
 
         body.sidebar-collapsed .sidebar-text,
         body.sidebar-collapsed .sidebar-brand-text,
         body.sidebar-collapsed .sidebar-category-header,
-        body.sidebar-collapsed .sidebar-user-info,
         body.sidebar-collapsed #sidebarCollapseBtn {
             display: none !important;
         }
 
         body.sidebar-collapsed .sidebar-brand-wrapper {
             justify-content: center !important;
-            padding-left: 0 !important;
-            padding-right: 0 !important;
+            padding-left: 0.5rem !important;
+            padding-right: 0.5rem !important;
         }
 
         body.sidebar-collapsed .sidebar-link,
@@ -79,6 +81,16 @@
             padding-left: 0.5rem !important;
             padding-right: 0.5rem !important;
             position: relative !important;
+        }
+
+        body.sidebar-collapsed .sidebar-user-info {
+            justify-content: center !important;
+            padding: 0.25rem 0 !important;
+        }
+
+        body.sidebar-collapsed .sidebar-collapsed-user-icon {
+            display: flex !important;
+            justify-content: center !important;
         }
 
         body.sidebar-collapsed .sidebar-badge {
@@ -104,7 +116,7 @@
         }
     </style>
 </head>
-<body class="bg-[#020617] text-slate-100 min-h-screen md:min-h-0 md:h-screen md:overflow-hidden flex flex-col md:flex-row antialiased font-sans">
+<body class="bg-[#020617] text-slate-100 min-h-screen md:min-h-0 md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row antialiased font-sans">
 
     <!-- Admin Mobile Drawer Backdrop -->
     <div id="adminMobileBackdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
@@ -130,129 +142,133 @@
     </div>
 
     <!-- Sidebar Navigation (Responsive Desktop/Tablet Fixed + Mobile Offcanvas Drawer) -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 max-w-[85vw] bg-[#070a14] border-r border-indigo-950/70 p-4 flex flex-col justify-between h-screen overflow-y-auto custom-scrollbar transform -translate-x-full md:translate-x-0 md:static md:shrink-0 shadow-2xl md:shadow-none">
-        <div class="space-y-5">
-            <!-- Brand Info + Action Buttons -->
-            <div class="sidebar-brand-wrapper flex items-center justify-between px-1 py-1 border-b border-indigo-950/50 pb-3">
-                <a href="{{ url_for('admin_dashboard') }}" class="flex items-center space-x-3 min-w-0" title="PT. Aksara Cipta Digital - Internal CMS">
-                    <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-10 w-auto drop-shadow-xl shrink-0 transition-transform hover:scale-105">
-                    <div class="sidebar-brand-text flex flex-col min-w-0">
-                        <span class="font-black text-white text-xs leading-snug truncate">AKSARA CIPTA DIGITAL</span>
-                        <span class="text-[10px] text-indigo-400 font-semibold truncate">Internal CMS Portal</span>
-                    </div>
-                </a>
-                
-                <!-- Collapse button inside sidebar on desktop/tablet -->
-                <button id="sidebarCollapseBtn" type="button" class="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" title="Kecilkan Menu (Minimize)">
-                    <i data-lucide="chevron-left" class="w-4 h-4"></i>
-                </button>
-                <!-- Mobile drawer close button -->
-                <button id="adminMobileCloseBtn" type="button" class="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" aria-label="Tutup Menu">
-                    <i data-lucide="x" class="w-5 h-5"></i>
-                </button>
-            </div>
-
-            <!-- Navigation Links -->
-            <nav class="space-y-1 text-xs">
-                <div class="sidebar-category-header px-3 pt-2 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Ringkasan & Leads</div>
-                <div class="sidebar-category-divider h-px bg-indigo-950/80 my-2 mx-1"></div>
-
-                <a href="{{ url_for('admin_dashboard') }}" title="Dashboard Metrik" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'dashboard' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Dashboard Metrik</span>
-                </a>
-                
-                <a href="{{ url_for('admin_inquiries') }}" title="Permintaan Masuk (Form Kebutuhan)" class="sidebar-link flex items-center justify-between px-3 py-2.5 rounded-xl font-medium transition relative {% if active_page == 'inquiries' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <div class="flex items-center space-x-2.5 min-w-0">
-                        <i data-lucide="inbox" class="w-4 h-4 shrink-0"></i>
-                        <span class="sidebar-text truncate">Permintaan Masuk</span>
-                    </div>
-                    {% if badge_new_inquiries and badge_new_inquiries > 0 %}
-                    <span class="sidebar-badge px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">{{ badge_new_inquiries }}</span>
-                    {% endif %}
-                </a>
-
-                <a href="{{ url_for('admin_wa_logs') }}" title="Log WA & Anti-Spam" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'wa_logs' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="shield-alert" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Log WA & Anti-Spam</span>
-                </a>
-
-                <div class="sidebar-category-header px-3 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Konten Website</div>
-                <div class="sidebar-category-divider h-px bg-indigo-950/80 my-2 mx-1"></div>
-
-                <a href="{{ url_for('admin_services') }}" title="Kelola Layanan" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'services' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="layers" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Kelola Layanan</span>
-                </a>
-                
-                <a href="{{ url_for('admin_portfolios') }}" title="Kelola Portofolio" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'portfolios' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="briefcase" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Kelola Portofolio</span>
-                </a>
-
-                <a href="{{ url_for('admin_careers') }}" title="Karir & Lowongan" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'careers' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="users" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Karir & Lowongan</span>
-                </a>
-
-                <a href="{{ url_for('admin_faqs') }}" title="Tanya Jawab (FAQ)" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'faqs' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="help-circle" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Tanya Jawab (FAQ)</span>
-                </a>
-
-                <a href="{{ url_for('admin_contact_form') }}" title="Kelola Kontak" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'contact_form' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="phone-call" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Kelola Kontak</span>
-                </a>
-
-                <a href="{{ url_for('admin_footer') }}" title="Kelola Footer" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'footer' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="layout-template" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Kelola Footer</span>
-                </a>
-
-                <div class="sidebar-category-header px-3 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Sistem & Profil</div>
-                <div class="sidebar-category-divider h-px bg-indigo-950/80 my-2 mx-1"></div>
-
-                <a href="{{ url_for('admin_settings') }}" title="Pengaturan Website" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'settings' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="settings" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Pengaturan Website</span>
-                </a>
-
-                <a href="{{ url_for('admin_seo') }}" title="Optimasi SEO" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'seo' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="search-check" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Optimasi SEO</span>
-                </a>
-
-                <a href="{{ url_for('admin_security') }}" title="Keamanan & Audit Log" class="sidebar-link flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'security' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>
-                    <span class="sidebar-text truncate">Keamanan & Audit Log</span>
-                </a>
-            </nav>
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 max-w-[85vw] bg-[#070a14] border-r border-indigo-950/70 flex flex-col h-[100dvh] md:h-screen md:static md:shrink-0 shadow-2xl md:shadow-none overflow-hidden transform -translate-x-full md:translate-x-0">
+        <!-- 1. Brand Header (Fixed Top, shrink-0) -->
+        <div class="sidebar-brand-wrapper shrink-0 px-3.5 py-3.5 border-b border-indigo-950/60 flex items-center justify-between bg-[#070a14]">
+            <a href="{{ url_for('admin_dashboard') }}" class="flex items-center space-x-3 min-w-0" title="PT. Aksara Cipta Digital - Internal CMS">
+                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-9 w-auto drop-shadow-xl shrink-0 transition-transform hover:scale-105">
+                <div class="sidebar-brand-text flex flex-col min-w-0">
+                    <span class="font-black text-white text-xs leading-snug truncate">AKSARA CIPTA DIGITAL</span>
+                    <span class="text-[10px] text-indigo-400 font-semibold truncate">Internal CMS Portal</span>
+                </div>
+            </a>
+            
+            <!-- Collapse button inside sidebar on desktop/tablet -->
+            <button id="sidebarCollapseBtn" type="button" class="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" title="Kecilkan Menu (Minimize)">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+            <!-- Mobile drawer close button -->
+            <button id="adminMobileCloseBtn" type="button" class="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" aria-label="Tutup Menu">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
         </div>
 
-        <!-- Bottom User & Website Links -->
-        <div class="pt-3 border-t border-slate-800/80 space-y-1 text-xs">
-            <a href="{{ url_for('index') }}" target="_blank" title="Buka Web Publik" class="sidebar-bottom-link flex items-center justify-between px-3 py-2 rounded-lg text-slate-400 hover:text-white hover:bg-slate-900 transition">
-                <span class="flex items-center space-x-2 min-w-0">
+        <!-- 2. Middle Navigation Links (Scrollable, flex-1 min-h-0 overflow-y-auto custom-scrollbar) -->
+        <nav class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-3 space-y-1 text-xs">
+            <div class="sidebar-category-header px-2.5 pt-1 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Ringkasan & Leads</div>
+            <div class="sidebar-category-divider h-px bg-indigo-950/80 my-1.5 mx-1"></div>
+
+            <a href="{{ url_for('admin_dashboard') }}" title="Dashboard Metrik" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'dashboard' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="layout-dashboard" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Dashboard Metrik</span>
+            </a>
+            
+            <a href="{{ url_for('admin_inquiries') }}" title="Permintaan Masuk (Form Kebutuhan)" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition relative {% if active_page == 'inquiries' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <div class="flex items-center space-x-2.5 min-w-0">
+                    <i data-lucide="inbox" class="w-4 h-4 shrink-0"></i>
+                    <span class="sidebar-text truncate">Permintaan Masuk</span>
+                </div>
+                {% if badge_new_inquiries and badge_new_inquiries > 0 %}
+                <span class="sidebar-badge px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">{{ badge_new_inquiries }}</span>
+                {% endif %}
+            </a>
+
+            <a href="{{ url_for('admin_wa_logs') }}" title="Log WA & Anti-Spam" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'wa_logs' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="shield-alert" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Log WA & Anti-Spam</span>
+            </a>
+
+            <div class="sidebar-category-header px-2.5 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Konten Website</div>
+            <div class="sidebar-category-divider h-px bg-indigo-950/80 my-1.5 mx-1"></div>
+
+            <a href="{{ url_for('admin_services') }}" title="Kelola Layanan" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'services' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="layers" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Kelola Layanan</span>
+            </a>
+            
+            <a href="{{ url_for('admin_portfolios') }}" title="Kelola Portofolio" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'portfolios' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="briefcase" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Kelola Portofolio</span>
+            </a>
+
+            <a href="{{ url_for('admin_careers') }}" title="Karir & Lowongan" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'careers' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="users" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Karir & Lowongan</span>
+            </a>
+
+            <a href="{{ url_for('admin_faqs') }}" title="Tanya Jawab (FAQ)" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'faqs' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="help-circle" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Tanya Jawab (FAQ)</span>
+            </a>
+
+            <a href="{{ url_for('admin_contact_form') }}" title="Kelola Kontak" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'contact_form' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="phone-call" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Kelola Kontak</span>
+            </a>
+
+            <a href="{{ url_for('admin_footer') }}" title="Kelola Footer" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'footer' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="layout-template" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Kelola Footer</span>
+            </a>
+
+            <div class="sidebar-category-header px-2.5 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Sistem & Profil</div>
+            <div class="sidebar-category-divider h-px bg-indigo-950/80 my-1.5 mx-1"></div>
+
+            <a href="{{ url_for('admin_settings') }}" title="Pengaturan Website" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'settings' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="settings" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Pengaturan Website</span>
+            </a>
+
+            <a href="{{ url_for('admin_seo') }}" title="Optimasi SEO" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'seo' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="search-check" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Optimasi SEO</span>
+            </a>
+
+            <a href="{{ url_for('admin_security') }}" title="Keamanan & Audit Log" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'security' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                <i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>
+                <span class="sidebar-text truncate">Keamanan & Audit Log</span>
+            </a>
+        </nav>
+
+        <!-- 3. Bottom Action Controls & User Info (Fixed Sticky at Bottom, shrink-0, ALWAYS VISIBLE!) -->
+        <div class="shrink-0 p-3 border-t border-indigo-950/80 bg-[#060913] space-y-1.5 text-xs shadow-[0_-4px_15px_rgba(0,0,0,0.5)] z-10">
+            <a href="{{ url_for('index') }}" target="_blank" title="Buka Web Publik" class="sidebar-bottom-link flex items-center justify-between px-3 py-2 rounded-xl text-slate-300 hover:text-white hover:bg-slate-900 border border-slate-900/60 hover:border-indigo-900/60 transition">
+                <span class="flex items-center space-x-2.5 min-w-0">
                     <i data-lucide="globe" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-                    <span class="sidebar-text truncate">Buka Web Publik</span>
+                    <span class="sidebar-text truncate font-medium">Buka Web Publik</span>
                 </span>
                 <i data-lucide="external-link" class="sidebar-text w-3.5 h-3.5 text-slate-500 shrink-0"></i>
             </a>
 
-            <a href="{{ url_for('admin_logout') }}" title="Keluar (Logout)" class="sidebar-bottom-link flex items-center space-x-2 px-3 py-2 rounded-lg text-rose-400 hover:text-rose-300 hover:bg-rose-950/30 transition">
+            <a href="{{ url_for('admin_logout') }}" title="Keluar (Logout)" class="sidebar-bottom-link flex items-center space-x-2.5 px-3 py-2 rounded-xl text-rose-400 hover:text-rose-200 hover:bg-rose-950/40 border border-rose-950/40 hover:border-rose-900/60 transition">
                 <i data-lucide="log-out" class="w-4 h-4 shrink-0"></i>
-                <span class="sidebar-text truncate">Keluar (Logout)</span>
+                <span class="sidebar-text truncate font-semibold">Keluar (Logout)</span>
             </a>
 
-            <div class="sidebar-user-info px-3 pt-1.5 text-[10px] text-slate-500 truncate">
-                Logged as: <strong class="text-slate-300">{{ session.get('admin_user', 'admin') }}</strong>
+            <div class="sidebar-user-info px-2.5 pt-1.5 flex items-center justify-between text-[11px] text-slate-400 border-t border-slate-900/90 mt-1">
+                <div class="flex items-center space-x-1.5 min-w-0 truncate">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 shrink-0 animate-pulse" title="Status Online"></span>
+                    <span class="sidebar-text truncate">Logged: <strong class="text-white font-bold">{{ session.get('admin_user', 'admin') }}</strong></span>
+                </div>
+                <span class="sidebar-collapsed-user-icon hidden" title="Logged in as: {{ session.get('admin_user', 'admin') }}">
+                    <i data-lucide="user-check" class="w-3.5 h-3.5 text-emerald-400"></i>
+                </span>
             </div>
         </div>
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex-1 flex flex-col min-w-0 md:h-screen overflow-y-auto custom-scrollbar relative">
+    <div class="flex-1 flex flex-col min-w-0 md:h-[100dvh] overflow-y-auto custom-scrollbar relative">
         <!-- Top Header Bar (Responsive Tablet & Desktop with Minimize Button) -->
         <header class="hidden md:flex items-center justify-between px-3 sm:px-6 lg:px-8 py-3.5 bg-[#0a0f1d]/95 backdrop-blur-xl border-b border-indigo-950/80 sticky top-0 z-30 shrink-0 shadow-[0_4px_25px_rgba(2,6,23,0.8)]">
             <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
@@ -287,6 +303,12 @@
                 <a href="{{ url_for('index') }}" target="_blank" class="px-2.5 sm:px-3 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition inline-flex items-center space-x-1.5 border border-slate-700" title="Buka Pratinjau Website Publik">
                     <i data-lucide="external-link" class="w-3.5 h-3.5 text-slate-400"></i>
                     <span class="hidden sm:inline">Pratinjau Web</span>
+                </a>
+
+                <!-- Quick Logout Button in Header -->
+                <a href="{{ url_for('admin_logout') }}" class="px-2.5 sm:px-3 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-xs font-semibold text-rose-400 hover:text-rose-300 transition inline-flex items-center space-x-1.5 border border-rose-500/30" title="Keluar (Logout) Administrator">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span class="hidden xl:inline">Keluar</span>
                 </a>
             </div>
         </header>
