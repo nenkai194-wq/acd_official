@@ -3,27 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Portal Internal - ACD Digital Consulting</title>
+    <title>Login Portal Internal - PT. Aksara Cipta Digital</title>
+    <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deptech: {
+                            dark: '#020617',
+                            slate: '#0f172a',
+                            navy: '#1e1b4b',
+                            indigo: '#6366f1',
+                            purple: '#7c3aed',
+                            violet: '#8b5cf6',
+                            cyan: '#06b6d4',
+                            light: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo_acd_icon.png') }}">
 </head>
-<body class="deptech-hero-bg min-h-screen flex items-center justify-center p-4 text-white relative font-sans antialiased">
-    <div class="deptech-grid-pattern"></div>
+<body class="deptech-hero-bg min-h-screen flex items-center justify-center p-4 text-white relative font-sans antialiased overflow-hidden">
+    <!-- 1. Interactive Particle Constellation Canvas (Animasi Seperti Frontend) -->
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
-    <div class="max-w-md w-full bg-[#0d0f1a]/95 border border-indigo-950/80 rounded-3xl p-8 shadow-2xl relative z-10 backdrop-blur-md">
+    <!-- 2. Ambient Grid Pattern -->
+    <div class="deptech-grid-pattern opacity-30 pointer-events-none"></div>
+
+    <!-- 3. Cosmic Soft Glow Ambient Orbs -->
+    <div class="absolute w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-3xl pointer-events-none -top-24 -left-24"></div>
+    <div class="absolute w-[450px] h-[450px] bg-cyan-600/10 rounded-full blur-3xl pointer-events-none -bottom-20 -right-20"></div>
+
+    <!-- 4. Login Card (Card Glassmorphism dengan Animasi Fade-In) -->
+    <div class="max-w-md w-full bg-[#0a0f1d]/95 border border-indigo-950/90 rounded-3xl p-8 sm:p-10 shadow-2xl relative z-10 backdrop-blur-xl animate-fade-in-up">
         <!-- Logo & Title -->
         <div class="text-center mb-6">
-            <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-20 sm:h-24 w-auto mx-auto mb-3 drop-shadow-xl hover:scale-105 transition-transform">
-            <h2 class="text-xl font-bold text-white tracking-tight">Portal Staf & Administrator</h2>
-            <p class="text-xs text-indigo-300 mt-1">PT. Aksara Cipta Digital (acd.co.id)</p>
+            <div class="relative inline-block mb-3">
+                <div class="absolute inset-0 bg-indigo-600/20 rounded-full blur-xl pointer-events-none"></div>
+                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-20 sm:h-24 w-auto mx-auto drop-shadow-[0_10px_25px_rgba(37,99,235,0.4)] hover:scale-105 transition-transform duration-300 relative z-10">
+            </div>
+            <h2 class="text-xl font-extrabold text-white tracking-tight">Portal Staf & Administrator</h2>
+            <p class="text-xs text-indigo-400 font-medium mt-1">PT. Aksara Cipta Digital (acd.co.id)</p>
         </div>
 
-        <!-- Flashed Messages (e.g. Session Timeout or Logout) -->
+        <!-- Flashed Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                <div class="mb-4 p-3 rounded-xl text-xs flex items-center space-x-2 {% if category == 'warning' %}bg-amber-500/20 border border-amber-500/40 text-amber-300{% elif category == 'success' %}bg-emerald-500/20 border border-emerald-500/40 text-emerald-300{% else %}bg-indigo-500/20 border border-indigo-500/40 text-indigo-300{% endif %}">
+                <div class="mb-4 p-3 rounded-xl text-xs flex items-center space-x-2.5 {% if category == 'warning' %}bg-amber-500/20 border border-amber-500/40 text-amber-300{% elif category == 'success' %}bg-emerald-500/20 border border-emerald-500/40 text-emerald-300{% else %}bg-indigo-500/20 border border-indigo-500/40 text-indigo-300{% endif %}">
                     {% if category == 'warning' %}
                     <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 text-amber-400"></i>
                     {% elif category == 'success' %}
@@ -58,24 +94,40 @@
         </div>
         {% endif %}
 
-        <!-- Form Login Simple & Bersih -->
-        <form method="POST" action="{{ url_for('admin_login') }}" class="space-y-4">
-            <!-- Invisible Honeypot Trap (Untuk Menjerat Hacker/Bot Scanner) -->
+        <!-- Form Login (Posisi Input Bersih & Dikosongkan Awal) -->
+        <form method="POST" action="{{ url_for('admin_login') }}" autocomplete="off" class="space-y-4">
+            <!-- Invisible Honeypot Trap (Menjerat Scanner/Bot) -->
             <div style="display:none !important;" aria-hidden="true">
                 <input type="text" name="admin_sec_trap" tabindex="-1" autocomplete="off">
             </div>
 
-            <!-- Username -->
+            <!-- Username Staf (Dikosongkan Terlebih Dahulu) -->
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Username Staf</label>
-                <input type="text" name="username" required {% if is_locked %}disabled{% endif %} placeholder="admin" value="{{ last_username or '' }}" class="w-full px-4 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50">
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Username Staf</label>
+                <input type="text"
+                       id="usernameInput"
+                       name="username"
+                       required
+                       {% if is_locked %}disabled{% endif %}
+                       placeholder="Masukkan username staf"
+                       value=""
+                       autocomplete="off"
+                       class="w-full px-4 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 transition">
             </div>
 
-            <!-- Kata Sandi dengan Tombol Lihat Password (Icon Mata) -->
+            <!-- Kata Sandi (Dikosongkan Terlebih Dahulu dengan Icon Mata) -->
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Kata Sandi</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kata Sandi</label>
                 <div class="relative">
-                    <input type="password" id="passwordInput" name="password" required {% if is_locked %}disabled{% endif %} placeholder="••••••••" class="w-full pl-4 pr-11 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50">
+                    <input type="password"
+                           id="passwordInput"
+                           name="password"
+                           required
+                           {% if is_locked %}disabled{% endif %}
+                           placeholder="Masukkan kata sandi"
+                           value=""
+                           autocomplete="new-password"
+                           class="w-full pl-4 pr-11 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 transition">
                     <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-white transition focus:outline-none" title="Tampilkan / Sembunyikan Kata Sandi">
                         <i data-lucide="eye" id="eyeIcon" class="w-4 h-4"></i>
                     </button>
@@ -84,7 +136,7 @@
 
             <!-- Kode CAPTCHA Gambar -->
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1">Kode Verifikasi Keamanan</label>
+                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Verifikasi Keamanan</label>
                 <div class="flex items-center space-x-2">
                     <!-- Gambar CAPTCHA Dinamis -->
                     <div class="relative bg-[#020617] border border-indigo-950 rounded-xl overflow-hidden shrink-0 shadow-inner flex items-center justify-center">
@@ -96,29 +148,42 @@
                         <i data-lucide="refresh-cw" class="w-4 h-4" id="refreshIcon"></i>
                     </button>
 
-                    <!-- Input Teks CAPTCHA -->
-                    <input type="text" name="captcha_code" required {% if is_locked %}disabled{% endif %} maxlength="5" placeholder="Ketik kode" autocomplete="off" class="w-full px-3 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-emerald-400 font-mono font-bold tracking-widest text-center uppercase focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50">
+                    <!-- Input Teks CAPTCHA (Dikosongkan) -->
+                    <input type="text"
+                           id="captchaInput"
+                           name="captcha_code"
+                           required
+                           {% if is_locked %}disabled{% endif %}
+                           maxlength="5"
+                           placeholder="Ketik kode"
+                           value=""
+                           autocomplete="off"
+                           class="w-full px-3 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-emerald-400 font-mono font-bold tracking-widest text-center uppercase placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 transition">
                 </div>
                 <span class="text-[10px] text-slate-500 mt-1 block">Masukkan 5 karakter huruf/angka dari gambar di atas</span>
             </div>
 
             <!-- Tombol Masuk -->
-            <button type="submit" {% if is_locked %}disabled{% endif %} class="w-full py-3.5 deptech-btn-primary font-bold text-xs uppercase tracking-wider shadow-lg flex items-center justify-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed mt-2">
+            <button type="submit" {% if is_locked %}disabled{% endif %} class="w-full py-3.5 deptech-btn-primary font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed mt-2 rounded-xl transition">
                 <span>Masuk ke Dashboard CMS</span>
             </button>
         </form>
 
         <!-- Link Kembali -->
         <div class="mt-6 pt-4 border-t border-indigo-950/80 text-center">
-            <a href="{{ url_for('index') }}" class="text-xs text-slate-400 hover:text-white transition">
-                &larr; Kembali ke Website Publik acd.co.id
+            <a href="{{ url_for('index') }}" class="text-xs text-slate-400 hover:text-white transition inline-flex items-center space-x-1.5">
+                <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
+                <span>Kembali ke Website Publik acd.co.id</span>
             </a>
         </div>
     </div>
 
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
     <script>
         lucide.createIcons();
 
+        // 1. Password Visibility Toggle
         function togglePasswordVisibility() {
             const pwd = document.getElementById('passwordInput');
             const eye = document.getElementById('eyeIcon');
@@ -132,6 +197,7 @@
             lucide.createIcons();
         }
 
+        // 2. Refresh CAPTCHA
         function refreshCaptcha() {
             const img = document.getElementById('captchaImg');
             const icon = document.getElementById('refreshIcon');
@@ -143,6 +209,20 @@
                 img.src = "{{ url_for('admin_captcha_image') }}?t=" + new Date().getTime();
             }
         }
+
+        // 3. Pastikan Form Input Selalu Kosong di Awal (Mencegah Autofill Browser Otomatis)
+        function clearLoginInputs() {
+            const u = document.getElementById('usernameInput');
+            const p = document.getElementById('passwordInput');
+            const c = document.getElementById('captchaInput');
+            if (u) u.value = '';
+            if (p) p.value = '';
+            if (c) c.value = '';
+        }
+
+        window.addEventListener('DOMContentLoaded', clearLoginInputs);
+        window.addEventListener('load', () => setTimeout(clearLoginInputs, 50));
+        window.addEventListener('pageshow', clearLoginInputs);
     </script>
 </body>
 </html>
