@@ -139,7 +139,6 @@ def get_footer_data():
     terms_url = s_val('footer_terms_url', '/tentang-kami')
     consult_label = s_val('footer_consult_label', 'Hubungi Konsultan')
     consult_url = s_val('footer_consult_url', '/kontak')
-    show_admin_link = str(s_val('footer_show_admin_link', '1')).strip() in ('1', 'true', 'True')
 
     return {
         'brand_name': brand_name,
@@ -175,7 +174,6 @@ def get_footer_data():
         'terms_url': terms_url,
         'consult_label': consult_label,
         'consult_url': consult_url,
-        'show_admin_link': show_admin_link
     }
 
 # Context Processor for global variables & multilingual translations
@@ -1431,7 +1429,6 @@ def admin_footer():
             'footer_terms_url': request.form.get('footer_terms_url', '').strip(),
             'footer_consult_label': request.form.get('footer_consult_label', '').strip(),
             'footer_consult_url': request.form.get('footer_consult_url', '').strip(),
-            'footer_show_admin_link': '1' if request.form.get('footer_show_admin_link') == '1' else '0'
         }
         
         SettingModel.update_many(updates)
@@ -1474,7 +1471,6 @@ def admin_footer_reset_defaults():
         'footer_terms_url': '/tentang-kami',
         'footer_consult_label': 'Hubungi Konsultan',
         'footer_consult_url': '/kontak',
-        'footer_show_admin_link': '1'
     }
     SettingModel.update_many(defaults)
     flash('Pengaturan footer berhasil dikembalikan ke standar awal PT. Aksara Cipta Digital.', 'info')

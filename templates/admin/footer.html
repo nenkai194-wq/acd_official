@@ -200,7 +200,7 @@
                 </div>
                 <div>
                     <h3 class="text-sm font-bold text-white">Baris Paling Bawah: Hak Cipta & Tautan Legal</h3>
-                    <p class="text-[11px] text-slate-400">Kalimat copyright, tautan kebijakan privasi, serta akses link portal admin</p>
+                    <p class="text-[11px] text-slate-400">Kalimat copyright dan tautan kebijakan privasi serta syarat layanan</p>
                 </div>
             </div>
 
@@ -237,18 +237,7 @@
                     <input type="text" name="footer_consult_url" value="{{ footer.consult_url }}" class="w-full px-4 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
                 </div>
 
-                <div class="sm:col-span-2 pt-2">
-                    <label class="flex items-center space-x-3 p-3.5 rounded-xl border border-indigo-950 bg-[#020617] cursor-pointer hover:border-indigo-800/60 transition">
-                        <input type="checkbox" name="footer_show_admin_link" value="1" {% if footer.show_admin_link %}checked{% endif %} class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-slate-900 border-slate-700">
-                        <div>
-                            <span class="text-xs font-bold text-white flex items-center space-x-1.5">
-                                <i data-lucide="lock" class="w-3.5 h-3.5 text-indigo-400"></i>
-                                <span>Tampilkan Tautan "Portal Admin" di Footer Website</span>
-                            </span>
-                            <p class="text-[11px] text-slate-400 mt-0.5">Memudahkan admin login langsung dari footer publik. Jika dimatikan, halaman login tetap dapat diakses manual via /admin/login.</p>
-                        </div>
-                    </label>
-                </div>
+
             </div>
         </div>
 
@@ -324,9 +313,7 @@
                     <div class="flex items-center space-x-3">
                         <span>{{ footer.privacy_label }}</span>
                         <span>{{ footer.terms_label }}</span>
-                        {% if footer.show_admin_link %}
-                        <span class="text-indigo-400 font-semibold">[Portal Admin Aktif]</span>
-                        {% endif %}
+
                     </div>
                 </div>
             </div>

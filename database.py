@@ -220,7 +220,6 @@ def init_db():
         ('footer_terms_url', '/tentang-kami'),
         ('footer_consult_label', 'Hubungi Konsultan'),
         ('footer_consult_url', '/kontak'),
-        ('footer_show_admin_link', '1')
     ]
     for k, v in default_settings:
         cursor.execute('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)', (k, v))
