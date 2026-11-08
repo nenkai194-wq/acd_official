@@ -73,16 +73,16 @@
             <span class="text-[10px] text-slate-500 mt-1 block">Studi kasus klien</span>
         </div>
 
-        <!-- Metric 5: Blogs -->
+        <!-- Metric 5: Lowongan Karir -->
         <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/70 hover:border-cyan-500/40 transition">
             <div class="flex items-center justify-between">
-                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Artikel Blog</span>
+                <span class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">Lowongan Karir</span>
                 <div class="p-2 rounded-lg bg-cyan-500/10 text-cyan-400">
-                    <i data-lucide="file-text" class="w-4 h-4"></i>
+                    <i data-lucide="users" class="w-4 h-4"></i>
                 </div>
             </div>
-            <p class="text-2xl font-black text-cyan-300 mt-3">{{ total_blogs }}</p>
-            <span class="text-[10px] text-slate-500 mt-1 block">Edukasi & teknologi</span>
+            <p class="text-2xl font-black text-cyan-300 mt-3">{{ total_careers }}</p>
+            <span class="text-[10px] text-slate-500 mt-1 block">Posisi talenta digital</span>
         </div>
 
         <!-- Metric 6: Anti-Spam WA Logs -->
@@ -120,23 +120,23 @@
             </div>
         </a>
 
-        <a href="{{ url_for('admin_blog_add') }}" class="p-4 rounded-xl bg-[#0a0f1d] border border-indigo-950/70 hover:border-cyan-500/50 hover:bg-cyan-950/20 transition flex items-center space-x-3 group">
+        <a href="{{ url_for('admin_contact_form') }}" class="p-4 rounded-xl bg-[#0a0f1d] border border-indigo-950/70 hover:border-cyan-500/50 hover:bg-cyan-950/20 transition flex items-center space-x-3 group">
             <div class="w-10 h-10 rounded-lg bg-cyan-600/20 group-hover:bg-cyan-600 flex items-center justify-center text-cyan-400 group-hover:text-white transition">
-                <i data-lucide="file-plus-2" class="w-5 h-5"></i>
+                <i data-lucide="phone-call" class="w-5 h-5"></i>
             </div>
             <div>
-                <span class="block text-xs font-bold text-white">Tulis Artikel</span>
-                <span class="text-[10px] text-slate-400">Wawasan IT & berita</span>
+                <span class="block text-xs font-bold text-white">Kelola Kontak</span>
+                <span class="text-[10px] text-slate-400">Form & pesan masuk</span>
             </div>
         </a>
 
-        <a href="{{ url_for('admin_testimonials') }}" class="p-4 rounded-xl bg-[#0a0f1d] border border-indigo-950/70 hover:border-amber-500/50 hover:bg-amber-950/20 transition flex items-center space-x-3 group">
-            <div class="w-10 h-10 rounded-lg bg-amber-600/20 group-hover:bg-amber-600 flex items-center justify-center text-amber-400 group-hover:text-white transition">
-                <i data-lucide="message-square" class="w-5 h-5"></i>
+        <a href="{{ url_for('admin_footer') }}" class="p-4 rounded-xl bg-[#0a0f1d] border border-indigo-950/70 hover:border-indigo-500/50 hover:bg-indigo-950/20 transition flex items-center space-x-3 group">
+            <div class="w-10 h-10 rounded-lg bg-indigo-600/20 group-hover:bg-indigo-600 flex items-center justify-center text-indigo-400 group-hover:text-white transition">
+                <i data-lucide="layout-template" class="w-5 h-5"></i>
             </div>
             <div>
-                <span class="block text-xs font-bold text-white">Kelola Testimoni</span>
-                <span class="text-[10px] text-slate-400">Ulasan & apresiasi klien</span>
+                <span class="block text-xs font-bold text-white">Kelola Footer</span>
+                <span class="text-[10px] text-slate-400">Tautan & informasi web</span>
             </div>
         </a>
     </div>

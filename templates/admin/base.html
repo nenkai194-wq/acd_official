@@ -49,33 +49,44 @@
 </head>
 <body class="bg-[#020617] text-slate-100 min-h-screen md:min-h-0 md:h-screen md:overflow-hidden flex flex-col md:flex-row antialiased font-sans">
 
+    <!-- Admin Mobile Drawer Backdrop -->
+    <div id="adminMobileBackdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+
     <!-- Mobile Topbar -->
-    <div class="md:hidden flex items-center justify-between p-4 bg-[#0a0f1d] border-b border-indigo-950/80 sticky top-0 z-50">
-        <div class="flex items-center space-x-3">
-            <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-11 w-auto drop-shadow-md">
-            <span class="font-extrabold text-white text-xs">IT Consultant - AI, Software Developer.</span>
+    <div class="md:hidden flex items-center justify-between p-3.5 sm:p-4 bg-[#0a0f1d] border-b border-indigo-950/80 sticky top-0 z-30">
+        <div class="flex items-center space-x-2.5 min-w-0">
+            <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-9 w-auto drop-shadow-md shrink-0">
+            <div class="flex flex-col min-w-0">
+                <span class="font-extrabold text-white text-xs truncate">PT. AKSARA CIPTA DIGITAL</span>
+                <span class="text-[10px] text-indigo-400 font-semibold truncate">Panel Kendali Admin</span>
+            </div>
         </div>
-        <div class="flex items-center space-x-2">
-            <div class="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[10px] font-mono text-slate-300" title="Proteksi Keamanan: Logout otomatis saat tidak ada aktivitas">
+        <div class="flex items-center space-x-2 shrink-0">
+            <div class="flex items-center space-x-1 px-2 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[10px] font-mono text-slate-300" title="Proteksi Keamanan: Logout otomatis saat tidak ada aktivitas">
                 <i data-lucide="shield" class="w-3 h-3 text-amber-400"></i>
                 <span id="mobileSessionTimerText" class="font-bold text-white">15:00</span>
             </div>
-            <button id="mobileMenuBtn" class="p-2 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+            <button id="mobileMenuBtn" class="p-2 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition" aria-label="Buka Menu Admin">
                 <i data-lucide="menu" class="w-5 h-5"></i>
             </button>
         </div>
     </div>
 
-    <!-- Sidebar Navigation -->
-    <aside id="sidebar" class="hidden md:flex flex-col w-full md:w-64 bg-[#070a14] border-r border-indigo-950/70 p-4 justify-between shrink-0 sticky top-0 h-screen overflow-y-auto custom-scrollbar z-40">
+    <!-- Sidebar Navigation (Responsive Desktop Fixed + Mobile Offcanvas Drawer) -->
+    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-72 max-w-[85vw] bg-[#070a14] border-r border-indigo-950/70 p-4 flex flex-col justify-between h-screen overflow-y-auto custom-scrollbar transform -translate-x-full md:translate-x-0 md:static md:w-64 md:shrink-0 transition-transform duration-300 ease-in-out shadow-2xl md:shadow-none">
         <div class="space-y-6">
-            <!-- Brand Info -->
-            <div class="flex items-center space-x-3.5 px-2 py-2">
-                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-14 w-auto drop-shadow-xl shrink-0 transition-transform hover:scale-105">
-                <div class="flex flex-col min-w-0">
-                    <span class="font-black text-white text-xs leading-snug">IT Consultant - AI, Software Developer.</span>
-                    <span class="text-[11px] text-indigo-400 font-semibold mt-0.5">Internal CMS Portal</span>
+            <!-- Brand Info + Mobile Close Button -->
+            <div class="flex items-center justify-between px-2 py-1 border-b border-indigo-950/50 pb-3">
+                <div class="flex items-center space-x-3 min-w-0">
+                    <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-11 w-auto drop-shadow-xl shrink-0 transition-transform hover:scale-105">
+                    <div class="flex flex-col min-w-0">
+                        <span class="font-black text-white text-xs leading-snug truncate">AKSARA CIPTA DIGITAL</span>
+                        <span class="text-[10px] text-indigo-400 font-semibold truncate">Internal CMS Portal</span>
+                    </div>
                 </div>
+                <button id="adminMobileCloseBtn" class="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" aria-label="Tutup Menu">
+                    <i data-lucide="x" class="w-5 h-5"></i>
+                </button>
             </div>
 
             <!-- Navigation Links -->
@@ -217,15 +228,43 @@
         </main>
     </div>
 
-    <!-- Script Lucide & Mobile Menu Toggle -->
+    <!-- Script Lucide & Responsive Mobile Menu Toggle -->
     <script>
         lucide.createIcons();
 
         const mobileBtn = document.getElementById('mobileMenuBtn');
         const sidebar = document.getElementById('sidebar');
-        if (mobileBtn && sidebar) {
-            mobileBtn.addEventListener('click', () => {
-                sidebar.classList.toggle('hidden');
+        const adminBackdrop = document.getElementById('adminMobileBackdrop');
+        const adminCloseBtn = document.getElementById('adminMobileCloseBtn');
+
+        function openAdminSidebar() {
+            if (sidebar) {
+                sidebar.classList.remove('-translate-x-full');
+                if (adminBackdrop) adminBackdrop.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        function closeAdminSidebar() {
+            if (sidebar) {
+                sidebar.classList.add('-translate-x-full');
+                if (adminBackdrop) adminBackdrop.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        if (mobileBtn) mobileBtn.addEventListener('click', openAdminSidebar);
+        if (adminCloseBtn) adminCloseBtn.addEventListener('click', closeAdminSidebar);
+        if (adminBackdrop) adminBackdrop.addEventListener('click', closeAdminSidebar);
+
+        // Auto close when nav links clicked on mobile
+        if (sidebar) {
+            sidebar.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 768) {
+                        closeAdminSidebar();
+                    }
+                });
             });
         }
     </script>

@@ -442,6 +442,10 @@ def career_detail(slug):
         abort(404)
     return render_template('career_detail.html', career=career)
 
+@app.route('/faq')
+def faq():
+    return redirect('/#faq')
+
 @app.route('/hubungi-kami', methods=['GET', 'POST'])
 @app.route('/kontak', methods=['GET', 'POST'])
 def contact():
@@ -909,7 +913,7 @@ def admin_dashboard():
     inquiry_stats = InquiryModel.get_stats()
     services = ServiceModel.get_all()
     portfolios = PortfolioModel.get_all()
-    blogs = BlogModel.get_all()
+    careers = CareerModel.get_all()
     recent_wa_logs = WALogModel.get_all(limit=10)
 
     return render_template(
@@ -919,7 +923,7 @@ def admin_dashboard():
         total_inquiries=len(inquiries),
         total_services=len(services),
         total_portfolios=len(portfolios),
-        total_blogs=len(blogs),
+        total_careers=len(careers),
         total_wa_logs=len(recent_wa_logs),
         recent_wa_logs=recent_wa_logs
     )
