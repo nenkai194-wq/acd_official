@@ -436,19 +436,19 @@ def seed_db():
     # --- PORTFOLIO SEED (HASIL PROJEK RESMI PT. AKSARA CIPTA DIGITAL) ---
     portfolios = [
         (
-            'sidakep-terpadu',
-            'SIDAKEP-TERPADU (Sistem Informasi Basis Data Kependudukan Terpadu)',
-            'E-Government',
-            'Dinas Kependudukan dan Pencatatan Sipil (Disdukcapil)',
-            'Pemerintahan',
+            'sisurvei-lembaga-survei-riset',
+            'SISURVEI (Sistem Informasi Manajemen Survei & Riset Lapangan Terpadu)',
+            'Sistem Informasi',
+            'Lembaga Riset & Konsultan Survei Nasional',
+            'Swasta / Lembaga Riset',
             '2024',
-            'Aplikasi yang menghimpun dan mengintegrasikan basis data kependudukan secara terpadu, valid, dan realtime antar-wilayah.',
-            'Pencatatan data kependudukan sebelumnya masih tersebar di database kelurahan dan kecamatan yang berbeda-beda, rawan data ganda NIK, dan lambatnya pemutakhiran data warga saat perpindahan domisili.',
-            'ACD merancang SIDAKEP-TERPADU sebagai data warehouse kependudukan terpadu dengan algoritma deduplikasi NIK otomatis, sinkronisasi realtime multi-kecamatan, dan API interoperabilitas data kependudukan antar-OPD.',
-            'Integrasi 100% basis data kependudukan daerah, meniadakan anomali NIK ganda, dan mempercepat validasi bantuan sosial serta pelayanan publik hingga 85%.',
-            json.dumps(['Python Flask/FastAPI', 'PostgreSQL', 'Vue.js', 'Redis Cache', 'Docker', 'REST API Data Interop']),
-            '/static/images/portfolio_sidakep.svg',
-            json.dumps({'Akurasi NIK': '99.98%', 'Integrasi Wilayah': '100%', 'Kecepatan Verifikasi': '4x Lebih Cepat'})
+            'Aplikasi untuk mengelola berbagai jenis kegiatan survei dari lembaga survei dan research konsultan yang terintegrasi langsung dengan petugas lapangan untuk menghasilkan data riset yang berkualitas, valid, dan realtime.',
+            'Pengelolaan sampling responden survei di berbagai wilayah sering lambat, rawan rekayasa data kuesioner oleh petugas lapangan fiktif (fraud entry), dan lambatnya kompilasi ribuan lembar kuesioner fisik ke pusat data riset.',
+            'ACD membangun platform SISURVEI dengan integrasi CAPI (Computer-Assisted Personal Interviewing) mobile offline-first, validasi GPS geotagging & timestamp saat wawancara, audio audit sampling, serta dashboard analitik visual tabulasi data riset instan.',
+            'Meniadakan kecurangan data survei lapangan hingga 100%, mempercepat proses tabulasi hasil survei dari 3 minggu menjadi hitungan jam, serta menghasilkan dataset riset yang berkualitas tinggi dan akuntabel.',
+            json.dumps(['Flutter Mobile CAPI', 'Python FastAPI', 'PostgreSQL', 'GIS Geolocation', 'Automated Quality Control Engine', 'Statistical Tabulation JS']),
+            '',
+            json.dumps({'Akurasi Data Riset': '99.9%', 'Pencegahan Fraud Survey': '100%', 'Kecepatan Tabulasi': 'Real-time'})
         ),
         (
             'sicepat-desa',
@@ -462,7 +462,7 @@ def seed_db():
             'ACD membangun platform SICEPAT DESA berbasis web & mobile-friendly dengan fitur e-Surat mandiri ber-QR Code legalitas digital, buku induk penduduk desa digital, serta notifikasi WhatsApp instan saat surat selesai.',
             'Waktu penerbitan surat terpangkas dari 2 hari menjadi kurang dari 10 menit, arsip desa 100% digital tanpa risiko rusak/hilang, dan indeks kepuasan masyarakat desa melonjak ke 98%.',
             json.dumps(['PHP Laravel', 'MySQL', 'Tailwind CSS', 'PDF Generator with QR Verify', 'WhatsApp Gateway API']),
-            '/static/images/portfolio_sicepat.svg',
+            '',
             json.dumps({'Waktu Penerbitan Surat': '< 10 Menit', 'Kepuasan Warga': '98%', 'Digitalisasi Arsip': '100%'})
         ),
         (
@@ -477,7 +477,7 @@ def seed_db():
             'ACD mengembangkan aplikasi mobile APK SIMANJA dengan fitur input panen harian, tracking delivery logistik ke mitra pemesan, scan barcode keranjang panen, pencatatan pos belanja operasional, dan dashboard laporan P&L (Profit & Loss).',
             'Selisih timbangan panen berkurang 95%, pencatatan pengeluaran modal harian transparan, dan pemilik usaha dapat memantau pergerakan laba rugi secara realtime langsung dari genggaman HP Android.',
             json.dumps(['Flutter Mobile Android APK', 'Node.js REST API', 'PostgreSQL', 'Google Cloud Storage', 'Report Export Engine']),
-            '/static/images/portfolio_simanja.svg',
+            '',
             json.dumps({'Akurasi Timbangan': '99.8%', 'Kebocoran Logistik': '-95%', 'Monitoring Laba': 'Real-time APK'})
         ),
         (
@@ -492,7 +492,7 @@ def seed_db():
             'ACD membangun SIMANTRA dengan algoritma smart-allocation yang otomatis mengunci penugasan jika mitra telah mencapai batas pagu honor per periode, kalkulasi pajak PPh otomatis, dan penerbitan slip pembayaran digital.',
             'Nihil over-budget anggaran (0%), alokasi kerja antar-mitra adil dan merata, serta proses verifikasi dan pembayaran honor yang sebelumnya butuh 1 minggu selesai dalam 1 hari.',
             json.dumps(['Python Django', 'PostgreSQL', 'Tailwind CSS', 'Automated Payroll Calculation', 'Slip Generator']),
-            '/static/images/portfolio_simantra.svg',
+            '',
             json.dumps({'Over-budget Risk': '0%', 'Kecepatan Payroll': '7x Lebih Cepat', 'Mitra Terkelola': '500+ Mitra'})
         ),
         (
@@ -507,7 +507,7 @@ def seed_db():
             'ACD merancang portal web profil desa modern dengan antarmuka mobile-first, visual galeri potensi desa, peta spasial sentra UMKM, infografis APBDes yang mudah dipahami warga, dan kanal pengaduan masyarakat.',
             'Kunjungan wisatawan ke destinasi lokal meningkat 35%, produk UMKM desa dikenal hingga luar daerah, dan keterbukaan tata kelola desa meraih predikat Desa Informatif.',
             json.dumps(['HTML5 / Tailwind CSS', 'Python Flask Web', 'MySQL', 'Interactive Infographic JS', 'SEO Optimization']),
-            '/static/images/portfolio_webdesa.svg',
+            '',
             json.dumps({'Pengunjung Bulanan': '12.000+', 'Keterbukaan APBDes': '100%', 'Kecepatan Muat': '< 1 detik'})
         ),
         (
@@ -522,7 +522,7 @@ def seed_db():
             'ACD membangun portal sekolah terintegrasi dengan modul profil interaktif, tur virtual fasilitas belajar, formulir pendaftaran PPDB online lengkap dengan upload berkas, dan integrasi konfirmasi WhatsApp.',
             'Jumlah pendaftar calon siswa baru melonjak 45%, penghematan biaya cetak brosur promosi hingga 70%, dan kemudahan akses informasi nilai serta kalender akademik bagi wali murid.',
             json.dumps(['Next.js / Python', 'Tailwind CSS', 'PostgreSQL', 'WhatsApp Confirmation API', 'Responsive UI']),
-            '/static/images/portfolio_websekolah.svg',
+            '',
             json.dumps({'Peningkatan PPDB': '+45%', 'Efisiensi Brosur': '70%', 'Akses Mobile': '94%'})
         ),
         (
@@ -537,7 +537,7 @@ def seed_db():
             'ACD merancang aplikasi mobile Android APK CUAN dengan fitur dispatching penugasan Work Order (WO) ke ponsel teknisi, riwayat servis customer, modul kasir penjualan unit AC & onderdil, notifikasi jadwal servis berkala otomatis via WA, dan rekapitulasi laba rugi harian.',
             'Kapasitas pengerjaan unit servis naik 60% per hari, kebocoran stok sparepart freon menjadi 0%, dan repeat order pelanggan servis berkala meningkat drastis.',
             json.dumps(['Flutter Android Mobile APK', 'FastAPI Python Backend', 'PostgreSQL', 'Thermal Bluetooth Printer API', 'WhatsApp Service Reminder']),
-            '/static/images/portfolio_cuan.svg',
+            '',
             json.dumps({'Kapasitas Servis': '+60%', 'Nihil Selisih Onderdil': '0%', 'Repeat Order': '+55%'})
         ),
         (
@@ -552,7 +552,7 @@ def seed_db():
             'ACD membangun aplikasi mobile APK kasir POS touchscreen yang ringan dengan sinkronisasi cloud realtime, mutasi transfer stok bahan antar-cabang, otorisasi diskon kasir, dan ringkasan omzet serta laba bersih harian langsung ke aplikasi HP owner.',
             'Proses tutup buku kasir harian selesai dalam 5 menit, menekan selisih stok bahan baku hingga 0%, dan memudahkan evaluasi cabang yang paling menguntungkan.',
             json.dumps(['Flutter Mobile APK', 'SQLite Offline-First', 'Node.js Cloud Sync', 'Bluetooth Receipt Printer', 'Executive Dashboard']),
-            '/static/images/portfolio_dimsum.svg',
+            '',
             json.dumps({'Tutup Kasir Harian': '5 Menit', 'Akurasi Stok Outlet': '100%', 'Cabang Terintegrasi': '8+ Outlet'})
         ),
         (
@@ -567,7 +567,7 @@ def seed_db():
             'ACD membangun platform SaaS e-commerce multi-tenant di mana merchant dapat menyewa dan mengaktifkan toko digital instan dalam hitungan menit, terintegrasi payment gateway (QRIS, VA, E-Wallet), modul manajemen pesanan, dan ongkos kirim otomatis.',
             'Memungkinkan lebih dari 150 merchant aktif membuka toko online mandiri dalam waktu kurang dari 10 menit, serta sistem penagihan langganan sewa platform berjalan 100% otomatis.',
             json.dumps(['Next.js / React Frontend', 'Python Backend API', 'PostgreSQL', 'Midtrans Payment Gateway', 'RajaOngkir Logistics API', 'Cloudflare CDN']),
-            '/static/images/portfolio_ecommerce.svg',
+            '',
             json.dumps({'Aktivasi Toko': '< 10 Menit', 'Uptime Platform': '99.95%', 'Merchant Terdaftar': '150+ Toko'})
         )
     ]

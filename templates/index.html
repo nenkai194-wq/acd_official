@@ -257,35 +257,37 @@
         <!-- Portfolio Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {% for item in featured_portfolios %}
-            <div class="deptech-card-dark overflow-hidden flex flex-col justify-between group">
-                <div>
-                    <!-- Image mockup -->
-                    <div class="overflow-hidden bg-[#070913] aspect-video relative">
-                        <img src="{{ item.image_url }}" alt="{{ item.title }}" class="w-full h-full object-cover transition transform duration-500 group-hover:scale-105">
-                        <div class="absolute top-3 left-3 bg-[#020617]/85 backdrop-blur-md px-2.5 py-1 rounded-md text-[11px] font-bold text-indigo-300 border border-indigo-950">
+            <div class="deptech-card-dark overflow-hidden flex flex-col justify-between group hover:border-indigo-500/60 transition">
+                <div class="p-6">
+                    <!-- Top Row: Category + Year -->
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-900/60">
                             {{ item.category }}
-                        </div>
+                        </span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 text-slate-400 border border-slate-800">
+                            Tahun {{ item.year }}
+                        </span>
                     </div>
 
-                    <div class="p-6">
-                        <p class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">{{ item.client_name }}</p>
-                        <h3 class="text-lg font-bold text-white group-hover:text-indigo-400 transition mb-3">
-                            <a href="{{ url_for('portfolio_detail', slug=item.slug) }}">{{ item.title }}</a>
-                        </h3>
-                        <p class="text-xs text-slate-300 line-clamp-3 leading-relaxed mb-4">
-                            {{ item.summary }}
-                        </p>
+                    <p class="text-xs font-bold text-emerald-400 mb-1">{{ item.client_name }}</p>
+                    <h3 class="text-lg font-bold text-white group-hover:text-indigo-400 transition mb-3 leading-snug">
+                        <a href="{{ url_for('portfolio_detail', slug=item.slug) }}">{{ item.title }}</a>
+                    </h3>
+                    <p class="text-xs text-slate-300 line-clamp-3 leading-relaxed mb-4">
+                        {{ item.summary }}
+                    </p>
 
-                        <!-- Key Metrics pills -->
-                        <div class="pt-3 border-t border-indigo-950/80 grid grid-cols-2 gap-2 text-xs">
-                            {% for m_key, m_val in item.metrics.items() %}
-                            <div class="bg-[#070913] p-2 rounded-xl border border-indigo-950/60">
-                                <span class="block text-[10px] text-slate-400 font-medium">{{ m_key }}</span>
-                                <span class="block text-xs font-bold text-purple-400">{{ m_val }}</span>
-                            </div>
-                            {% endfor %}
+                    <!-- Key Metrics pills -->
+                    {% if item.metrics %}
+                    <div class="pt-3 border-t border-indigo-950/80 grid grid-cols-2 gap-2 text-xs">
+                        {% for m_key, m_val in item.metrics.items() %}
+                        <div class="bg-[#070913] p-2 rounded-xl border border-indigo-950/60">
+                            <span class="block text-[10px] text-slate-400 font-medium truncate">{{ m_key }}</span>
+                            <span class="block text-xs font-bold text-purple-400 mt-0.5">{{ m_val }}</span>
                         </div>
+                        {% endfor %}
                     </div>
+                    {% endif %}
                 </div>
 
                 <div class="px-6 pb-6 pt-2">

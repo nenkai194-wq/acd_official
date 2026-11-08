@@ -31,10 +31,12 @@
 
 <div class="py-20 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100 relative overflow-hidden">
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12 relative z-10">
+        {% if portfolio.image_url %}
         <!-- Project Hero Card Mockup -->
         <div class="rounded-2xl overflow-hidden border border-indigo-950/80 shadow-2xl bg-[#070913]">
             <img src="{{ portfolio.image_url }}" alt="{{ portfolio.title }}" class="w-full h-auto">
         </div>
+        {% endif %}
 
         <!-- Key Metrics Highlights -->
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">

@@ -53,50 +53,49 @@
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolioGrid">
         {% for p in portfolios %}
         <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden hover:border-indigo-600/50 transition flex flex-col justify-between group shadow-xl portfolio-card" data-search="{{ (p.title ~ ' ' ~ p.client_name ~ ' ' ~ p.category ~ ' ' ~ p.summary) | lower }}">
-            <div>
-                <!-- Image or Banner -->
-                <div class="h-44 bg-[#020617] border-b border-indigo-950/60 relative overflow-hidden flex items-center justify-center">
-                    {% if p.image_url %}
-                    <img src="{{ p.image_url }}" alt="{{ p.title }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
-                    {% else %}
-                    <div class="flex flex-col items-center justify-center text-slate-600 space-y-1">
-                        <i data-lucide="briefcase" class="w-8 h-8"></i>
-                        <span class="text-[10px]">No Thumbnail</span>
-                    </div>
-                    {% endif %}
-                    <div class="absolute top-3 left-3">
-                        <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-[#020617]/90 text-indigo-300 border border-indigo-950/80 backdrop-blur-md">
-                            {{ p.category }}
-                        </span>
-                    </div>
-                    <div class="absolute top-3 right-3">
-                        <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-black/80 text-slate-300 border border-slate-700/60">
-                            {{ p.year }}
-                        </span>
-                    </div>
+            <div class="p-5 sm:p-6 space-y-3.5">
+                <!-- Top Row: Category Badge & Year -->
+                <div class="flex items-center justify-between">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-900/60">
+                        {{ p.category }}
+                    </span>
+                    <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 text-slate-400 border border-slate-800">
+                        Tahun {{ p.year }}
+                    </span>
                 </div>
 
-                <!-- Info Body -->
-                <div class="p-5 space-y-2.5">
-                    <div>
-                        <span class="text-[11px] font-semibold text-emerald-400 block">{{ p.client_name }} <span class="text-slate-500 font-normal">({{ p.client_type }})</span></span>
-                        <h3 class="text-sm font-bold text-white mt-1 leading-snug group-hover:text-indigo-300 transition-colors line-clamp-2">{{ p.title }}</h3>
-                    </div>
+                <!-- Client & Title -->
+                <div>
+                    <span class="text-[11px] font-semibold text-emerald-400 block">{{ p.client_name }} <span class="text-slate-500 font-normal">({{ p.client_type }})</span></span>
+                    <h3 class="text-base font-bold text-white mt-1 leading-snug group-hover:text-indigo-300 transition-colors">{{ p.title }}</h3>
+                </div>
 
-                    <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">{{ p.summary }}</p>
+                <!-- Summary -->
+                <p class="text-xs text-slate-300 line-clamp-3 leading-relaxed">{{ p.summary }}</p>
 
-                    <!-- Tech Stack Badges -->
-                    {% if p.tech_stack %}
-                    <div class="flex flex-wrap gap-1.5 pt-1.5">
-                        {% for tech in p.tech_stack[:4] %}
-                        <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-[#020617] text-slate-300 border border-slate-800 shadow-sm">{{ tech }}</span>
-                        {% endfor %}
-                        {% if p.tech_stack | length > 4 %}
-                        <span class="px-1.5 py-0.5 rounded text-[10px] text-slate-500 bg-slate-900 border border-slate-800">+{{ (p.tech_stack | length) - 4 }}</span>
-                        {% endif %}
+                <!-- Metrics Highlights if available -->
+                {% if p.metrics %}
+                <div class="grid grid-cols-2 sm:grid-cols-3 gap-2 pt-1 text-[11px]">
+                    {% for k, v in p.metrics.items() %}
+                    <div class="p-2 rounded-xl bg-[#020617] border border-indigo-950/70">
+                        <span class="text-slate-400 block text-[9px] truncate font-medium">{{ k }}</span>
+                        <span class="text-indigo-300 font-bold block mt-0.5">{{ v }}</span>
                     </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+
+                <!-- Tech Stack Badges -->
+                {% if p.tech_stack %}
+                <div class="flex flex-wrap gap-1.5 pt-1">
+                    {% for tech in p.tech_stack[:4] %}
+                    <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-[#020617] text-slate-300 border border-slate-800 shadow-sm">{{ tech }}</span>
+                    {% endfor %}
+                    {% if p.tech_stack | length > 4 %}
+                    <span class="px-1.5 py-0.5 rounded text-[10px] text-slate-500 bg-slate-900 border border-slate-800">+{{ (p.tech_stack | length) - 4 }}</span>
                     {% endif %}
                 </div>
+                {% endif %}
             </div>
 
             <!-- Footer Action Controls -->
