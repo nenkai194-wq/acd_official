@@ -1813,8 +1813,13 @@ def admin_settings():
 # Error Handlers
 @app.errorhandler(404)
 def not_found_error(error):
-    return render_template('base.html'), 404
+    return render_template('404.html'), 404
+
+@app.errorhandler(500)
+def internal_error(error):
+    return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    # Running on local port 5000
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    # Running on local port 5000 (debug configurable via env FLASK_DEBUG)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'True').lower() in ['true', '1']
+    app.run(host='0.0.0.0', port=5000, debug=debug_mode)
