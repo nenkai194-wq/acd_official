@@ -17,7 +17,7 @@ class Config:
     COMPANY_PHONE = "+62 21 8299 8765"
     COMPANY_WHATSAPP = "6281288882510"
     COMPANY_ADDRESS = "Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950"
-    COMPANY_BRANCH = "Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281"
+    COMPANY_BRANCH = ""
     
     # Admin Credentials & Security
     ADMIN_USERNAME = os.environ.get('ADMIN_USER') or 'admin'

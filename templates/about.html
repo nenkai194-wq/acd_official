@@ -174,30 +174,19 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="text-center max-w-xl mx-auto mb-10">
             <span class="text-xs font-bold text-indigo-400 uppercase tracking-widest">Keberadaan Kami</span>
-            <h2 class="text-2xl font-extrabold text-white mt-1">Kantor Operasional & Cabang Teknis</h2>
+            <h2 class="text-2xl font-extrabold text-white mt-1">Kantor Operasional</h2>
         </div>
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div class="p-6 rounded-2xl deptech-card-dark">
-                <span class="text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-2.5 py-1 rounded-md">Head Office Jakarta</span>
-                <h4 class="text-base font-bold text-white mt-3 mb-1">Cyber 2 Tower Lt. 18</h4>
-                <p class="text-xs text-slate-400 leading-relaxed mb-3">
+        <div class="max-w-2xl mx-auto">
+            <div class="p-8 rounded-2xl deptech-card-dark border border-indigo-950/80">
+                <span class="text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-3 py-1 rounded-full uppercase tracking-wider">Kantor Perusahaan</span>
+                <p class="text-sm text-slate-300 leading-relaxed my-4">
                     {{ config.COMPANY_ADDRESS }}
                 </p>
-                <div class="text-xs text-slate-300 space-y-1">
-                    <p>Telepon: <span class="text-white">{{ config.COMPANY_PHONE }}</span></p>
-                    <p>Email: <span class="text-white">{{ config.COMPANY_EMAIL }}</span></p>
-                </div>
-            </div>
-
-            <div class="p-6 rounded-2xl deptech-card-dark">
-                <span class="text-xs font-bold text-cyan-300 bg-cyan-950/80 border border-cyan-800/60 px-2.5 py-1 rounded-md">Engineering & Delivery Center</span>
-                <h4 class="text-base font-bold text-white mt-3 mb-1">Graha Cipta Technopark Kav. 8</h4>
-                <p class="text-xs text-slate-400 leading-relaxed mb-3">
-                    {{ config.COMPANY_BRANCH }}
-                </p>
-                <div class="text-xs text-slate-300 space-y-1">
-                    <p>Hotline WhatsApp: <span class="text-white">+62 812-8888-2510</span></p>
-                    <p>Jam Kerja: <span class="text-white">Senin - Jumat (08:30 - 17:00 WIB)</span></p>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300 pt-4 border-t border-indigo-950/60">
+                    <p>Telepon: <span class="text-white font-medium">{{ config.COMPANY_PHONE }}</span></p>
+                    <p>Email: <span class="text-white font-medium">{{ config.COMPANY_EMAIL }}</span></p>
+                    <p>WhatsApp: <span class="text-white font-medium">+62 812-8888-2510</span></p>
+                    <p>Jam Kerja: <span class="text-white font-medium">Senin - Jumat (08:30 - 17:00 WIB)</span></p>
                 </div>
             </div>
         </div>

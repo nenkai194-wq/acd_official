@@ -162,7 +162,7 @@ def get_contact_data():
     phone = s_val('contact_phone', '+62 21 8299 8765')
     hours = s_val('contact_hours', 'Senin - Jumat: 08:30 - 17:00 WIB')
     address_main = s_val('contact_address_main', 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950')
-    address_branch = s_val('contact_address_branch', 'Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281')
+    address_branch = ''
     
     categories_raw = s_val('contact_categories', "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT")
     categories_list = [line.strip() for line in categories_raw.splitlines() if line.strip()]
@@ -202,7 +202,7 @@ def get_footer_data():
     brand_tagline = s_val('footer_brand_tagline', 'IT Consultant - AI, Software Developer')
     about = s_val('footer_about', 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
     address_main = s_val('footer_address_main', 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950')
-    address_branch = s_val('footer_address_branch', 'Cabang Teknis: Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281')
+    address_branch = ''
     phone = s_val('footer_phone', '+62 21 8299 8765')
     email = s_val('footer_email', 'info@acd.co.id')
     whatsapp = s_val('footer_whatsapp', '6281288882510')
@@ -1559,7 +1559,6 @@ def admin_contact_form():
             'contact_phone': request.form.get('contact_phone', '').strip(),
             'contact_hours': request.form.get('contact_hours', '').strip(),
             'contact_address_main': request.form.get('contact_address_main', '').strip(),
-            'contact_address_branch': request.form.get('contact_address_branch', '').strip(),
             'contact_categories': request.form.get('contact_categories', '').strip(),
             'contact_budget_ranges': request.form.get('contact_budget_ranges', '').strip(),
         }
@@ -1588,7 +1587,7 @@ def admin_contact_form_reset_defaults():
         'contact_phone': '+62 21 8299 8765',
         'contact_hours': 'Senin - Jumat: 08:30 - 17:00 WIB',
         'contact_address_main': 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950',
-        'contact_address_branch': 'Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281',
+        'contact_address_branch': '',
         'contact_categories': "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT",
         'contact_budget_ranges': "Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)"
     }
@@ -1607,7 +1606,6 @@ def admin_footer():
             'footer_brand_tagline': request.form.get('footer_brand_tagline', '').strip(),
             'footer_about': request.form.get('footer_about', '').strip(),
             'footer_address_main': request.form.get('footer_address_main', '').strip(),
-            'footer_address_branch': request.form.get('footer_address_branch', '').strip(),
             'footer_phone': request.form.get('footer_phone', '').strip(),
             'footer_email': request.form.get('footer_email', '').strip(),
             'footer_whatsapp': request.form.get('footer_whatsapp', '').strip(),
@@ -1649,7 +1647,7 @@ def admin_footer_reset_defaults():
         'footer_brand_tagline': 'IT Consultant - AI, Software Developer',
         'footer_about': 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
         'footer_address_main': 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950',
-        'footer_address_branch': 'Cabang Teknis: Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281',
+        'footer_address_branch': '',
         'footer_phone': '+62 21 8299 8765',
         'footer_email': 'info@acd.co.id',
         'footer_whatsapp': '6281288882510',
@@ -1749,7 +1747,6 @@ def admin_settings():
             'company_phone': request.form.get('company_phone', '').strip(),
             'company_whatsapp': request.form.get('company_whatsapp', '').strip(),
             'company_address': request.form.get('company_address', '').strip(),
-            'company_branch': request.form.get('company_branch', '').strip(),
             'admin_username': request.form.get('admin_username', '').strip(),
         }
 
