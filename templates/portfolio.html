@@ -24,14 +24,20 @@
             <a href="{{ url_for('portfolio') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md shadow-indigo-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
                 Semua Proyek
             </a>
-            <a href="{{ url_for('portfolio', category='Aplikasi Bisnis ERP') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi Bisnis ERP' %}text-white bg-gradient-to-r from-purple-600 to-violet-600 shadow-md shadow-purple-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Aplikasi ERP
+            <a href="{{ url_for('portfolio', category='E-Government') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'E-Government' %}text-white bg-gradient-to-r from-cyan-600 to-emerald-600 shadow-md shadow-cyan-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                E-Government
             </a>
-            <a href="{{ url_for('portfolio', category='Aplikasi E-Government') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi E-Government' %}text-white bg-gradient-to-r from-cyan-600 to-emerald-600 shadow-md shadow-cyan-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Aplikasi E-Government
+            <a href="{{ url_for('portfolio', category='Aplikasi Mobile') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi Mobile' %}text-white bg-gradient-to-r from-amber-600 to-orange-600 shadow-md shadow-amber-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                Aplikasi Mobile
             </a>
-            <a href="{{ url_for('portfolio', category='Aplikasi & Website') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi & Website' %}text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Aplikasi & Website
+            <a href="{{ url_for('portfolio', category='ERP & HRIS') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'ERP & HRIS' %}text-white bg-gradient-to-r from-purple-600 to-violet-600 shadow-md shadow-purple-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                ERP & HRIS
+            </a>
+            <a href="{{ url_for('portfolio', category='Website Korporat') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Website Korporat' %}text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                Website Profil
+            </a>
+            <a href="{{ url_for('portfolio', category='Sistem Informasi') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Sistem Informasi' %}text-white bg-gradient-to-r from-indigo-600 to-sky-600 shadow-md shadow-indigo-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
+                Sistem Informasi & E-Commerce
             </a>
         </div>
     </div>

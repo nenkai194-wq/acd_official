@@ -777,8 +777,18 @@ def admin_service_delete(service_id):
 @admin_required
 def admin_portfolios():
     category = request.args.get('category')
+    q = request.args.get('q', '').strip().lower()
     portfolios = PortfolioModel.get_all(category=category)
-    return render_template('admin/portfolios.html', portfolios=portfolios, current_category=category or 'Semua')
+    if q:
+        portfolios = [p for p in portfolios if q in p['title'].lower() or q in p['client_name'].lower() or q in p['category'].lower() or q in (p.get('summary') or '').lower()]
+    categories = ['E-Government', 'Aplikasi Mobile', 'ERP & HRIS', 'Website Korporat', 'Sistem Informasi']
+    return render_template(
+        'admin/portfolios.html',
+        portfolios=portfolios,
+        categories=categories,
+        current_category=category or 'Semua',
+        search_query=q
+    )
 
 @app.route('/admin/portfolios/add', methods=['GET', 'POST'])
 @admin_required

@@ -1,39 +1,58 @@
 {% extends 'admin/base.html' %}
 {% set active_page = 'portfolios' %}
 
-{% block title %}Kelola Portofolio Proyek{% endblock %}
+{% block title %}Kelola Portofolio Proyek - PT. Aksara Cipta Digital{% endblock %}
 
 {% block content %}
-<div class="space-y-6">
+<div class="space-y-5">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-indigo-950/70">
         <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Katalog Portofolio & Studi Kasus</h1>
-            <p class="text-xs text-slate-400 mt-1">Kelola portofolio implementasi software BUMN, Pemerintah, Korporasi Swasta, dan Industri</p>
+            <div class="flex items-center space-x-2">
+                <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Studi Kasus Proyek</span>
+                <span class="text-xs text-slate-500">•</span>
+                <span class="text-xs text-slate-400">{{ portfolios | length }} Proyek Resmi Terdaftar</span>
+            </div>
+            <h1 class="text-2xl font-black text-white tracking-tight mt-1">Kelola Portofolio & Proyek ACD</h1>
+            <p class="text-xs text-slate-400 mt-1">Katalog implementasi software resmi PT. Aksara Cipta Digital untuk Pemerintahan, BUMN, UMKM, dan Swasta</p>
         </div>
-        <a href="{{ url_for('admin_portfolio_add') }}" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+        <a href="{{ url_for('admin_portfolio_add') }}" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30 shrink-0">
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span>Tambah Portofolio Baru</span>
         </a>
     </div>
 
-    <!-- Category Filter Tabs -->
-    <div class="flex items-center space-x-2 overflow-x-auto pb-2">
-        <a href="{{ url_for('admin_portfolios') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
-            Semua Portofolio ({{ portfolios | length }})
-        </a>
-        {% for cat in ['Sistem Informasi', 'Aplikasi Mobile', 'Website Korporat', 'ERP & HRIS', 'E-Government', 'GIS Geoportal'] %}
-        <a href="{{ url_for('admin_portfolios', category=cat) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if current_category == cat %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
-            {{ cat }}
-        </a>
-        {% endfor %}
+    <!-- Filter & Search Toolbar -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-3.5 space-y-3">
+        <!-- Search Row -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div class="relative flex-1 max-w-md">
+                <i data-lucide="search" class="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500"></i>
+                <input type="text" id="portfolioSearchInput" placeholder="Cari nama proyek, klien, atau kategori..." value="{{ search_query or '' }}" class="w-full pl-10 pr-4 py-2 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            </div>
+            <div class="text-xs text-slate-400">
+                Menampilkan <strong class="text-white" id="portfolioCountText">{{ portfolios | length }}</strong> proyek
+            </div>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="flex items-center space-x-2 overflow-x-auto pb-1 pt-1 border-t border-indigo-950/60 custom-scrollbar text-xs">
+            <a href="{{ url_for('admin_portfolios') }}" class="px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
+                Semua Kategori ({{ portfolios | length }})
+            </a>
+            {% for cat in categories %}
+            <a href="{{ url_for('admin_portfolios', category=cat) }}" class="px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition {% if current_category == cat %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
+                {{ cat }}
+            </a>
+            {% endfor %}
+        </div>
     </div>
 
-    <!-- Portfolio Grid -->
+    <!-- Portfolio Cards Grid -->
     {% if portfolios %}
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="portfolioGrid">
         {% for p in portfolios %}
-        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden hover:border-indigo-600/40 transition flex flex-col justify-between group">
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden hover:border-indigo-600/50 transition flex flex-col justify-between group shadow-xl portfolio-card" data-search="{{ (p.title ~ ' ' ~ p.client_name ~ ' ' ~ p.category ~ ' ' ~ p.summary) | lower }}">
             <div>
                 <!-- Image or Banner -->
                 <div class="h-44 bg-[#020617] border-b border-indigo-950/60 relative overflow-hidden flex items-center justify-center">
@@ -58,20 +77,23 @@
                 </div>
 
                 <!-- Info Body -->
-                <div class="p-5 space-y-3">
+                <div class="p-5 space-y-2.5">
                     <div>
-                        <span class="text-[11px] font-semibold text-emerald-400 block">{{ p.client_name }} ({{ p.client_type }})</span>
-                        <h3 class="text-sm font-bold text-white mt-1 leading-snug line-clamp-2">{{ p.title }}</h3>
+                        <span class="text-[11px] font-semibold text-emerald-400 block">{{ p.client_name }} <span class="text-slate-500 font-normal">({{ p.client_type }})</span></span>
+                        <h3 class="text-sm font-bold text-white mt-1 leading-snug group-hover:text-indigo-300 transition-colors line-clamp-2">{{ p.title }}</h3>
                     </div>
 
-                    <p class="text-xs text-slate-400 line-clamp-2 leading-relaxed">{{ p.summary }}</p>
+                    <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">{{ p.summary }}</p>
 
-                    <!-- Tech Stack badges -->
+                    <!-- Tech Stack Badges -->
                     {% if p.tech_stack %}
-                    <div class="flex flex-wrap gap-1 pt-1">
+                    <div class="flex flex-wrap gap-1.5 pt-1.5">
                         {% for tech in p.tech_stack[:4] %}
-                        <span class="px-1.5 py-0.5 rounded text-[9px] bg-[#020617] text-slate-400 border border-indigo-950/80">{{ tech }}</span>
+                        <span class="px-2 py-0.5 rounded text-[10px] font-medium bg-[#020617] text-slate-300 border border-slate-800 shadow-sm">{{ tech }}</span>
                         {% endfor %}
+                        {% if p.tech_stack | length > 4 %}
+                        <span class="px-1.5 py-0.5 rounded text-[10px] text-slate-500 bg-slate-900 border border-slate-800">+{{ (p.tech_stack | length) - 4 }}</span>
+                        {% endif %}
                     </div>
                     {% endif %}
                 </div>
@@ -79,16 +101,16 @@
 
             <!-- Footer Action Controls -->
             <div class="p-4 bg-[#020617] border-t border-indigo-950/60 flex items-center justify-between">
-                <a href="{{ url_for('portfolio_detail', slug=p.slug) }}" target="_blank" class="text-xs text-slate-400 hover:text-white font-medium inline-flex items-center space-x-1">
-                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                    <span>Pratinjau</span>
+                <a href="{{ url_for('portfolio_detail', slug=p.slug) }}" target="_blank" class="text-xs text-slate-400 hover:text-white font-medium inline-flex items-center space-x-1.5 transition">
+                    <i data-lucide="external-link" class="w-3.5 h-3.5 text-indigo-400"></i>
+                    <span>Pratinjau Publik</span>
                 </a>
-                <div class="flex items-center space-x-2">
-                    <a href="{{ url_for('admin_portfolio_edit', portfolio_id=p.id) }}" class="p-2 rounded-lg bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-600/30 transition" title="Edit Portofolio">
+                <div class="flex items-center space-x-1.5">
+                    <a href="{{ url_for('admin_portfolio_edit', portfolio_id=p.id) }}" class="p-2 rounded-xl bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-600/30 transition shadow-sm" title="Edit Portofolio">
                         <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                     </a>
                     <form method="POST" action="{{ url_for('admin_portfolio_delete', portfolio_id=p.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus portofolio \'{{ p.title }}\'?');" class="inline">
-                        <button type="submit" class="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Portofolio">
+                        <button type="submit" class="p-2 rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/30 transition shadow-sm" title="Hapus Portofolio">
                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
                     </form>
@@ -104,5 +126,49 @@
         <p class="text-xs text-slate-500">Klik tombol Tambah Portofolio Baru untuk membuat studi kasus proyek.</p>
     </div>
     {% endif %}
+
+    <!-- No Match Alert for Search (Hidden by default) -->
+    <div id="noPortfolioMatch" class="hidden bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-10 text-center text-slate-400 space-y-2">
+        <i data-lucide="search-x" class="w-8 h-8 text-slate-600 mx-auto"></i>
+        <h4 class="text-sm font-bold text-white">Tidak ada proyek yang sesuai</h4>
+        <p class="text-xs text-slate-500">Coba sesuaikan kata kunci pencarian Anda.</p>
+    </div>
 </div>
+
+<!-- Realtime Client-side Search Script -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('portfolioSearchInput');
+        const cards = document.querySelectorAll('.portfolio-card');
+        const countText = document.getElementById('portfolioCountText');
+        const noMatch = document.getElementById('noPortfolioMatch');
+
+        if (searchInput) {
+            searchInput.addEventListener('input', function() {
+                const term = this.value.toLowerCase().trim();
+                let visibleCount = 0;
+
+                cards.forEach(function(card) {
+                    const searchData = card.getAttribute('data-search') || '';
+                    if (term === '' || searchData.includes(term)) {
+                        card.style.display = '';
+                        visibleCount++;
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+
+                if (countText) countText.textContent = visibleCount;
+
+                if (noMatch) {
+                    if (visibleCount === 0 && cards.length > 0) {
+                        noMatch.classList.remove('hidden');
+                    } else {
+                        noMatch.classList.add('hidden');
+                    }
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}
