@@ -2,7 +2,7 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Login Portal Internal - PT. Aksara Cipta Digital</title>
     <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -32,34 +32,34 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo_acd_icon.png') }}">
 </head>
-<body class="deptech-hero-bg min-h-screen flex items-center justify-center p-4 text-white relative font-sans antialiased overflow-hidden">
-    <!-- 1. Interactive Particle Constellation Canvas (Animasi Seperti Frontend) -->
+<body class="deptech-hero-bg min-h-screen py-5 px-3 sm:py-8 sm:px-4 flex items-center justify-center text-white relative font-sans antialiased overflow-y-auto">
+    <!-- 1. Interactive Particle Constellation Canvas -->
     <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
 
     <!-- 2. Ambient Grid Pattern -->
     <div class="deptech-grid-pattern opacity-30 pointer-events-none"></div>
 
     <!-- 3. Cosmic Soft Glow Ambient Orbs -->
-    <div class="absolute w-[500px] h-[500px] bg-indigo-600/15 rounded-full blur-3xl pointer-events-none -top-24 -left-24"></div>
-    <div class="absolute w-[450px] h-[450px] bg-cyan-600/10 rounded-full blur-3xl pointer-events-none -bottom-20 -right-20"></div>
+    <div class="absolute w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-indigo-600/15 rounded-full blur-3xl pointer-events-none -top-20 -left-20"></div>
+    <div class="absolute w-[300px] sm:w-[450px] h-[300px] sm:h-[450px] bg-cyan-600/10 rounded-full blur-3xl pointer-events-none -bottom-16 -right-16"></div>
 
-    <!-- 4. Login Card (Card Glassmorphism dengan Animasi Fade-In) -->
-    <div class="max-w-md w-full bg-[#0a0f1d]/95 border border-indigo-950/90 rounded-3xl p-8 sm:p-10 shadow-2xl relative z-10 backdrop-blur-xl animate-fade-in-up">
-        <!-- Logo & Title -->
-        <div class="text-center mb-6">
-            <div class="relative inline-block mb-3">
+    <!-- 4. Login Card (Compact Glassmorphic Box Optimized for Mobile & Desktop) -->
+    <div class="max-w-[420px] w-full bg-[#0a0f1d]/95 border border-indigo-950/90 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-2xl relative z-10 backdrop-blur-xl animate-fade-in-up">
+        <!-- Logo & Header -->
+        <div class="text-center mb-4 sm:mb-5">
+            <div class="relative inline-block mb-2">
                 <div class="absolute inset-0 bg-indigo-600/20 rounded-full blur-xl pointer-events-none"></div>
-                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-20 sm:h-24 w-auto mx-auto drop-shadow-[0_10px_25px_rgba(37,99,235,0.4)] hover:scale-105 transition-transform duration-300 relative z-10">
+                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-14 sm:h-18 w-auto mx-auto drop-shadow-[0_8px_20px_rgba(37,99,235,0.4)] hover:scale-105 transition-transform duration-300 relative z-10">
             </div>
-            <h2 class="text-xl font-extrabold text-white tracking-tight">Portal Staf & Administrator</h2>
-            <p class="text-xs text-indigo-400 font-medium mt-1">PT. Aksara Cipta Digital (acd.co.id)</p>
+            <h2 class="text-lg sm:text-xl font-black text-white tracking-tight">Portal Staf & Administrator</h2>
+            <p class="text-[11px] sm:text-xs text-indigo-400 font-medium mt-0.5">PT. Aksara Cipta Digital (acd.co.id)</p>
         </div>
 
         <!-- Flashed Messages -->
         {% with messages = get_flashed_messages(with_categories=true) %}
             {% if messages %}
                 {% for category, message in messages %}
-                <div class="mb-4 p-3 rounded-xl text-xs flex items-center space-x-2.5 {% if category == 'warning' %}bg-amber-500/20 border border-amber-500/40 text-amber-300{% elif category == 'success' %}bg-emerald-500/20 border border-emerald-500/40 text-emerald-300{% else %}bg-indigo-500/20 border border-indigo-500/40 text-indigo-300{% endif %}">
+                <div class="mb-3 p-2.5 rounded-xl text-xs flex items-center space-x-2 {% if category == 'warning' %}bg-amber-500/20 border border-amber-500/40 text-amber-300{% elif category == 'success' %}bg-emerald-500/20 border border-emerald-500/40 text-emerald-300{% else %}bg-indigo-500/20 border border-indigo-500/40 text-indigo-300{% endif %}">
                     {% if category == 'warning' %}
                     <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 text-amber-400"></i>
                     {% elif category == 'success' %}
@@ -67,7 +67,7 @@
                     {% else %}
                     <i data-lucide="info" class="w-4 h-4 shrink-0 text-indigo-400"></i>
                     {% endif %}
-                    <span>{{ message }}</span>
+                    <span class="leading-snug">{{ message }}</span>
                 </div>
                 {% endfor %}
             {% endif %}
@@ -75,35 +75,35 @@
 
         <!-- Lockout Notice (Anti Brute-Force) -->
         {% if is_locked %}
-        <div class="mb-4 p-3.5 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs">
+        <div class="mb-3 p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs">
             <div class="font-bold flex items-center space-x-1.5 mb-1">
-                <i data-lucide="lock" class="w-4 h-4 text-rose-400"></i>
+                <i data-lucide="lock" class="w-4 h-4 text-rose-400 shrink-0"></i>
                 <span>Akses Login Terkunci Sementara</span>
             </div>
             <p class="text-[11px] leading-relaxed">
-                Terlalu banyak percobaan login gagal. Demi keamanan, silakan tunggu <strong>{{ lockout_remaining }} menit</strong> lagi sebelum mencoba kembali.
+                Terlalu banyak percobaan gagal. Silakan tunggu <strong>{{ lockout_remaining }} menit</strong> sebelum mencoba lagi.
             </p>
         </div>
         {% endif %}
 
         <!-- Error Alert -->
         {% if error and not is_locked %}
-        <div class="mb-4 p-3 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs flex items-center space-x-2">
+        <div class="mb-3 p-2.5 rounded-xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs flex items-center space-x-2">
             <i data-lucide="alert-circle" class="w-4 h-4 shrink-0 text-rose-400"></i>
             <span>{{ error }}</span>
         </div>
         {% endif %}
 
-        <!-- Form Login (Posisi Input Bersih & Dikosongkan Awal) -->
-        <form method="POST" action="{{ url_for('admin_login') }}" autocomplete="off" class="space-y-4">
-            <!-- Invisible Honeypot Trap (Menjerat Scanner/Bot) -->
+        <!-- Form Login -->
+        <form method="POST" action="{{ url_for('admin_login') }}" autocomplete="off" class="space-y-3 sm:space-y-3.5">
+            <!-- Invisible Honeypot Trap -->
             <div style="display:none !important;" aria-hidden="true">
                 <input type="text" name="admin_sec_trap" tabindex="-1" autocomplete="off">
             </div>
 
             <!-- Username Staf (Dikosongkan Terlebih Dahulu) -->
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Username Staf</label>
+                <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Username Staf</label>
                 <input type="text"
                        id="usernameInput"
                        name="username"
@@ -112,12 +112,12 @@
                        placeholder="Masukkan username staf"
                        value=""
                        autocomplete="off"
-                       class="w-full px-4 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 transition">
+                       class="w-full px-3.5 py-2.5 text-xs sm:text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 transition">
             </div>
 
             <!-- Kata Sandi (Dikosongkan Terlebih Dahulu dengan Icon Mata) -->
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kata Sandi</label>
+                <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Kata Sandi</label>
                 <div class="relative">
                     <input type="password"
                            id="passwordInput"
@@ -127,50 +127,54 @@
                            placeholder="Masukkan kata sandi"
                            value=""
                            autocomplete="new-password"
-                           class="w-full pl-4 pr-11 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 transition">
-                    <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-white transition focus:outline-none" title="Tampilkan / Sembunyikan Kata Sandi">
+                           class="w-full pl-3.5 pr-10 py-2.5 text-xs sm:text-sm bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 disabled:opacity-50 transition">
+                    <button type="button" onclick="togglePasswordVisibility()" class="absolute right-2.5 top-1/2 -translate-y-1/2 p-1.5 text-slate-400 hover:text-white transition focus:outline-none" title="Tampilkan / Sembunyikan Kata Sandi">
                         <i data-lucide="eye" id="eyeIcon" class="w-4 h-4"></i>
                     </button>
                 </div>
             </div>
 
-            <!-- Kode CAPTCHA Gambar -->
+            <!-- Kode CAPTCHA (Tata Letak 2 Baris: Baris 1 Gambar + Tombol Acak, Baris 2 Input Full-Width) -->
             <div>
-                <label class="block text-xs font-semibold text-slate-300 mb-1.5">Kode Verifikasi Keamanan</label>
-                <div class="flex items-center space-x-2">
-                    <!-- Gambar CAPTCHA Dinamis -->
-                    <div class="relative bg-[#020617] border border-indigo-950 rounded-xl overflow-hidden shrink-0 shadow-inner flex items-center justify-center">
-                        <img id="captchaImg" src="{{ url_for('admin_captcha_image') }}" alt="Kode CAPTCHA" class="h-11 w-36 object-contain select-none" draggable="false">
+                <label class="block text-[11px] sm:text-xs font-semibold text-slate-300 mb-1">Kode Verifikasi Keamanan</label>
+                
+                <!-- Baris 1: Gambar CAPTCHA + Tombol Refresh / Acak Ulang -->
+                <div class="flex items-center justify-between bg-[#020617] border border-indigo-950 rounded-xl px-2.5 py-1.5 sm:px-3 sm:py-2">
+                    <div class="flex items-center space-x-2">
+                        <img id="captchaImg" src="{{ url_for('admin_captcha_image') }}" alt="Kode CAPTCHA" class="h-9 sm:h-10 w-28 sm:w-36 object-contain select-none" draggable="false">
+                        <span class="text-[10px] text-slate-500 hidden sm:inline">(5 Karakter)</span>
                     </div>
-
-                    <!-- Tombol Refresh CAPTCHA -->
-                    <button type="button" onclick="refreshCaptcha()" class="p-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-indigo-950 text-slate-400 hover:text-white transition" title="Ganti Kode Gambar">
-                        <i data-lucide="refresh-cw" class="w-4 h-4" id="refreshIcon"></i>
+                    <button type="button" onclick="refreshCaptcha()" class="px-2.5 py-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 hover:text-white transition inline-flex items-center space-x-1.5 text-xs font-medium" title="Ganti Kode Gambar">
+                        <i data-lucide="refresh-cw" class="w-3.5 h-3.5" id="refreshIcon"></i>
+                        <span class="text-[11px]">Acak Ulang</span>
                     </button>
+                </div>
 
-                    <!-- Input Teks CAPTCHA (Dikosongkan) -->
+                <!-- Baris 2: Input Teks CAPTCHA (Lebar Penuh / Full-Width, Tidak Sempit!) -->
+                <div class="mt-2">
                     <input type="text"
                            id="captchaInput"
                            name="captcha_code"
                            required
                            {% if is_locked %}disabled{% endif %}
                            maxlength="5"
-                           placeholder="Ketik kode"
+                           placeholder="Ketik 5 digit kode di atas"
                            value=""
                            autocomplete="off"
-                           class="w-full px-3 py-3 text-sm bg-[#020617] border border-indigo-950 rounded-xl text-emerald-400 font-mono font-bold tracking-widest text-center uppercase placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 transition">
+                           class="w-full px-4 py-2.5 text-sm sm:text-base bg-[#020617] border border-indigo-950 rounded-xl text-emerald-400 font-mono font-black tracking-[0.25em] text-center uppercase placeholder-slate-500 placeholder:normal-case placeholder:font-sans placeholder:font-normal placeholder:tracking-normal placeholder:text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500 disabled:opacity-50 transition">
                 </div>
-                <span class="text-[10px] text-slate-500 mt-1 block">Masukkan 5 karakter huruf/angka dari gambar di atas</span>
+                <span class="text-[10px] text-slate-500 mt-1 block text-center sm:text-left">Masukkan 5 karakter huruf/angka sesuai gambar</span>
             </div>
 
             <!-- Tombol Masuk -->
-            <button type="submit" {% if is_locked %}disabled{% endif %} class="w-full py-3.5 deptech-btn-primary font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed mt-2 rounded-xl transition">
+            <button type="submit" {% if is_locked %}disabled{% endif %} class="w-full py-3 deptech-btn-primary font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-600/30 flex items-center justify-center space-x-2 disabled:opacity-40 disabled:cursor-not-allowed mt-2 rounded-xl transition">
+                <i data-lucide="log-in" class="w-4 h-4"></i>
                 <span>Masuk ke Dashboard CMS</span>
             </button>
         </form>
 
-        <!-- Link Kembali -->
-        <div class="mt-6 pt-4 border-t border-indigo-950/80 text-center">
+        <!-- Link Kembali ke Web Publik -->
+        <div class="mt-4 pt-3 sm:mt-5 sm:pt-4 border-t border-indigo-950/80 text-center">
             <a href="{{ url_for('index') }}" class="text-xs text-slate-400 hover:text-white transition inline-flex items-center space-x-1.5">
                 <i data-lucide="arrow-left" class="w-3.5 h-3.5"></i>
                 <span>Kembali ke Website Publik acd.co.id</span>
