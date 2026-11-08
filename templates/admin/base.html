@@ -267,6 +267,11 @@
                     <i data-lucide="shield-check" class="w-4 h-4 shrink-0"></i>
                     <span class="sidebar-text truncate">Keamanan & Audit Log</span>
                 </a>
+
+                <a href="{{ url_for('admin_manual_book') }}" title="Buku Panduan (Manual Book)" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'manual_book' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="book-open" class="w-4 h-4 shrink-0"></i>
+                    <span class="sidebar-text truncate">Buku Panduan (Manual Book)</span>
+                </a>
             </nav>
 
             <!-- Bottom User & Website Links (Inside the scroll flow with pb-14 so it is 100% visible on any phone/tablet!) -->

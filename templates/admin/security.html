@@ -6,12 +6,12 @@
 {% block content %}
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-indigo-950/70">
         <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Pusat Keamanan & Audit Log Sistem</h1>
+            <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight">Pusat Keamanan & Audit Log Sistem</h1>
             <p class="text-xs text-slate-400 mt-1">Pemantauan proteksi brute-force, deteksi bot scanner, audit akses administrator, dan daftar blokir IP</p>
         </div>
-        <div class="flex items-center space-x-2">
+        <div class="flex items-center space-x-2 shrink-0">
             <form method="POST" action="{{ url_for('admin_security_clear_logs') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log audit keamanan?');">
                 <button type="submit" class="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
@@ -23,7 +23,7 @@
 
     <!-- Active Lockouts Alert (Jika ada IP yang sedang diblokir) -->
     {% if lockouts %}
-    <div class="p-5 rounded-2xl bg-rose-500/15 border border-rose-500/40 space-y-3">
+    <div class="p-4 sm:p-5 rounded-2xl bg-rose-500/15 border border-rose-500/40 space-y-3">
         <div class="flex items-center space-x-2 text-rose-300 font-bold text-xs">
             <i data-lucide="shield-alert" class="w-4 h-4 text-rose-400"></i>
             <span>DAFTAR IP YANG SEDANG DIBLOKIR OTOMATIS (TERKUNCI BRUTE-FORCE)</span>
@@ -48,8 +48,8 @@
     {% endif %}
 
     <!-- 4 Security Defense Pillars Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
-        <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
             <div class="flex items-center space-x-2 text-indigo-400">
                 <i data-lucide="shield-alert" class="w-5 h-5"></i>
                 <h4 class="text-xs font-bold uppercase tracking-wider text-white">Anti Brute-Force</h4>
@@ -59,7 +59,7 @@
             </p>
         </div>
 
-        <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
             <div class="flex items-center space-x-2 text-emerald-400">
                 <i data-lucide="key" class="w-5 h-5"></i>
                 <h4 class="text-xs font-bold uppercase tracking-wider text-white">PIN Otorisasi 2FA</h4>
@@ -69,7 +69,7 @@
             </p>
         </div>
 
-        <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
             <div class="flex items-center space-x-2 text-cyan-400">
                 <i data-lucide="bot" class="w-5 h-5"></i>
                 <h4 class="text-xs font-bold uppercase tracking-wider text-white">Anti-Bot Captcha</h4>
@@ -79,7 +79,7 @@
             </p>
         </div>
 
-        <div class="p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
+        <div class="p-4 sm:p-5 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 space-y-2">
             <div class="flex items-center space-x-2 text-purple-400">
                 <i data-lucide="eye-off" class="w-5 h-5"></i>
                 <h4 class="text-xs font-bold uppercase tracking-wider text-white">Honeypot Trap</h4>
@@ -90,60 +90,135 @@
         </div>
     </div>
 
-    <!-- Security Audit Logs Table -->
-    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden">
-        <div class="p-4 border-b border-indigo-950/70 flex items-center justify-between">
-            <span class="text-xs font-bold text-white">Riwayat Audit Keamanan & Percobaan Akses ({{ logs | length }} Entri)</span>
+    <!-- Security Audit Logs (Dual Responsive: Mobile Cards + Desktop Table) -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden shadow-xl">
+        <div class="p-3.5 sm:p-4 border-b border-indigo-950/70 flex items-center justify-between">
+            <div class="flex items-center space-x-2">
+                <i data-lucide="shield-alert" class="w-4 h-4 text-indigo-400"></i>
+                <span class="text-xs font-bold text-white">Riwayat Audit Keamanan & Percobaan Akses</span>
+            </div>
+            <span class="px-2.5 py-0.5 rounded-full bg-indigo-950/80 text-indigo-300 border border-indigo-900/60 text-[10px] font-bold">
+                {{ logs | length }} Entri
+            </span>
         </div>
+
         {% if logs %}
-        <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
+        <!-- 1. Tampilan Khusus Mobile (< 768px): Card-Based Rapi & Responsif -->
+        <div class="md:hidden divide-y divide-indigo-950/60">
+            {% for l in logs %}
+            <div class="p-3.5 space-y-2 hover:bg-slate-900/40 transition">
+                <!-- Baris 1: Status Event Badge & Waktu -->
+                <div class="flex items-center justify-between gap-2">
+                    <div>
+                        {% if l.event_type == 'LOGIN_SUCCESS' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">
+                            <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+                            BERHASIL LOGIN
+                        </span>
+                        {% elif l.event_type == 'LOCKED_OUT' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30 whitespace-nowrap">
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-400 mr-1.5"></span>
+                            IP DIBLOKIR
+                        </span>
+                        {% elif l.event_type == 'BOT_HONEYPOT' or l.event_type == 'BOT_DETECTED' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30 whitespace-nowrap">
+                            <span class="w-1.5 h-1.5 rounded-full bg-purple-400 mr-1.5"></span>
+                            BOT TERJEBAK
+                        </span>
+                        {% elif l.event_type == 'CAPTCHA_FAILED' %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">
+                            <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5"></span>
+                            CAPTCHA GAGAL
+                        </span>
+                        {% else %}
+                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-300 border border-rose-500/30 whitespace-nowrap">
+                            <span class="w-1.5 h-1.5 rounded-full bg-rose-400 mr-1.5"></span>
+                            GAGAL LOGIN
+                        </span>
+                        {% endif %}
+                    </div>
+                    <span class="text-[11px] font-mono text-slate-400 whitespace-nowrap">{{ l.created_at }}</span>
+                </div>
+
+                <!-- Baris 2: Alamat IP & Username -->
+                <div class="flex items-center justify-between text-xs pt-1">
+                    <div class="flex items-center space-x-1.5">
+                        <i data-lucide="globe" class="w-3.5 h-3.5 text-indigo-400 shrink-0"></i>
+                        <span class="font-mono font-bold text-indigo-300 text-xs">{{ l.ip_address }}</span>
+                    </div>
+                    <div class="flex items-center space-x-1 text-slate-400 text-[11px]">
+                        <i data-lucide="user" class="w-3 h-3 text-slate-500 shrink-0"></i>
+                        <span>User: <strong class="text-white">{{ l.username or '-' }}</strong></span>
+                    </div>
+                </div>
+
+                <!-- Baris 3: Detail Aktivitas & Browser -->
+                {% if l.details or l.user_agent %}
+                <div class="p-2.5 rounded-xl bg-[#020617] border border-indigo-950/70 text-[11px] text-slate-300">
+                    <p class="leading-relaxed">{{ l.details }}</p>
+                    {% if l.user_agent %}
+                    <p class="text-[10px] text-slate-500 truncate mt-1 font-mono" title="{{ l.user_agent }}">{{ l.user_agent }}</p>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- 2. Tampilan Khusus Tablet & Desktop (>= 768px): Tabel Full-Width Elegan -->
+        <div class="hidden md:block overflow-x-auto custom-scrollbar">
+            <table class="w-full text-left text-xs min-w-[700px]">
                 <thead class="bg-[#020617] border-b border-indigo-950/70 text-slate-400 font-semibold uppercase text-[10px] tracking-wider">
                     <tr>
-                        <th class="px-6 py-4">Waktu</th>
-                        <th class="px-6 py-4">Status / Tipe Event</th>
-                        <th class="px-6 py-4">Alamat IP</th>
-                        <th class="px-6 py-4">Username</th>
-                        <th class="px-6 py-4">Detail Aktivitas</th>
+                        <th class="px-5 py-3.5">Waktu</th>
+                        <th class="px-5 py-3.5">Status / Tipe Event</th>
+                        <th class="px-5 py-3.5">Alamat IP</th>
+                        <th class="px-5 py-3.5">Username</th>
+                        <th class="px-5 py-3.5">Detail Aktivitas</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-indigo-950/50">
                     {% for l in logs %}
                     <tr class="hover:bg-slate-900/40 transition">
-                        <td class="px-6 py-4 text-slate-400 font-mono text-[11px] whitespace-nowrap">
+                        <td class="px-5 py-3.5 text-slate-400 font-mono text-[11px] whitespace-nowrap">
                             {{ l.created_at }}
                         </td>
-                        <td class="px-6 py-4">
+                        <td class="px-5 py-3.5">
                             {% if l.event_type == 'LOGIN_SUCCESS' %}
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 whitespace-nowrap">
+                                <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
                                 BERHASIL LOGIN
                             </span>
                             {% elif l.event_type == 'LOCKED_OUT' %}
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/20 text-rose-400 border border-rose-500/30 whitespace-nowrap">
+                                <span class="w-1.5 h-1.5 rounded-full bg-rose-400 mr-1.5"></span>
                                 IP DIBLOKIR
                             </span>
                             {% elif l.event_type == 'BOT_HONEYPOT' or l.event_type == 'BOT_DETECTED' %}
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-purple-500/20 text-purple-400 border border-purple-500/30 whitespace-nowrap">
+                                <span class="w-1.5 h-1.5 rounded-full bg-purple-400 mr-1.5"></span>
                                 BOT TERJEBAK
                             </span>
                             {% elif l.event_type == 'CAPTCHA_FAILED' %}
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-amber-500/20 text-amber-400 border border-amber-500/30 whitespace-nowrap">
+                                <span class="w-1.5 h-1.5 rounded-full bg-amber-400 mr-1.5"></span>
                                 CAPTCHA GAGAL
                             </span>
                             {% else %}
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-slate-800 text-slate-400 border border-slate-700">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-full text-[10px] font-bold bg-rose-500/15 text-rose-300 border border-rose-500/30 whitespace-nowrap">
+                                <span class="w-1.5 h-1.5 rounded-full bg-rose-400 mr-1.5"></span>
                                 GAGAL LOGIN
                             </span>
                             {% endif %}
                         </td>
-                        <td class="px-6 py-4 font-mono font-semibold text-xs text-indigo-300">
+                        <td class="px-5 py-3.5 font-mono font-semibold text-xs text-indigo-300 whitespace-nowrap">
                             {{ l.ip_address }}
                         </td>
-                        <td class="px-6 py-4 font-medium text-slate-300">
+                        <td class="px-5 py-3.5 font-medium text-slate-300 whitespace-nowrap">
                             {{ l.username or '-' }}
                         </td>
-                        <td class="px-6 py-4 text-slate-400 text-xs max-w-md">
-                            <span>{{ l.details }}</span>
+                        <td class="px-5 py-3.5 text-slate-400 text-xs max-w-md">
+                            <span class="text-slate-300">{{ l.details }}</span>
                             {% if l.user_agent %}
                             <span class="block text-[10px] text-slate-600 truncate mt-0.5" title="{{ l.user_agent }}">{{ l.user_agent }}</span>
                             {% endif %}

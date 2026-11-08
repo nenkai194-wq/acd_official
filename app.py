@@ -1810,6 +1810,247 @@ def admin_settings():
     settings = SettingModel.get_all()
     return render_template('admin/settings.html', settings=settings)
 
+# ==============================================================================
+# BUKU PANDUAN PENGOPERASIAN SISTEM & INFRASTRUKTUR (MANUAL BOOK)
+# ==============================================================================
+@app.route('/admin/manual-book')
+@admin_required
+def admin_manual_book():
+    from database import get_db_connection
+    import platform
+    import sys
+
+    # Informasi Arsitektur & Infrastruktur
+    infra_info = {
+        'company_name': SettingModel.get('company_name', Config.COMPANY_NAME),
+        'domain': SettingModel.get('seo_canonical_url', 'https://acd.co.id'),
+        'python_version': platform.python_version(),
+        'platform': platform.platform(),
+        'framework': 'Python Flask 3.x (WSGI / Jinja2)',
+        'database_engine': 'SQLite 3 (ACID Relational Engine, Write-Ahead Logging)',
+        'frontend_stack': 'Tailwind CSS, Vanilla JavaScript, Lucide Icons',
+        'security_features': [
+            'Otorisasi Ganda 2FA (PIN Master 6-Digit)',
+            'Brute-Force Rate Limiting (Kunci IP otomatis setelah 3x gagal, lockout 15 menit)',
+            'Dynamic Visual & Math CAPTCHA',
+            'Honeypot Anti-Bot Field Detector',
+            'Proteksi Anti-Spam WhatsApp & Leads (Maks 2x per 24 jam)',
+            'Auto-Logout Sesi Idle 15 Menit',
+            'OWASP Hardened Security Headers (CSP, X-Frame-Options, HSTS, nosniff)',
+            'Audit Logging Realtime & IP Lockout Management'
+        ]
+    }
+
+    # Kamus Basis Data Dinamis (Dynamic Database Schema & Stats)
+    db_tables = [
+        {
+            'name': 'inquiries',
+            'label': 'Permintaan Masuk (Leads Klien)',
+            'desc': 'Menyimpan data calon klien yang mengirim form kebutuhan / konsultasi proyek software.'
+        },
+        {
+            'name': 'services',
+            'label': 'Katalog Layanan Solusi IT',
+            'desc': 'Menyimpan data solusi IT, fitur unggulan, tech stack, dan status tayang di web.'
+        },
+        {
+            'name': 'portfolios',
+            'label': 'Studi Kasus Portofolio',
+            'desc': 'Menyimpan riwayat proyek klien (BUMN, Pemerintah, Swasta), tantangan, solusi, dan metrik dampak.'
+        },
+        {
+            'name': 'careers',
+            'label': 'Lowongan Karir & Rekrutmen',
+            'desc': 'Menyimpan data lowongan pekerjaan, departemen, kualifikasi, tanggung jawab, dan status tayang.'
+        },
+        {
+            'name': 'faqs',
+            'label': 'Tanya Jawab (FAQ)',
+            'desc': 'Menyimpan daftar pertanyaan yang sering diajukan klien beserta jawaban resmi.'
+        },
+        {
+            'name': 'wa_logs',
+            'label': 'Log Anti-Spam WhatsApp',
+            'desc': 'Merekam setiap klik tombol konsultasi WhatsApp per IP pengunjung untuk mencegah flooding spam.'
+        },
+        {
+            'name': 'admin_security_logs',
+            'label': 'Audit Log Keamanan',
+            'desc': 'Mencatat seluruh percobaan login, kegagalan kredensial, deteksi bot, dan aktivitas penting sistem.'
+        },
+        {
+            'name': 'login_lockouts',
+            'label': 'Daftar Blokir IP Brute-Force',
+            'desc': 'Menyimpan daftar alamat IP penyerang yang sedang terkunci otomatis akibat salah password berulang.'
+        },
+        {
+            'name': 'settings',
+            'label': 'Konfigurasi Global & SEO',
+            'desc': 'Menyimpan identitas perusahaan, nomor hotline, email, konfigurasi SEO meta, dan kredensial admin.'
+        }
+    ]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    for table in db_tables:
+        # Hitung jumlah baris data
+        try:
+            cursor.execute(f"SELECT COUNT(*) as count FROM {table['name']}")
+            table['count'] = cursor.fetchone()['count']
+        except Exception:
+            table['count'] = 0
+
+        # Ambil skema kolom PRAGMA
+        try:
+            cursor.execute(f"PRAGMA table_info({table['name']})")
+            table['columns'] = [dict(col) for col in cursor.fetchall()]
+        except Exception:
+            table['columns'] = []
+
+    conn.close()
+
+    return render_template(
+        'admin/manual_book.html',
+        infra=infra_info,
+        tables=db_tables,
+        now=datetime.now().strftime('%d %B %Y, %H:%M WIB')
+    )
+
+@app.route('/admin/manual-book/download')
+@admin_required
+def admin_manual_book_download():
+    from database import get_db_connection
+    import platform
+
+    company_name = SettingModel.get('company_name', Config.COMPANY_NAME)
+    company_domain = SettingModel.get('seo_canonical_url', 'https://acd.co.id')
+    export_date = datetime.now().strftime('%d %B %Y, %H:%M WIB')
+
+    # Bangun dokumen teks Markdown lengkap
+    doc = []
+    doc.append(f"# BUKU PANDUAN PENGOPERASIAN & DOKUMENTASI TEKNIS SISTEM (MANUAL BOOK)")
+    doc.append(f"**Website Resmi**: {company_name} ({company_domain})  ")
+    doc.append(f"**Tanggal Generate Dokumen**: {export_date}  ")
+    doc.append(f"**Klasifikasi Dokumen**: Rahasia / Internal Administrator  \n")
+    doc.append("---\n")
+
+    doc.append("## 1. PENDAHULUAN & TUJUAN")
+    doc.append(f"Buku Panduan ini disusun sebagai standar operasional prosedur (SOP) dan dokumentasi komprehensif arsitektur teknologi website **{company_name}**. Dokumen ini wajib dipahami oleh tim administrator, IT internal, maupun DevOps yang bertugas memelihara, memperbarui konten, dan mengawasi keamanan website.\n")
+
+    doc.append("## 2. INFRASTRUKTUR & STACK TEKNOLOGI")
+    doc.append("Website ini dirancang menggunakan standar teknologi modern yang mengutamakan kecepatan akses, keamanan data tingkat tinggi, dan kemudahan skalabilitas:")
+    doc.append(f"- **Bahasa Pemrograman**: Python {platform.python_version()}")
+    doc.append("- **Web Framework**: Python Flask 3.x (WSGI Architecture, Jinja2 Templating Engine)")
+    doc.append("- **Database Engine**: SQLite 3 Relational Engine (ACID Compliant, WAL / Write-Ahead Logging Enabled)")
+    doc.append("- **Frontend Styling**: Tailwind CSS (Utility-first framework) + Custom Cosmic Dark Theme CSS")
+    doc.append("- **Icon Library**: Lucide Icons (SVG Vector Engine)")
+    doc.append("- **Interactive Canvas**: HTML5 Canvas Particle Constellation System (Efek Grafis Cosmic Modern)")
+    doc.append("- **Production Web Server**: Nginx Reverse Proxy + Gunicorn / Waitress WSGI Server")
+    doc.append("- **Sertifikat Keamanan**: SSL/TLS HTTPS Let's Encrypt (Grade A+ Security)\n")
+
+    doc.append("## 3. ARSITEKTUR KEAMANAN SISTEM (SECURITY DEFENSE)")
+    doc.append("Website dilengkapi dengan 6 lapis pertahanan siber berlapis untuk melindungi data perusahaan dan klien:")
+    doc.append("1. **Otorisasi Ganda 2FA (PIN Master 6-Digit)**: Setelah username dan kata sandi benar, sistem meminta verifikasi PIN Master sebelum memberikan akses ke panel kendali CMS.")
+    doc.append("2. **Proteksi Anti Brute-Force & Rate Limiting**: Batas toleransi maksimal 3 kali kesalahan login per alamat IP. Percobaan ke-4 memicu pemblokiran otomatis (Lockout) selama 15 menit.")
+    doc.append("3. **Anti-Bot Dynamic CAPTCHA**: Algoritma kalkulasi dinamis dan verifikasi visual untuk mencegah pengisian otomatis oleh script peretas.")
+    doc.append("4. **Honeypot Trap Detector**: Jebakan input tak kasat mata yang mendeteksi bot otomatis secara instan.")
+    doc.append("5. **Proteksi Anti-Spam WhatsApp & Leads**: Membatasi pengiriman formulir dan interaksi klik WA maksimal 2 kali per 24 jam per pengunjung/IP.")
+    doc.append("6. **Auto-Logout Sesi Inaktivitas (15 Menit)**: Bila staf tidak menyentuh mouse/keyboard selama 15 menit, sistem otomatis mengakhiri sesi untuk mencegah pencurian akses.")
+    doc.append("7. **Audit Trail Realtime**: Setiap aktivitas login, kegagalan autentikasi, dan aksi penting tercatat lengkap dengan IP dan User-Agent.\n")
+
+    doc.append("## 4. STRUKTUR BASIS DATA (DATABASE SCHEMA & DATA DICTIONARY)")
+    doc.append("Basis data SQLite dirancang dalam format tabel relasional terstruktur:\n")
+
+    db_tables = [
+        ('inquiries', 'Permintaan Masuk (Leads Klien)', 'Menyimpan calon klien yang mengisi formulir kebutuhan software.'),
+        ('services', 'Katalog Layanan Solusi IT', 'Katalog solusi IT, fitur, tech stack, dan status tayang.'),
+        ('portfolios', 'Portofolio Proyek Klien', 'Showcase implementasi sistem untuk Pemerintahan, BUMN, dan Swasta.'),
+        ('careers', 'Lowongan Karir & Rekrutmen', 'Daftar lowongan kerja, kualifikasi talenta, dan status tayang.'),
+        ('faqs', 'Tanya Jawab (FAQ)', 'Daftar tanya jawab interaktif untuk mengedukasi calon klien.'),
+        ('wa_logs', 'Log Anti-Spam WhatsApp', 'Pencatatan interaksi tombol WA untuk penegakan batas 2x/24 jam.'),
+        ('admin_security_logs', 'Audit Log Keamanan', 'Riwayat percobaan login, serangan bot, dan akses administrator.'),
+        ('login_lockouts', 'Daftar Blokir IP Brute-Force', 'Daftar alamat IP yang terkunci sementara oleh sistem keamanan.'),
+        ('settings', 'Konfigurasi Sistem & SEO', 'Key-value konfigurasi identitas brand, kontak, dan metadata SEO.')
+    ]
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    for tbl_name, tbl_label, tbl_desc in db_tables:
+        doc.append(f"### Tabel: `{tbl_name}` ({tbl_label})")
+        doc.append(f"_{tbl_desc}_\n")
+        try:
+            cursor.execute(f"PRAGMA table_info({tbl_name})")
+            cols = cursor.fetchall()
+            cursor.execute(f"SELECT COUNT(*) as count FROM {tbl_name}")
+            cnt = cursor.fetchone()['count']
+            doc.append(f"**Total Data Saat Ini**: {cnt} baris\n")
+            doc.append("| No | Nama Kolom | Tipe Data | Not Null | Primary Key | Keterangan |")
+            doc.append("|:---|:---|:---|:---:|:---:|:---|")
+            for col in cols:
+                cid, name, col_type, notnull, dflt, pk = col
+                nn_str = "Ya" if notnull else "Tidak"
+                pk_str = "PK" if pk else "-"
+                doc.append(f"| {cid + 1} | `{name}` | `{col_type}` | {nn_str} | {pk_str} | - |")
+            doc.append("")
+        except Exception as e:
+            doc.append(f"Gagal membaca skema tabel: {str(e)}\n")
+
+    conn.close()
+
+    doc.append("## 5. PANDUAN PENGOPERASIAN MODUL CMS (SOP ADMINISTRATOR)")
+    doc.append("Berikut alur pengoperasian tiap modul pada panel kendali internal:")
+    doc.append("### A. Mengelola Leads Masuk & Follow-Up Klien")
+    doc.append("1. Buka menu **Permintaan Masuk (Form Kebutuhan)**.")
+    doc.append("2. Periksa badge status: **Baru**, **Dihubungi**, **Diproses**, atau **Selesai**.")
+    doc.append("3. Klik tombol **Follow-Up via WA** untuk langsung membuka WhatsApp Web / App dengan pesan sapaan resmi yang sudah terisi otomatis.")
+    doc.append("4. Masukkan catatan internal pada kolom *Tambah catatan...* lalu ubah status ke *Dihubungi* / *Diproses* dan klik **Simpan**.\n")
+
+    doc.append("### B. Mengelola Solusi & Layanan IT")
+    doc.append("1. Buka menu **Kelola Layanan**.")
+    doc.append("2. Untuk menambahkan layanan baru, klik tombol **Tambah Layanan Baru**.")
+    doc.append("3. Isi judul layanan, kategori (misal: Solusi Pemerintahan & E-Gov, Aplikasi Bisnis ERP), subjudul, ringkasan, fitur unggulan, dan daftar teknologi (tech stack).")
+    doc.append("4. Tentukan status tayang (Tayang / Draft) lalu simpan.\n")
+
+    doc.append("### C. Mengelola Portofolio & Studi Kasus")
+    doc.append("1. Buka menu **Kelola Portofolio**.")
+    doc.append("2. Klik **Tambah Portofolio Baru**.")
+    doc.append("3. Masukkan nama proyek, nama klien, tipe klien (BUMN, Swasta, Pemerintahan), tahun implementasi, tantangan, solusi, dan dampak konkret.")
+    doc.append("4. Portofolio otomatis muncul di halaman depan dan halaman portofolio publik.\n")
+
+    doc.append("### D. Mengelola Lowongan Karir")
+    doc.append("1. Buka menu **Karir & Lowongan**.")
+    doc.append("2. Klik **Buka Lowongan Baru**.")
+    doc.append("3. Isi posisi pekerjaan, departemen, jenis kerja (Onsite/Hybrid/Remote), kualifikasi syarat, dan tanggung jawab.")
+    doc.append("4. Anda dapat mengaktifkan atau menonaktifkan status tayang kapan saja dengan satu klik tombol toggle.\n")
+
+    doc.append("### E. Mengatur SEO & Metadata Pencarian Google")
+    doc.append("1. Buka menu **Optimasi SEO**.")
+    doc.append("2. Isi Meta Title, Meta Description, Keywords, URL Canonical (`https://acd.co.id`), dan Kode Verifikasi Google Search Console.")
+    doc.append("3. File `sitemap.xml` dan `robots.txt` digenerate secara otomatis oleh sistem secara dinamis.\n")
+
+    doc.append("### F. Memantau Keamanan & Membuka Blokir IP")
+    doc.append("1. Buka menu **Keamanan & Audit Log**.")
+    doc.append("2. Periksa daftar *IP yang Sedang Diblokir Otomatis* jika ada staf yang salah memasukkan password lebih dari 3 kali.")
+    doc.append("3. Klik tombol hijau **Buka Blokir** untuk mengembalikan akses IP tersebut secara instan.")
+    doc.append("4. Periksa riwayat log aktivitas untuk memastikan tidak ada percobaan hacking yang mencurigakan.\n")
+
+    doc.append("## 6. PROSEDUR BACKUP & RESTORE DATA")
+    doc.append("1. Seluruh data website tersimpan dalam satu file database SQLite: `acd_database.sqlite`.")
+    doc.append("2. Lakukan backup berkala dengan menyalin (copy) file `acd_database.sqlite` ke tempat penyimpanan aman (cloud drive / server backup terpisah).")
+    doc.append("3. Untuk restore data, cukup gantikan file `acd_database.sqlite` dengan file backup yang diinginkan saat server web sedang tidak menerima beban tinggi.\n")
+
+    doc.append("---\n")
+    doc.append(f"_Dokumen ini digenerate secara otomatis oleh Internal CMS Portal {company_name}._")
+
+    content = "\n".join(doc)
+    filename = f"Manual_Book_Operasional_PT_Aksara_Cipta_Digital.md"
+
+    response = Response(content, mimetype='text/markdown; charset=utf-8')
+    response.headers['Content-Disposition'] = f'attachment; filename="{filename}"'
+    return response
+
 # Error Handlers
 @app.errorhandler(404)
 def not_found_error(error):

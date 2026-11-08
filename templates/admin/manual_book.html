@@ -1,0 +1,302 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'manual_book' %}
+
+{% block title %}Buku Panduan Pengoperasian Sistem (Manual Book){% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header Utama -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-indigo-950/70">
+        <div>
+            <div class="flex items-center space-x-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-indigo-500/15 text-indigo-400 border border-indigo-500/30 uppercase tracking-wider">
+                    Internal Documentation
+                </span>
+                <span class="text-xs text-slate-500">•</span>
+                <span class="text-xs text-slate-400 font-mono">Diperbarui: {{ now }}</span>
+            </div>
+            <h1 class="text-xl sm:text-2xl font-black text-white tracking-tight mt-1">Buku Panduan Operasional (Manual Book)</h1>
+            <p class="text-xs text-slate-400 mt-1">Pedoman komprehensif pengoperasian CMS, arsitektur infrastruktur, dan kamus data teknis PT. Aksara Cipta Digital</p>
+        </div>
+
+        <!-- Tombol Aksi: Download Manual Book & Cetak Dokumen -->
+        <div class="flex flex-wrap items-center gap-2 shrink-0">
+            <a href="{{ url_for('admin_manual_book_download') }}" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+                <i data-lucide="download" class="w-4 h-4"></i>
+                <span>Unduh Manual Book (.md)</span>
+            </a>
+            <button onclick="window.print()" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
+                <i data-lucide="printer" class="w-4 h-4"></i>
+                <span>Cetak / Simpan PDF</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- 1. Ringkasan Infrastruktur & Arsitektur Hosting -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl">
+        <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+            <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                <i data-lucide="server" class="w-4 h-4"></i>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-white">Infrastruktur & Arsitektur Website</h3>
+                <p class="text-[11px] text-slate-400">Fondasi komputasi dan stack teknologi yang menggerakkan platform ACD</p>
+            </div>
+        </div>
+
+        <!-- Grid Spesifikasi Teknis -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
+            <div class="p-3.5 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase tracking-wider font-bold block">Backend Framework</span>
+                <strong class="text-indigo-300 font-semibold text-xs block">{{ infra.framework }}</strong>
+                <span class="text-[10px] text-slate-400 block font-mono">Python v{{ infra.python_version }}</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase tracking-wider font-bold block">Basis Data (Database)</span>
+                <strong class="text-emerald-400 font-semibold text-xs block">SQLite 3 Relational Engine</strong>
+                <span class="text-[10px] text-slate-400 block">ACID Compliant + WAL Mode</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase tracking-wider font-bold block">Frontend UI & Styling</span>
+                <strong class="text-cyan-300 font-semibold text-xs block">Tailwind CSS + Lucide SVG</strong>
+                <span class="text-[10px] text-slate-400 block">HTML5 Canvas Constellation</span>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-1">
+                <span class="text-[10px] text-slate-500 uppercase tracking-wider font-bold block">Lingkungan Server</span>
+                <strong class="text-purple-300 font-semibold text-xs block">Waitress / Gunicorn WSGI</strong>
+                <span class="text-[10px] text-slate-400 block">Nginx Reverse Proxy + SSL Let's Encrypt</span>
+            </div>
+        </div>
+
+        <!-- Fitur Keamanan Terintegrasi -->
+        <div class="p-4 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-2 mt-2">
+            <span class="text-[11px] font-bold text-slate-300 uppercase tracking-wider flex items-center space-x-1.5">
+                <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400"></i>
+                <span>Fitur Keamanan Aktif (Security Matrix):</span>
+            </span>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs text-slate-400">
+                {% for feat in infra.security_features %}
+                <div class="flex items-start space-x-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-1.5 shrink-0"></span>
+                    <span class="leading-relaxed">{{ feat }}</span>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Struktur Basis Data (Database Schema & Kamus Data) -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-indigo-950/70">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 flex items-center justify-center">
+                    <i data-lucide="database" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Struktur Basis Data (Database Schema)</h3>
+                    <p class="text-[11px] text-slate-400">Skema relasional tabel, tipe data, dan kamus data sistem website ACD</p>
+                </div>
+            </div>
+            <span class="px-3 py-1 rounded-full bg-emerald-950/70 text-emerald-300 border border-emerald-800/60 text-xs font-semibold self-start sm:self-auto">
+                Total: {{ tables | length }} Tabel
+            </span>
+        </div>
+
+        <div class="space-y-4">
+            {% for tbl in tables %}
+            <div class="p-3.5 sm:p-4 rounded-xl bg-[#020617] border border-indigo-950/70 space-y-3">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <div class="flex items-center space-x-2">
+                        <code class="px-2 py-1 rounded-md bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 font-mono font-bold text-xs">
+                            {{ tbl.name }}
+                        </code>
+                        <strong class="text-white text-xs">{{ tbl.label }}</strong>
+                    </div>
+                    <div class="flex items-center space-x-2 text-[11px] text-slate-400">
+                        <span>Jumlah Baris: <strong class="text-emerald-400 font-mono">{{ tbl.count }}</strong> data</span>
+                        <span>•</span>
+                        <span>Total: <strong class="text-indigo-300 font-mono">{{ tbl.columns | length }}</strong> kolom</span>
+                    </div>
+                </div>
+
+                <p class="text-[11px] text-slate-400">{{ tbl.desc }}</p>
+
+                <!-- Tabel Kolom PRAGMA -->
+                <div class="overflow-x-auto custom-scrollbar">
+                    <table class="w-full text-left text-xs min-w-[500px]">
+                        <thead class="bg-[#0a0f1d] border-b border-indigo-950/60 text-slate-500 uppercase text-[9px] tracking-wider font-semibold">
+                            <tr>
+                                <th class="px-3 py-1.5 w-10">CID</th>
+                                <th class="px-3 py-1.5">Nama Kolom</th>
+                                <th class="px-3 py-1.5">Tipe Data</th>
+                                <th class="px-3 py-1.5 text-center">Not Null</th>
+                                <th class="px-3 py-1.5 text-center">Key</th>
+                                <th class="px-3 py-1.5">Nilai Default</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-indigo-950/40 text-[11px]">
+                            {% for col in tbl.columns %}
+                            <tr class="hover:bg-slate-900/30 transition">
+                                <td class="px-3 py-1.5 font-mono text-slate-500">{{ col.cid }}</td>
+                                <td class="px-3 py-1.5 font-mono font-bold text-slate-200">{{ col.name }}</td>
+                                <td class="px-3 py-1.5 font-mono text-indigo-400">{{ col.type }}</td>
+                                <td class="px-3 py-1.5 text-center">
+                                    {% if col.notnull %}
+                                    <span class="text-emerald-400 font-bold text-[10px]">YA</span>
+                                    {% else %}
+                                    <span class="text-slate-600 text-[10px]">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-3 py-1.5 text-center">
+                                    {% if col.pk %}
+                                    <span class="px-1.5 py-0.5 rounded text-[9px] font-bold bg-amber-500/20 text-amber-300 border border-amber-500/30">PK</span>
+                                    {% else %}
+                                    <span class="text-slate-600 text-[10px]">-</span>
+                                    {% endif %}
+                                </td>
+                                <td class="px-3 py-1.5 font-mono text-slate-500 text-[10px]">
+                                    {{ col.dflt_value if col.dflt_value is not none else '-' }}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- 3. Standar Operasional Prosedur Pengoperasian Website (SOP Administrator) -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 sm:p-6 space-y-5 shadow-xl">
+        <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+            <div class="w-8 h-8 rounded-lg bg-cyan-600/20 text-cyan-400 flex items-center justify-center">
+                <i data-lucide="book-open-check" class="w-4 h-4"></i>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-white">Panduan Pengoperasian Modul CMS (SOP Administrator)</h3>
+                <p class="text-[11px] text-slate-400">Langkah-langkah praktis dalam mengoperasikan dan mengelola setiap modul website</p>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs">
+            <!-- SOP 1: Leads & Konsultasi -->
+            <div class="p-4 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-2">
+                <div class="flex items-center space-x-2 text-indigo-400">
+                    <i data-lucide="inbox" class="w-4 h-4"></i>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">1. Mengelola Leads Masuk & Follow-Up</h4>
+                </div>
+                <ul class="space-y-1.5 text-slate-400 leading-relaxed list-disc list-inside">
+                    <li>Buka menu <strong>Permintaan Masuk</strong> untuk meninjau formulir kebutuhan klien.</li>
+                    <li>Gunakan tombol <strong>Follow-Up via WA</strong> untuk langsung chat WhatsApp klien dengan draft salam pembuka otomatis dari sistem ACD.</li>
+                    <li>Perbarui status leads menjadi <em>Dihubungi</em>, <em>Diproses</em>, atau <em>Selesai</em> dan catat hasil pembicaraan pada field catatan internal.</li>
+                </ul>
+            </div>
+
+            <!-- SOP 2: Layanan IT -->
+            <div class="p-4 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-2">
+                <div class="flex items-center space-x-2 text-purple-400">
+                    <i data-lucide="layers" class="w-4 h-4"></i>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">2. Mengelola Katalog Solusi & Layanan</h4>
+                </div>
+                <ul class="space-y-1.5 text-slate-400 leading-relaxed list-disc list-inside">
+                    <li>Buka menu <strong>Kelola Layanan</strong> untuk menambah atau mengedit layanan solusi IT.</li>
+                    <li>Pilih kategori yang tepat (Pemerintahan, ERP, Mobile Apps, AI & Data, Cloud).</li>
+                    <li>Tentukan status <em>Tayang</em> agar langsung terbit di halaman publik atau <em>Draft</em> jika masih dipersiapkan.</li>
+                </ul>
+            </div>
+
+            <!-- SOP 3: Portofolio Proyek -->
+            <div class="p-4 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-2">
+                <div class="flex items-center space-x-2 text-emerald-400">
+                    <i data-lucide="briefcase" class="w-4 h-4"></i>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">3. Mengelola Portofolio & Studi Kasus</h4>
+                </div>
+                <ul class="space-y-1.5 text-slate-400 leading-relaxed list-disc list-inside">
+                    <li>Buka menu <strong>Kelola Portofolio</strong> untuk mendokumentasikan proyek yang berhasil diselesaikan ACD.</li>
+                    <li>Lengkapi tantangan klien (challenge), solusi implementasi ACD, dan metrik dampak positif proyek.</li>
+                    <li>Data portofolio otomatis ditampilkan di showcase halaman utama dan halaman portofolio resmi.</li>
+                </ul>
+            </div>
+
+            <!-- SOP 4: Karir & Lowongan Kerja -->
+            <div class="p-4 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-2">
+                <div class="flex items-center space-x-2 text-cyan-400">
+                    <i data-lucide="users" class="w-4 h-4"></i>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">4. Mengelola Lowongan Karir & Rekrutmen</h4>
+                </div>
+                <ul class="space-y-1.5 text-slate-400 leading-relaxed list-disc list-inside">
+                    <li>Buka menu <strong>Karir & Lowongan</strong> untuk membuka lowongan posisi baru talenta teknologi.</li>
+                    <li>Atur jenis penempatan (Onsite, Hybrid, atau Remote) serta poin persyaratan dan tanggung jawab.</li>
+                    <li>Pelamar dapat langsung mengirim CV dan portofolio ke email karir resmi dengan subjek terformat.</li>
+                </ul>
+            </div>
+
+            <!-- SOP 5: Optimasi SEO Google -->
+            <div class="p-4 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-2">
+                <div class="flex items-center space-x-2 text-amber-400">
+                    <i data-lucide="search" class="w-4 h-4"></i>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">5. Mengatur Optimasi SEO & Indeks Mesin Pencari</h4>
+                </div>
+                <ul class="space-y-1.5 text-slate-400 leading-relaxed list-disc list-inside">
+                    <li>Buka menu <strong>Optimasi SEO</strong> untuk mengatur Meta Title, Description, dan URL kanonikal resmi.</li>
+                    <li>Sistem secara dinamis menyajikan file <code>/sitemap.xml</code> dan <code>/robots.txt</code> tanpa perlu update manual.</li>
+                    <li>Masukkan kode tag verifikasi Google Search Console untuk verifikasi kepemilikan domain instan.</li>
+                </ul>
+            </div>
+
+            <!-- SOP 6: Keamanan & Buka Blokir IP -->
+            <div class="p-4 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-2">
+                <div class="flex items-center space-x-2 text-rose-400">
+                    <i data-lucide="shield-alert" class="w-4 h-4"></i>
+                    <h4 class="font-bold text-white uppercase tracking-wider text-[11px]">6. Monitoring Keamanan & Buka Blokir IP</h4>
+                </div>
+                <ul class="space-y-1.5 text-slate-400 leading-relaxed list-disc list-inside">
+                    <li>Buka menu <strong>Keamanan & Audit Log</strong> untuk memantau percobaan akses ilegal dan bot scanning.</li>
+                    <li>Jika ada staf yang terkunci akunnya karena 3x salah memasukkan kata sandi, klik tombol hijau <strong>Buka Blokir</strong> pada daftar IP.</li>
+                    <li>Sesi login otomatis terkunci setelah 15 menit idle demi mencegah penyalahgunaan saat komputer ditinggalkan.</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4. Prosedur Backup & Restore Data -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 sm:p-6 space-y-4 shadow-xl">
+        <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+            <div class="w-8 h-8 rounded-lg bg-amber-600/20 text-amber-400 flex items-center justify-center">
+                <i data-lucide="archive" class="w-4 h-4"></i>
+            </div>
+            <div>
+                <h3 class="text-sm font-bold text-white">Prosedur Pencadangan (Backup) & Pemulihan (Restore)</h3>
+                <p class="text-[11px] text-slate-400">Panduan menjaga kontinuitas data website dan pemulihan darurat</p>
+            </div>
+        </div>
+
+        <div class="p-4 rounded-xl bg-[#020617] border border-indigo-950/60 space-y-3 text-xs text-slate-300">
+            <p class="leading-relaxed">
+                Seluruh data website (pengaturan, leads klien, layanan, portofolio, lowongan, dan log keamanan) tersimpan dalam satu berkas terintegrasi: <code class="px-2 py-0.5 rounded bg-indigo-950 text-indigo-300 font-mono text-[11px] border border-indigo-800/60">acd_database.sqlite</code>.
+            </p>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2 border-t border-indigo-950/60">
+                <div>
+                    <strong class="text-white block mb-1 text-[11px]">Cara Backup Data:</strong>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-400 text-[11px]">
+                        <li>Salin berkas <code class="text-indigo-300 font-mono">acd_database.sqlite</code> di root direktori proyek.</li>
+                        <li>Simpan berkas salinan ke cloud storage (Google Drive / S3) dengan format penamaan tanggal (contoh: <code>acd_db_backup_20261108.sqlite</code>).</li>
+                    </ol>
+                </div>
+                <div>
+                    <strong class="text-white block mb-1 text-[11px]">Cara Restore Data:</strong>
+                    <ol class="list-decimal list-inside space-y-1 text-slate-400 text-[11px]">
+                        <li>Hentikan sementara proses web server (Gunicorn / Waitress).</li>
+                        <li>Gantikan berkas <code class="text-indigo-300 font-mono">acd_database.sqlite</code> dengan berkas cadangan Anda.</li>
+                        <li>Jalankan kembali web server. Data langsung pulih 100% tanpa konfigurasi ulang.</li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
