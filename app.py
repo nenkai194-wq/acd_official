@@ -636,17 +636,18 @@ def admin_delete_inquiry(inquiry_id):
 def admin_services():
     category = request.args.get('category')
     status_filter = request.args.get('status')  # 'tayang', 'draft', or None
-    all_services = ServiceModel.get_all(category=category)
+    q = request.args.get('q', '').strip().lower()
     
-    total_count = len(all_services)
-    published_count = sum(1 for s in all_services if s.get('is_published') == 1)
-    draft_count = total_count - published_count
+    all_services = ServiceModel.get_all(category=category)
     
     services = all_services
     if status_filter == 'tayang':
-        services = [s for s in all_services if s.get('is_published') == 1]
+        services = [s for s in services if s.get('is_published') == 1]
     elif status_filter == 'draft':
-        services = [s for s in all_services if s.get('is_published') == 0]
+        services = [s for s in services if s.get('is_published') == 0]
+        
+    if q:
+        services = [s for s in services if q in s['title'].lower() or q in (s.get('subtitle') or '').lower() or q in (s.get('summary') or '').lower() or q in s['category'].lower()]
 
     categories = [
         'Aplikasi & Website',
@@ -661,9 +662,7 @@ def admin_services():
         categories=categories,
         current_category=category or 'Semua',
         current_status=status_filter or 'semua',
-        total_count=total_count,
-        published_count=published_count,
-        draft_count=draft_count
+        search_query=q
     )
 
 @app.route('/admin/services/<int:service_id>/toggle-status', methods=['POST'])
