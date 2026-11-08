@@ -31,9 +31,9 @@
             {{ service.subtitle }}
         </p>
         <div class="pt-6 flex flex-wrap gap-4 animate-fade-in-up delay-500">
-            <button onclick="openConsultationModal('{{ service.title }}')" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-7 py-3.5">
+            <a href="{{ url_for('contact', service=service.title) }}" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-7 py-3.5 inline-block text-center">
                 Konsultasikan Solusi Ini Gratis
-            </button>
+            </a>
             <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}?text=Halo%20ACD%2C%20saya%20tertarik%20dengan%20layanan%20{{ service.title | urlencode }}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-full transition inline-flex items-center space-x-2">
                 <i data-lucide="message-circle" class="w-4 h-4"></i>
                 <span>Tanya via WhatsApp</span>
@@ -111,9 +111,9 @@
                     Konsultasikan kebutuhan spesifik instansi atau perusahaan Anda. Kami siapkan dokumen SRS, arsitektur, dan penawaran teknis tanpa dipungut biaya.
                 </p>
                 <div class="pt-2">
-                    <button onclick="openConsultationModal('{{ service.title }}')" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-8 py-3.5 shadow-lg shadow-indigo-500/25">
+                    <a href="{{ url_for('contact', service=service.title) }}" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-8 py-3.5 shadow-lg shadow-indigo-500/25 inline-block text-center">
                         Mulai Diskusi Teknis Gratis
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

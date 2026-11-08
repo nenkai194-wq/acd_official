@@ -105,9 +105,9 @@
                     Diskusikan bersama konsultan sistem ACD. Kami bantu memetakan alur kerja dan merancang sistem yang menyelesaikan masalah hingga ke akar.
                 </p>
                 <div class="pt-2">
-                    <button onclick="openConsultationModal('{{ portfolio.title }}')" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-8 py-3.5 shadow-lg shadow-indigo-500/25">
+                    <a href="{{ url_for('contact', service=portfolio.title) }}" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-8 py-3.5 shadow-lg shadow-indigo-500/25 inline-block text-center">
                         Jadwalkan Konsultasi Teknis Gratis
-                    </button>
+                    </a>
                 </div>
             </div>
         </div>

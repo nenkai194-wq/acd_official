@@ -3,9 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}ACD IT Consultant - AI, Software Developer{% endblock %}</title>
-    <meta name="description" content="{% block meta_desc %}PT. Aksara Cipta Digital (ACD Digital Consulting) - Jasa Pembuatan Aplikasi Mobile, Web Base, Sistem Informasi ERP, dan E-Government terpercaya dan bergaransi di Indonesia.{% endblock %}">
-    
+    <title>{% block title %}{{ seo.meta_title }}{% endblock %}</title>
+    <meta name="description" content="{% block meta_desc %}{{ seo.meta_description }}{% endblock %}">
+    <meta name="keywords" content="{{ seo.meta_keywords }}">
+    <meta name="author" content="{{ seo.author }}">
+    <meta name="robots" content="{{ seo.robots }}">
+    <link rel="canonical" href="{{ seo.canonical_url }}{{ request.path }}">
+
+    <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
+    <meta property="og:type" content="{{ seo.og_type }}">
+    <meta property="og:url" content="{{ seo.canonical_url }}{{ request.path }}">
+    <meta property="og:title" content="{% block og_title %}{{ seo.og_title }}{% endblock %}">
+    <meta property="og:description" content="{% block og_desc %}{{ seo.og_description }}{% endblock %}">
+    <meta property="og:image" content="{{ seo.canonical_url }}{{ seo.og_image }}">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="{{ seo.twitter_card }}">
+    <meta name="twitter:title" content="{% block twitter_title %}{{ seo.og_title }}{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_desc %}{{ seo.og_description }}{% endblock %}">
+    <meta name="twitter:image" content="{{ seo.canonical_url }}{{ seo.og_image }}">
+
+    {% if seo.google_verification %}
+    <meta name="google-site-verification" content="{{ seo.google_verification }}">
+    {% endif %}
+    {% if seo.bing_verification %}
+    <meta name="msvalidate.01" content="{{ seo.bing_verification }}">
+    {% endif %}
+
+    <!-- Structured Data (JSON-LD Organization Schema) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "{{ seo.organization_type }}",
+      "name": "PT. Aksara Cipta Digital",
+      "alternateName": "ACD Digital Consulting",
+      "url": "{{ seo.canonical_url }}",
+      "logo": "{{ seo.canonical_url }}/static/images/logo_acd_icon.png",
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "{{ config.COMPANY_PHONE }}",
+        "contactType": "Customer Support",
+        "areaServed": "ID",
+        "availableLanguage": ["Indonesian", "English"]
+      },
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "{{ config.COMPANY_ADDRESS }}"
+      }
+    }
+    </script>
+
+    {% if seo.google_analytics_id %}
+    <!-- Google Analytics (GA4) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id={{ seo.google_analytics_id }}"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag(){dataLayer.push(arguments);}
+      gtag('js', new Date());
+      gtag('config', '{{ seo.google_analytics_id }}');
+    </script>
+    {% endif %}
+
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo_acd_icon.png') }}">
 
@@ -246,10 +304,10 @@
 
                     <!-- 3. Tombol Hubungi Kami (Merapat di sebelah menu utama) -->
                     <div class="shrink-0 pl-1 xl:pl-2">
-                        <button onclick="openConsultationModal()" class="inline-flex items-center space-x-1.5 deptech-btn-primary px-3 xl:px-4 py-1.5 xl:py-2 font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/20 whitespace-nowrap">
+                        <a href="{{ url_for('contact') }}" class="inline-flex items-center space-x-1.5 deptech-btn-primary px-3 xl:px-4 py-1.5 xl:py-2 font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/20 whitespace-nowrap">
                             <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
                             <span>{{ t.nav_consultation_btn }}</span>
-                        </button>
+                        </a>
                     </div>
                 </div>
 
@@ -355,9 +413,9 @@
             <a href="{{ url_for('career') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_career }}</a>
         </div>
         <div class="p-4 border-t border-indigo-950/60 bg-[#070c24]">
-            <button onclick="openConsultationModal()" class="w-full deptech-btn-primary font-semibold py-2.5 rounded-xl text-center shadow-lg">
+            <a href="{{ url_for('contact') }}" class="w-full deptech-btn-primary font-semibold py-2.5 rounded-xl text-center shadow-lg block">
                 {{ t.nav_consultation_btn }}
-            </button>
+            </a>
         </div>
     </div>
 

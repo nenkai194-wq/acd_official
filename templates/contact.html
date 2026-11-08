@@ -141,7 +141,7 @@
 
                         <div>
                             <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Uraian Kebutuhan & Masalah Operasional yang Ingin Diselesaikan *</label>
-                            <textarea name="message" required rows="4" placeholder="Jelaskan secara singkat fitur utama yang Anda butuhkan, jumlah calon pengguna, serta target jadwal peluncuran sistem..." class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500"></textarea>
+                            <textarea name="message" required rows="4" placeholder="Jelaskan secara singkat fitur utama yang Anda butuhkan, jumlah calon pengguna, serta target jadwal peluncuran sistem..." class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">{% if request.args.get('service') %}Halo Tim Konsultan ACD, saya tertarik untuk mendiskusikan kebutuhan sistem/proyek: {{ request.args.get('service') }}. Mohon informasi jadwal diskusi dan estimasi penawaran teknis.{% endif %}</textarea>
                         </div>
 
                         <button type="submit" class="w-full py-4 deptech-btn-primary font-extrabold text-xs uppercase tracking-wider shadow-xl rounded-xl">

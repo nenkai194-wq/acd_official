@@ -7,7 +7,7 @@ import random
 from PIL import Image, ImageDraw, ImageFont
 from functools import wraps
 from datetime import datetime
-from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort, flash
+from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort, flash, Response
 from config import Config
 from database import init_db, seed_db
 from models import (
@@ -97,6 +97,50 @@ def parse_footer_links(raw_text):
             items.append({'label': line, 'url': '#'})
     return items
 
+
+
+def get_seo_data():
+    all_s = SettingModel.get_all()
+    
+    def s_val(k, fallback):
+        v = all_s.get(k)
+        return v if (v is not None and str(v).strip() != '') else fallback
+
+    meta_title = s_val('seo_meta_title', 'PT. Aksara Cipta Digital | IT Consultant - AI, Software Developer')
+    meta_desc = s_val('seo_meta_description', 'PT. Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.')
+    meta_keywords = s_val('seo_meta_keywords', 'IT Consultant, Konsultan IT Jakarta, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD')
+    canonical_url = s_val('seo_canonical_url', 'https://acd.co.id').rstrip('/')
+    author = s_val('seo_author', 'PT. Aksara Cipta Digital')
+    robots = s_val('seo_robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
+    og_title = s_val('seo_og_title', 'PT. Aksara Cipta Digital - IT Consultant & Enterprise Software House')
+    og_desc = s_val('seo_og_description', 'Solusi software inovatif, arsitektur sistem berkinerja tinggi, dan transformasi digital terpercaya untuk Korporasi Swasta, BUMN, dan Pemerintahan di seluruh Indonesia.')
+    og_image = s_val('seo_og_image', '/static/images/logo_acd_icon.png')
+    og_type = s_val('seo_og_type', 'website')
+    twitter_card = s_val('seo_twitter_card', 'summary_large_image')
+    google_ver = s_val('seo_google_verification', '')
+    bing_ver = s_val('seo_bing_verification', '')
+    ga_id = s_val('seo_google_analytics_id', '')
+    gtm_id = s_val('seo_gtm_id', '')
+    org_type = s_val('seo_organization_type', 'Corporation')
+
+    return {
+        'meta_title': meta_title,
+        'meta_description': meta_desc,
+        'meta_keywords': meta_keywords,
+        'canonical_url': canonical_url,
+        'author': author,
+        'robots': robots,
+        'og_title': og_title,
+        'og_description': og_desc,
+        'og_image': og_image,
+        'og_type': og_type,
+        'twitter_card': twitter_card,
+        'google_verification': google_ver,
+        'bing_verification': bing_ver,
+        'google_analytics_id': ga_id,
+        'gtm_id': gtm_id,
+        'organization_type': org_type
+    }
 
 def get_contact_data():
     all_s = SettingModel.get_all()
@@ -255,7 +299,8 @@ def inject_global_data():
         'badge_new_inquiries': badge_new,
         'admin_inactivity_timeout': ADMIN_INACTIVITY_TIMEOUT,
         'footer': get_footer_data(),
-        'contact_cfg': get_contact_data()
+        'contact_cfg': get_contact_data(),
+        'seo': get_seo_data()
     }
 
 @app.route('/set-language/<lang>')
@@ -266,6 +311,55 @@ def set_language(lang):
     if referrer and ('127.0.0.1' in referrer or 'localhost' in referrer or '192.168.' in referrer or 'acd.' in referrer):
         return redirect(referrer)
     return redirect(url_for('index'))
+
+
+# --- SEO ENDPOINTS: SITEMAP & ROBOTS ---
+
+@app.route('/sitemap.xml', methods=['GET'])
+def sitemap_xml():
+    base_url = SettingModel.get('seo_canonical_url', 'https://acd.co.id').rstrip('/')
+    services = ServiceModel.get_all(only_published=True)
+    portfolios = PortfolioModel.get_all()
+    careers = CareerModel.get_all(only_published=True)
+    
+    pages = [
+        {'loc': f"{base_url}/", 'changefreq': 'daily', 'priority': '1.0'},
+        {'loc': f"{base_url}/layanan", 'changefreq': 'weekly', 'priority': '0.9'},
+        {'loc': f"{base_url}/portofolio", 'changefreq': 'weekly', 'priority': '0.9'},
+        {'loc': f"{base_url}/tentang-kami", 'changefreq': 'monthly', 'priority': '0.8'},
+        {'loc': f"{base_url}/karir", 'changefreq': 'weekly', 'priority': '0.8'},
+        {'loc': f"{base_url}/kontak", 'changefreq': 'monthly', 'priority': '0.8'},
+    ]
+    for s in services:
+        pages.append({'loc': f"{base_url}/layanan/{s['slug']}", 'changefreq': 'weekly', 'priority': '0.8'})
+    for p in portfolios:
+        pages.append({'loc': f"{base_url}/portofolio/{p['slug']}", 'changefreq': 'monthly', 'priority': '0.7'})
+    for c in careers:
+        pages.append({'loc': f"{base_url}/karir/{c['slug']}", 'changefreq': 'weekly', 'priority': '0.6'})
+
+    xml_lines = ['<?xml version="1.0" encoding="UTF-8"?>']
+    xml_lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
+    for page in pages:
+        xml_lines.append('  <url>')
+        xml_lines.append(f"    <loc>{page['loc']}</loc>")
+        xml_lines.append(f"    <changefreq>{page['changefreq']}</changefreq>")
+        xml_lines.append(f"    <priority>{page['priority']}</priority>")
+        xml_lines.append('  </url>')
+    xml_lines.append('</urlset>')
+
+    return Response('\n'.join(xml_lines), mimetype='application/xml')
+
+@app.route('/robots.txt', methods=['GET'])
+def robots_txt():
+    base_url = SettingModel.get('seo_canonical_url', 'https://acd.co.id').rstrip('/')
+    content = f"""User-agent: *
+Allow: /
+Disallow: /admin/
+Disallow: /api/
+
+Sitemap: {base_url}/sitemap.xml
+"""
+    return Response(content, mimetype='text/plain')
 
 # --- PUBLIC ROUTES ---
 
@@ -348,8 +442,8 @@ def career_detail(slug):
         abort(404)
     return render_template('career_detail.html', career=career)
 
-@app.route('/kontak')
 @app.route('/hubungi-kami')
+@app.route('/kontak')
 def contact():
     return render_template('contact.html')
 
@@ -1584,6 +1678,62 @@ def admin_footer_reset_defaults():
     SettingModel.update_many(defaults)
     flash('Pengaturan footer berhasil dikembalikan ke standar awal PT. Aksara Cipta Digital.', 'info')
     return redirect(url_for('admin_footer'))
+
+
+# --- KELOLA OPTIMASI SEO WEBSITE ---
+
+@app.route('/admin/seo', methods=['GET', 'POST'])
+@admin_required
+def admin_seo():
+    if request.method == 'POST':
+        updates = {
+            'seo_meta_title': request.form.get('seo_meta_title', '').strip(),
+            'seo_meta_description': request.form.get('seo_meta_description', '').strip(),
+            'seo_meta_keywords': request.form.get('seo_meta_keywords', '').strip(),
+            'seo_canonical_url': request.form.get('seo_canonical_url', '').strip(),
+            'seo_author': request.form.get('seo_author', '').strip(),
+            'seo_robots': request.form.get('seo_robots', '').strip(),
+            'seo_og_title': request.form.get('seo_og_title', '').strip(),
+            'seo_og_description': request.form.get('seo_og_description', '').strip(),
+            'seo_og_image': request.form.get('seo_og_image', '').strip(),
+            'seo_twitter_card': request.form.get('seo_twitter_card', '').strip(),
+            'seo_google_verification': request.form.get('seo_google_verification', '').strip(),
+            'seo_bing_verification': request.form.get('seo_bing_verification', '').strip(),
+            'seo_google_analytics_id': request.form.get('seo_google_analytics_id', '').strip(),
+            'seo_gtm_id': request.form.get('seo_gtm_id', '').strip(),
+            'seo_organization_type': request.form.get('seo_organization_type', 'Corporation').strip(),
+        }
+        SettingModel.update_many(updates)
+        flash('Konfigurasi optimasi SEO website PT. Aksara Cipta Digital berhasil diperbarui!', 'success')
+        return redirect(url_for('admin_seo'))
+
+    seo_data = get_seo_data()
+    return render_template('admin/seo.html', seo=seo_data)
+
+@app.route('/admin/seo/reset-defaults', methods=['POST'])
+@admin_required
+def admin_seo_reset_defaults():
+    defaults = {
+        'seo_meta_title': 'PT. Aksara Cipta Digital | IT Consultant - AI, Software Developer',
+        'seo_meta_description': 'PT. Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.',
+        'seo_meta_keywords': 'IT Consultant, Konsultan IT Jakarta, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD',
+        'seo_canonical_url': 'https://acd.co.id',
+        'seo_author': 'PT. Aksara Cipta Digital',
+        'seo_robots': 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
+        'seo_og_title': 'PT. Aksara Cipta Digital - IT Consultant & Enterprise Software House',
+        'seo_og_description': 'Solusi software inovatif, arsitektur sistem berkinerja tinggi, dan transformasi digital terpercaya untuk Korporasi Swasta, BUMN, dan Pemerintahan di seluruh Indonesia.',
+        'seo_og_image': '/static/images/logo_acd_icon.png',
+        'seo_og_type': 'website',
+        'seo_twitter_card': 'summary_large_image',
+        'seo_google_verification': '',
+        'seo_bing_verification': '',
+        'seo_google_analytics_id': '',
+        'seo_gtm_id': '',
+        'seo_organization_type': 'Corporation'
+    }
+    SettingModel.update_many(defaults)
+    flash('Konfigurasi SEO berhasil dikembalikan ke standar awal PT. Aksara Cipta Digital.', 'info')
+    return redirect(url_for('admin_seo'))
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 @admin_required

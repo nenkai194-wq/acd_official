@@ -117,8 +117,8 @@
                     <span>Tanya Jawab (FAQ)</span>
                 </a>
                 <a href="{{ url_for('admin_contact_form') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'contact_form' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
-                    <i data-lucide="message-square" class="w-4 h-4"></i>
-                    <span>Kelola Form Kontak</span>
+                    <i data-lucide="phone-call" class="w-4 h-4"></i>
+                    <span>Kelola Kontak</span>
                 </a>
                 <a href="{{ url_for('admin_footer') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'footer' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
                     <i data-lucide="layout-template" class="w-4 h-4"></i>
@@ -129,6 +129,10 @@
                 <a href="{{ url_for('admin_settings') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'settings' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
                     <i data-lucide="settings" class="w-4 h-4"></i>
                     <span>Pengaturan Website</span>
+                </a>
+                <a href="{{ url_for('admin_seo') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'seo' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="search-check" class="w-4 h-4"></i>
+                    <span>Optimasi SEO</span>
                 </a>
                 <a href="{{ url_for('admin_security') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'security' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
                     <i data-lucide="shield-check" class="w-4 h-4"></i>

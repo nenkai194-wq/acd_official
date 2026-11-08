@@ -1,0 +1,293 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'seo' %}
+
+{% block title %}Optimasi SEO Website{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Optimasi SEO (Search Engine Optimization)</h1>
+            <p class="text-xs text-slate-400 mt-1">Konfigurasi meta tag Google, preview snippet pencarian, indeks sitemap, dan verifikasi webmaster PT. Aksara Cipta Digital</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+            <a href="{{ url_for('sitemap_xml') }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
+                <i data-lucide="file-code" class="w-3.5 h-3.5 text-indigo-400"></i>
+                <span>Sitemap XML</span>
+            </a>
+            <a href="{{ url_for('robots_txt') }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
+                <i data-lucide="bot" class="w-3.5 h-3.5 text-cyan-400"></i>
+                <span>Robots.txt</span>
+            </a>
+            <form method="POST" action="{{ url_for('admin_seo_reset_defaults') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan seluruh konfigurasi SEO ke standar bawaan PT. Aksara Cipta Digital?');" class="inline">
+                <button type="submit" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>Reset Standar SEO</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- SEO Health Metrics Bar -->
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 flex items-center justify-center shrink-0">
+                <i data-lucide="check-circle-2" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Status Indeks</span>
+                <span class="text-xs font-bold text-white">Index, Follow Aktif</span>
+            </div>
+        </div>
+
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-indigo-950/80 text-indigo-400 border border-indigo-800/60 flex items-center justify-center shrink-0">
+                <i data-lucide="sitemap" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Sitemap Dinamis</span>
+                <a href="{{ url_for('sitemap_xml') }}" target="_blank" class="text-xs font-bold text-indigo-400 hover:underline">/sitemap.xml Online</a>
+            </div>
+        </div>
+
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-purple-950/80 text-purple-400 border border-purple-800/60 flex items-center justify-center shrink-0">
+                <i data-lucide="share-2" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Open Graph Protocol</span>
+                <span class="text-xs font-bold text-white">Siap Share WA & Medsos</span>
+            </div>
+        </div>
+
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-xl bg-cyan-950/80 text-cyan-400 border border-cyan-800/60 flex items-center justify-center shrink-0">
+                <i data-lucide="code-2" class="w-5 h-5"></i>
+            </div>
+            <div>
+                <span class="block text-[10px] text-slate-400 uppercase font-semibold">Structured Data</span>
+                <span class="text-xs font-bold text-white">JSON-LD Organization</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Live Google Snippet Preview -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-4">
+        <div class="flex items-center justify-between pb-3 border-b border-indigo-950/70">
+            <div class="flex items-center space-x-2.5">
+                <div class="w-7 h-7 rounded-lg bg-blue-600/20 text-blue-400 flex items-center justify-center">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Pratinjau Hasil Pencarian Google (Snippet Simulation)</h3>
+                    <p class="text-[11px] text-slate-400">Simulasi tampilan website PT. Aksara Cipta Digital ketika muncul di halaman hasil pencarian Google</p>
+                </div>
+            </div>
+            <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-1 rounded-full">
+                Google Desktop / Mobile Preview
+            </span>
+        </div>
+
+        <!-- Google Snippet Card -->
+        <div class="bg-white text-slate-900 p-5 rounded-2xl shadow-xl max-w-3xl space-y-1.5 font-sans">
+            <div class="flex items-center space-x-2 text-xs text-[#202124]">
+                <div class="w-6 h-6 rounded-full bg-slate-100 border border-slate-200 flex items-center justify-center overflow-hidden shrink-0">
+                    <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" class="w-4 h-4 object-contain" alt="favicon">
+                </div>
+                <div class="leading-tight">
+                    <div class="font-medium text-xs text-[#202124]">PT. Aksara Cipta Digital</div>
+                    <div class="text-[11px] text-[#4d5156] truncate max-w-md">{{ seo.canonical_url }} › id</div>
+                </div>
+            </div>
+            <h4 class="text-lg sm:text-xl text-[#1a0dab] hover:underline cursor-pointer font-medium leading-snug pt-0.5" id="preview-google-title">
+                {{ seo.meta_title }}
+            </h4>
+            <p class="text-xs sm:text-sm text-[#4d5156] leading-relaxed line-clamp-2" id="preview-google-desc">
+                {{ seo.meta_description }}
+            </p>
+        </div>
+    </div>
+
+    <!-- Main SEO Form -->
+    <form method="POST" action="{{ url_for('admin_seo') }}" class="space-y-8">
+        <!-- 1. Meta Tag Utama Google -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="tag" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Bagian 1: Meta Tag Utama Google (Global Meta Tags)</h3>
+                    <p class="text-[11px] text-slate-400">Judul utama, deskripsi snippet, dan kata kunci SEO yang dibaca mesin pencari</p>
+                </div>
+            </div>
+
+            <div class="space-y-5 text-xs">
+                <!-- Meta Title -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block font-bold text-slate-300">Meta Title Global <span class="text-rose-400">*</span></label>
+                        <span class="text-[10px] text-slate-400 font-mono" id="title-counter">Panjang: {{ seo.meta_title | length }} / 60 karakter (Optimal: 50-60)</span>
+                    </div>
+                    <input type="text" name="seo_meta_title" id="input-seo-title" value="{{ seo.meta_title }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                </div>
+
+                <!-- Meta Description -->
+                <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                        <label class="block font-bold text-slate-300">Meta Description Global <span class="text-rose-400">*</span></label>
+                        <span class="text-[10px] text-slate-400 font-mono" id="desc-counter">Panjang: {{ seo.meta_description | length }} / 160 karakter (Optimal: 140-160)</span>
+                    </div>
+                    <textarea name="seo_meta_description" id="input-seo-desc" rows="3" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ seo.meta_description }}</textarea>
+                </div>
+
+                <!-- Meta Keywords -->
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Meta Keywords <span class="text-slate-500 font-normal">(Pisahkan dengan tanda koma)</span></label>
+                    <textarea name="seo_meta_keywords" rows="2" class="w-full px-4 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500">{{ seo.meta_keywords }}</textarea>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1.5">Canonical URL Utama</label>
+                        <input type="url" name="seo_canonical_url" value="{{ seo.canonical_url }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1.5">Author / Hak Cipta Penerbit</label>
+                        <input type="text" name="seo_author" value="{{ seo.author }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1.5">Meta Robots Directive</label>
+                        <input type="text" name="seo_robots" value="{{ seo.robots }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Open Graph & Social Share -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="share-2" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Bagian 2: Open Graph & Social Sharing (WhatsApp, LinkedIn, Medsos)</h3>
+                    <p class="text-[11px] text-slate-400">Format thumbnail gambar dan judul saat tautan website dibagikan ke WhatsApp, LinkedIn, atau media sosial</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Judul Berbagi Medsos (og:title)</label>
+                    <input type="text" name="seo_og_title" value="{{ seo.og_title }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Deskripsi Ringkas Medsos (og:description)</label>
+                    <textarea name="seo_og_description" rows="2" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ seo.og_description }}</textarea>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">URL Gambar Thumbnail Medsos (og:image)</label>
+                    <input type="text" name="seo_og_image" value="{{ seo.og_image }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Tipe Twitter Card</label>
+                    <select name="seo_twitter_card" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                        <option value="summary_large_image" {% if seo.twitter_card == 'summary_large_image' %}selected{% endif %}>summary_large_image (Gambar Besar)</option>
+                        <option value="summary" {% if seo.twitter_card == 'summary' %}selected{% endif %}>summary (Kotak Kecil)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Webmaster Verification & Pelacakan -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Bagian 3: Verifikasi Search Engine & Pelacakan Trafik (Analytics)</h3>
+                    <p class="text-[11px] text-slate-400">Verifikasi kepemilikan Google Search Console, Bing Webmaster, serta Google Analytics</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Google Search Console Verification Code</label>
+                    <input type="text" name="seo_google_verification" value="{{ seo.google_verification }}" placeholder="Contoh: gsc-verify-abc123xyz" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <span class="text-[10px] text-slate-500 mt-1 block">Kode pada meta tag &lt;meta name="google-site-verification" content="..."&gt;</span>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Bing Webmaster Tools Verification</label>
+                    <input type="text" name="seo_bing_verification" value="{{ seo.bing_verification }}" placeholder="Contoh: 1234567890ABCDEF" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <span class="text-[10px] text-slate-500 mt-1 block">Kode pada meta tag &lt;meta name="msvalidate.01" content="..."&gt;</span>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Google Analytics 4 (GA4) Measurement ID</label>
+                    <input type="text" name="seo_google_analytics_id" value="{{ seo.google_analytics_id }}" placeholder="Contoh: G-XXXXXXXXXX" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    <span class="text-[10px] text-slate-500 mt-1 block">Script pelacak GA4 akan otomatis disisipkan di seluruh halaman publik.</span>
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Google Tag Manager (GTM) Container ID</label>
+                    <input type="text" name="seo_gtm_id" value="{{ seo.gtm_id }}" placeholder="Contoh: GTM-XXXXXXX" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Tipe Schema.org Organization</label>
+                    <select name="seo_organization_type" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                        <option value="Corporation" {% if seo.organization_type == 'Corporation' %}selected{% endif %}>Corporation (Korporasi / Perusahaan PT)</option>
+                        <option value="ITService" {% if seo.organization_type == 'ITService' %}selected{% endif %}>ITService (Penyedia Layanan IT)</option>
+                        <option value="Organization" {% if seo.organization_type == 'Organization' %}selected{% endif %}>Organization (Organisasi Umum)</option>
+                        <option value="LocalBusiness" {% if seo.organization_type == 'LocalBusiness' %}selected{% endif %}>LocalBusiness (Bisnis Lokal Terdaftar)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Bottom Action Bar -->
+        <div class="sticky bottom-4 z-20 bg-[#0a0f1d]/95 backdrop-blur-md border border-indigo-900/60 p-4 rounded-2xl shadow-2xl flex items-center justify-between">
+            <div class="flex items-center space-x-2 text-xs text-slate-400">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                <span>Perubahan meta tag SEO dan sitemap langsung aktif dan terbaca oleh robot Google / Bing.</span>
+            </div>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                <span>Simpan Pengaturan SEO</span>
+            </button>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Live update Google preview
+    const titleInput = document.getElementById('input-seo-title');
+    const descInput = document.getElementById('input-seo-desc');
+    const previewTitle = document.getElementById('preview-google-title');
+    const previewDesc = document.getElementById('preview-google-desc');
+    const titleCounter = document.getElementById('title-counter');
+    const descCounter = document.getElementById('desc-counter');
+
+    if (titleInput && previewTitle) {
+        titleInput.addEventListener('input', function() {
+            previewTitle.textContent = this.value || 'PT. Aksara Cipta Digital';
+            titleCounter.textContent = 'Panjang: ' + this.value.length + ' / 60 karakter (Optimal: 50-60)';
+        });
+    }
+
+    if (descInput && previewDesc) {
+        descInput.addEventListener('input', function() {
+            previewDesc.textContent = this.value || 'Deskripsi pencarian Google...';
+            descCounter.textContent = 'Panjang: ' + this.value.length + ' / 160 karakter (Optimal: 140-160)';
+        });
+    }
+</script>
+{% endblock %}

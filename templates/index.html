@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}ACD IT Consultant - AI, Software Developer{% endblock %}
+{% block title %}{{ seo.meta_title }}{% endblock %}
 
 {% block content %}
 <!-- 1. HERO SECTION (DEPTECH DIGITAL SIGNATURE STYLE) -->
@@ -31,10 +31,10 @@
 
             <!-- CTA Actions -->
             <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-400">
-                <button onclick="openConsultationModal()" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 deptech-btn-primary px-8 py-4 font-bold text-sm tracking-wide">
+                <a href="{{ url_for('contact') }}" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 deptech-btn-primary px-8 py-4 font-bold text-sm tracking-wide">
                     <i data-lucide="message-square-plus" class="w-4 h-4"></i>
                     <span>{{ t.hero_cta_primary }}</span>
-                </button>
+                </a>
                 <a href="{{ url_for('portfolio') }}" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 deptech-btn-secondary px-8 py-4 font-semibold text-sm">
                     <span>{{ t.hero_cta_secondary }}</span>
                     <i data-lucide="arrow-right" class="w-4 h-4 text-indigo-400"></i>
@@ -170,10 +170,10 @@
                     Banyak proyek IT gagal bukan karena keterbatasan teknis koding, melainkan karena vendor tidak memahami konteks dan dinamika operasional klien. Di <strong>PT. Aksara Cipta Digital</strong>, kami menempatkan System Analyst dan Business Consultant di garis depan untuk merancang arsitektur yang menjawab akar permasalahan bisnis Anda.
                 </p>
                 <div class="pt-2">
-                    <button onclick="openConsultationModal()" class="inline-flex items-center space-x-2 deptech-btn-primary px-8 py-4 text-xs font-bold uppercase tracking-wider shadow-lg shadow-indigo-500/20">
+                    <a href="{{ url_for('contact') }}" class="inline-flex items-center space-x-2 deptech-btn-primary px-8 py-4 text-xs font-bold uppercase tracking-wider shadow-lg shadow-indigo-500/20">
                         <span>Konsultasikan Masalah Bisnis Anda</span>
                         <i data-lucide="arrow-right" class="w-4 h-4"></i>
-                    </button>
+                    </a>
                 </div>
             </div>
 
@@ -427,9 +427,9 @@
                         <p class="text-xs text-slate-400 mt-1">Estimasi Jadwal Pengerjaan: <strong id="est-result-timeline" class="text-white">6 - 10 Minggu</strong></p>
                     </div>
                     <div class="shrink-0 w-full sm:w-auto">
-                        <button type="button" onclick="openConsultationModal()" class="w-full sm:w-auto deptech-btn-primary px-7 py-3 text-xs font-bold uppercase tracking-wider">
+                        <a href="{{ url_for('contact') }}" class="w-full sm:w-auto inline-flex items-center justify-center deptech-btn-primary px-7 py-3 text-xs font-bold uppercase tracking-wider">
                             Konsultasikan RAB Rinci Gratis →
-                        </button>
+                        </a>
                     </div>
                 </div>
             </form>
@@ -480,10 +480,10 @@
             Saatnya mengotomatiskan alur kerja operasional perusahaan Anda. Tim konsultan senior PT. Aksara Cipta Digital siap berdiskusi, memetakan proses bisnis, dan memberikan rancangan sistem bergaransi.
         </p>
         <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-            <button onclick="openConsultationModal()" class="w-full sm:w-auto deptech-btn-primary px-9 py-4 font-bold text-sm tracking-wide">
+            <a href="{{ url_for('contact') }}" class="w-full sm:w-auto deptech-btn-primary px-9 py-4 font-bold text-sm tracking-wide inline-flex items-center justify-center">
                 <i data-lucide="calendar" class="w-5 h-5 inline-block mr-1"></i>
                 <span>Jadwalkan Konsultasi Gratis Sekarang</span>
-            </button>
+            </a>
             <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-8 py-4 rounded-full shadow-lg transition">
                 <i data-lucide="message-circle" class="w-5 h-5"></i>
                 <span>Chat Langsung via WhatsApp</span>
