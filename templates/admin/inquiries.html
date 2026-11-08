@@ -19,40 +19,40 @@
     </div>
 
     <!-- Filter & Search Bar -->
-    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <!-- Status Tabs -->
-        <div class="flex items-center space-x-1.5 overflow-x-auto pb-1 md:pb-0">
-            <a href="{{ url_for('admin_inquiries') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {% if not current_status or current_status == 'Semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-3 sm:p-4 flex flex-col lg:flex-row lg:items-center justify-between gap-3">
+        <!-- Status Tabs (Horizontally scrollable with smooth touch on mobile) -->
+        <div class="flex items-center space-x-1.5 overflow-x-auto custom-scrollbar pb-2 lg:pb-0 -mx-1 px-1">
+            <a href="{{ url_for('admin_inquiries') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition {% if not current_status or current_status == 'Semua' %}bg-indigo-600 text-white shadow-md shadow-indigo-600/30{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
                 Semua ({{ stats.total }})
             </a>
-            <a href="{{ url_for('admin_inquiries', status='Baru') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {% if current_status == 'Baru' %}bg-amber-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+            <a href="{{ url_for('admin_inquiries', status='Baru') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition {% if current_status == 'Baru' %}bg-amber-600 text-white shadow-md shadow-amber-600/30{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
                 Baru ({{ stats.baru }})
             </a>
-            <a href="{{ url_for('admin_inquiries', status='Dihubungi') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {% if current_status == 'Dihubungi' %}bg-blue-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+            <a href="{{ url_for('admin_inquiries', status='Dihubungi') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition {% if current_status == 'Dihubungi' %}bg-blue-600 text-white shadow-md shadow-blue-600/30{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
                 Dihubungi ({{ stats.dihubungi }})
             </a>
-            <a href="{{ url_for('admin_inquiries', status='Diproses') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {% if current_status == 'Diproses' %}bg-purple-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+            <a href="{{ url_for('admin_inquiries', status='Diproses') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition {% if current_status == 'Diproses' %}bg-purple-600 text-white shadow-md shadow-purple-600/30{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
                 Diproses ({{ stats.diproses }})
             </a>
-            <a href="{{ url_for('admin_inquiries', status='Selesai') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold transition {% if current_status == 'Selesai' %}bg-emerald-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
+            <a href="{{ url_for('admin_inquiries', status='Selesai') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap shrink-0 transition {% if current_status == 'Selesai' %}bg-emerald-600 text-white shadow-md shadow-emerald-600/30{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
                 Selesai ({{ stats.selesai }})
             </a>
         </div>
 
-        <!-- Search Form -->
-        <form method="GET" action="{{ url_for('admin_inquiries') }}" class="flex items-center space-x-2">
+        <!-- Search Form (Responsive on mobile) -->
+        <form method="GET" action="{{ url_for('admin_inquiries') }}" class="flex items-center space-x-2 w-full lg:w-auto">
             {% if current_status and current_status != 'Semua' %}
             <input type="hidden" name="status" value="{{ current_status }}">
             {% endif %}
-            <div class="relative">
-                <input type="text" name="search" value="{{ search_query or '' }}" placeholder="Cari nama, email, WA..." class="w-48 sm:w-64 pl-8 pr-3 py-1.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+            <div class="relative flex-1 lg:w-64">
+                <input type="text" name="search" value="{{ search_query or '' }}" placeholder="Cari nama, email, WA..." class="w-full pl-8 pr-3 py-2 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                 <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-2.5 top-2.5"></i>
             </div>
-            <button type="submit" class="px-3 py-1.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition">
+            <button type="submit" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 transition shrink-0">
                 Cari
             </button>
             {% if search_query %}
-            <a href="{{ url_for('admin_inquiries', status=current_status) }}" class="p-1.5 rounded-xl bg-slate-800 text-slate-400 hover:text-white" title="Reset Pencarian">
+            <a href="{{ url_for('admin_inquiries', status=current_status) }}" class="p-2 rounded-xl bg-slate-800 text-slate-400 hover:text-white shrink-0" title="Reset Pencarian">
                 <i data-lucide="x" class="w-4 h-4"></i>
             </a>
             {% endif %}
@@ -94,7 +94,7 @@
             </div>
 
             <!-- Detail Grid -->
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs">
                 <div class="p-3 rounded-xl bg-[#020617] border border-indigo-950/50">
                     <span class="text-[10px] uppercase tracking-wider text-slate-500 block mb-1">Kategori Layanan</span>
                     <strong class="text-indigo-300 font-semibold text-xs">{{ inq.service_type }}</strong>
@@ -126,8 +126,8 @@
             </div>
 
             <!-- Action Controls (WhatsApp CTA, Email, Update Status & Notes, Delete) -->
-            <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-indigo-950/60">
-                <div class="flex items-center space-x-2">
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 pt-3 border-t border-indigo-950/60">
+                <div class="flex flex-wrap items-center gap-2">
                     <!-- Direct WhatsApp Follow Up -->
                     <a href="https://wa.me/{{ '62' + inq.phone[1:] if inq.phone.startswith('08') else inq.phone }}?text=Halo%20Bpk%2FIbu%20{{ inq.name | urlencode }}%2C%20terima%20kasih%20telah%20menghubungi%20PT%20Aksara%20Cipta%20Digital%20(ACD)%20mengenai%20kebutuhan%20{{ inq.service_type | urlencode }}.%20Perkenalkan%20saya%20konsultan%20solusi%20dari%20tim%20ACD%2C%20apakah%20ada%20waktu%20untuk%20diskusi%20singkat%3F" target="_blank" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition inline-flex items-center space-x-1.5 shadow-md shadow-emerald-600/20">
                         <i data-lucide="message-circle" class="w-4 h-4"></i>
@@ -141,27 +141,29 @@
                     </a>
                 </div>
 
-                <!-- Update Status Form -->
-                <form method="POST" action="{{ url_for('admin_update_inquiry_status', inquiry_id=inq.id) }}" class="flex items-center space-x-2">
-                    <input type="text" name="notes" value="{{ inq.notes or '' }}" placeholder="Tambah catatan..." class="px-3 py-1.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-44">
-                    <select name="status" class="px-3 py-1.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
-                        <option value="Baru" {% if inq.status == 'Baru' %}selected{% endif %}>Baru</option>
-                        <option value="Dihubungi" {% if inq.status == 'Dihubungi' %}selected{% endif %}>Dihubungi</option>
-                        <option value="Diproses" {% if inq.status == 'Diproses' %}selected{% endif %}>Diproses</option>
-                        <option value="Selesai" {% if inq.status == 'Selesai' %}selected{% endif %}>Selesai</option>
-                        <option value="Ditolak" {% if inq.status == 'Ditolak' %}selected{% endif %}>Ditolak / Batal</option>
-                    </select>
-                    <button type="submit" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition">
-                        Simpan
-                    </button>
-                </form>
+                <!-- Update Status Form & Delete -->
+                <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-between xl:justify-end">
+                    <form method="POST" action="{{ url_for('admin_update_inquiry_status', inquiry_id=inq.id) }}" class="flex flex-wrap items-center gap-2 flex-1 sm:flex-initial">
+                        <input type="text" name="notes" value="{{ inq.notes or '' }}" placeholder="Tambah catatan..." class="px-3 py-1.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 flex-1 sm:w-44">
+                        <select name="status" class="px-2.5 py-1.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                            <option value="Baru" {% if inq.status == 'Baru' %}selected{% endif %}>Baru</option>
+                            <option value="Dihubungi" {% if inq.status == 'Dihubungi' %}selected{% endif %}>Dihubungi</option>
+                            <option value="Diproses" {% if inq.status == 'Diproses' %}selected{% endif %}>Diproses</option>
+                            <option value="Selesai" {% if inq.status == 'Selesai' %}selected{% endif %}>Selesai</option>
+                            <option value="Ditolak" {% if inq.status == 'Ditolak' %}selected{% endif %}>Ditolak / Batal</option>
+                        </select>
+                        <button type="submit" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition">
+                            Simpan
+                        </button>
+                    </form>
 
-                <!-- Delete Inquiry -->
-                <form method="POST" action="{{ url_for('admin_delete_inquiry', inquiry_id=inq.id) }}" onsubmit="return confirm('Hapus data konsultasi dari {{ inq.name }}?');">
-                    <button type="submit" class="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition" title="Hapus Data">
-                        <i data-lucide="trash-2" class="w-4 h-4"></i>
-                    </button>
-                </form>
+                    <!-- Delete Inquiry -->
+                    <form method="POST" action="{{ url_for('admin_delete_inquiry', inquiry_id=inq.id) }}" onsubmit="return confirm('Hapus data konsultasi dari {{ inq.name }}?');" class="shrink-0">
+                        <button type="submit" class="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition" title="Hapus Data">
+                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                        </button>
+                    </form>
+                </div>
             </div>
         </div>
         {% endfor %}

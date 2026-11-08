@@ -28,16 +28,16 @@
             </div>
 
             <!-- Status Filter Tabs -->
-            <div class="flex items-center space-x-1.5 text-xs shrink-0">
-                <span class="text-[11px] font-bold text-slate-500 uppercase mr-1">Status:</span>
-                <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None) }}" class="px-3 py-1.5 rounded-lg font-semibold transition {% if current_status == 'semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
+            <div class="flex items-center space-x-1.5 text-xs overflow-x-auto no-scrollbar py-0.5 shrink-0">
+                <span class="text-[11px] font-bold text-slate-500 uppercase mr-1 whitespace-nowrap">Status:</span>
+                <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None) }}" class="px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition {% if current_status == 'semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
                     Semua
                 </a>
-                <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None, status='tayang') }}" class="px-3 py-1.5 rounded-lg font-semibold transition inline-flex items-center space-x-1.5 {% if current_status == 'tayang' %}bg-emerald-600 text-white{% else %}bg-slate-900 text-emerald-400 hover:text-white border border-slate-800{% endif %}">
+                <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None, status='tayang') }}" class="px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition inline-flex items-center space-x-1.5 {% if current_status == 'tayang' %}bg-emerald-600 text-white{% else %}bg-slate-900 text-emerald-400 hover:text-white border border-slate-800{% endif %}">
                     <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
                     <span>Tayang</span>
                 </a>
-                <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None, status='draft') }}" class="px-3 py-1.5 rounded-lg font-semibold transition inline-flex items-center space-x-1.5 {% if current_status == 'draft' %}bg-rose-600 text-white{% else %}bg-slate-900 text-rose-400 hover:text-white border border-slate-800{% endif %}">
+                <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None, status='draft') }}" class="px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition inline-flex items-center space-x-1.5 {% if current_status == 'draft' %}bg-rose-600 text-white{% else %}bg-slate-900 text-rose-400 hover:text-white border border-slate-800{% endif %}">
                     <span class="w-2 h-2 rounded-full bg-rose-400"></span>
                     <span>Tidak Tayang</span>
                 </a>

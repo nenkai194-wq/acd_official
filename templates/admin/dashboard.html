@@ -144,13 +144,13 @@
     <!-- Main Section: Recent Leads Inquiries & WA Anti-Spam Log -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         <!-- Recent Inquiries (2 Columns on large) -->
-        <div class="lg:col-span-2 bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6">
-            <div class="flex items-center justify-between pb-4 mb-4 border-b border-indigo-950/60">
-                <div class="flex items-center space-x-2.5">
-                    <i data-lucide="inbox" class="w-5 h-5 text-indigo-400"></i>
-                    <h3 class="text-sm font-bold text-white">Permintaan Konsultasi Masuk Terbaru</h3>
+        <div class="lg:col-span-2 bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 sm:p-6">
+            <div class="flex items-center justify-between gap-2 pb-3.5 mb-4 border-b border-indigo-950/60">
+                <div class="flex items-center space-x-2 min-w-0">
+                    <i data-lucide="inbox" class="w-4 h-4 sm:w-5 sm:h-5 text-indigo-400 shrink-0"></i>
+                    <h3 class="text-xs sm:text-sm font-bold text-white truncate">Permintaan Konsultasi Masuk</h3>
                 </div>
-                <a href="{{ url_for('admin_inquiries') }}" class="text-xs text-indigo-400 hover:text-indigo-300 font-semibold inline-flex items-center space-x-1">
+                <a href="{{ url_for('admin_inquiries') }}" class="text-[11px] sm:text-xs text-indigo-400 hover:text-white font-semibold inline-flex items-center space-x-1 shrink-0 whitespace-nowrap bg-indigo-950/60 hover:bg-indigo-600/40 px-2.5 py-1 rounded-lg border border-indigo-800/50 transition">
                     <span>Lihat Semua</span>
                     <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                 </a>
@@ -229,14 +229,14 @@
         <!-- Sidebar Section: Anti-Spam & System Information -->
         <div class="space-y-6">
             <!-- WA Anti-Spam Logs -->
-            <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6">
-                <div class="flex items-center justify-between pb-3 mb-4 border-b border-indigo-950/60">
-                    <div class="flex items-center space-x-2">
-                        <i data-lucide="shield" class="w-4 h-4 text-emerald-400"></i>
-                        <h3 class="text-xs font-bold text-white">Log Proteksi Anti-Spam</h3>
+            <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 sm:p-6">
+                <div class="flex items-center justify-between gap-2 pb-3 mb-4 border-b border-indigo-950/60">
+                    <div class="flex items-center space-x-2 min-w-0">
+                        <i data-lucide="shield" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                        <h3 class="text-xs sm:text-sm font-bold text-white truncate">Log Proteksi Anti-Spam</h3>
                     </div>
-                    <a href="{{ url_for('admin_wa_logs') }}" class="text-[11px] text-indigo-400 hover:text-indigo-300 font-semibold">
-                        Semua Log &rarr;
+                    <a href="{{ url_for('admin_wa_logs') }}" class="text-[11px] text-indigo-400 hover:text-white font-semibold shrink-0 whitespace-nowrap bg-indigo-950/60 hover:bg-indigo-600/40 px-2.5 py-1 rounded-lg border border-indigo-800/50 transition">
+                        <span>Semua Log &rarr;</span>
                     </a>
                 </div>
 

@@ -53,6 +53,15 @@
             background: #334155;
         }
 
+        /* Hide scrollbar for smooth horizontal touch swipe */
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
         /* Sidebar Transition for Smooth Minimizing */
         #sidebar {
             transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
@@ -68,6 +77,8 @@
                 max-height: 100% !important;
                 bottom: 0 !important;
                 top: 0 !important;
+                right: 0 !important;
+                left: auto !important;
             }
         }
 
@@ -157,8 +168,8 @@
         </div>
     </div>
 
-    <!-- Sidebar Navigation (Responsive Desktop/Tablet Fixed + Mobile Offcanvas Drawer) -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 z-50 w-64 max-w-[85vw] bg-[#070a14] border-r border-indigo-950/70 flex flex-col h-full md:h-screen md:static md:shrink-0 shadow-2xl md:shadow-none overflow-hidden transform -translate-x-full md:translate-x-0">
+    <!-- Sidebar Navigation (Responsive Desktop/Tablet Fixed + Mobile Offcanvas Drawer from the Right) -->
+    <aside id="sidebar" class="fixed inset-y-0 right-0 z-50 w-72 max-w-[85vw] sm:w-80 bg-[#070a14] border-l border-indigo-950/70 flex flex-col h-full md:h-screen md:static md:left-0 md:right-auto md:w-64 md:border-r md:border-l-0 md:shrink-0 shadow-2xl md:shadow-none overflow-hidden transform translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
         <!-- 1. Brand Header (Fixed Top, shrink-0) -->
         <div class="sidebar-brand-wrapper shrink-0 px-3.5 py-3.5 border-b border-indigo-950/60 flex items-center justify-between bg-[#070a14]">
             <a href="{{ url_for('admin_dashboard') }}" class="flex items-center space-x-3 min-w-0" title="PT. Aksara Cipta Digital - Internal CMS">
@@ -385,7 +396,7 @@
 
         function toggleSidebarMinimize() {
             if (window.innerWidth < 768) {
-                if (sidebar && sidebar.classList.contains('-translate-x-full')) {
+                if (sidebar && sidebar.classList.contains('translate-x-full')) {
                     openAdminSidebar();
                 } else {
                     closeAdminSidebar();
@@ -414,7 +425,8 @@
 
         function openAdminSidebar() {
             if (sidebar) {
-                sidebar.classList.remove('-translate-x-full');
+                sidebar.classList.remove('translate-x-full');
+                sidebar.classList.add('translate-x-0');
                 if (adminBackdrop) adminBackdrop.classList.remove('hidden');
                 document.body.classList.add('overflow-hidden');
             }
@@ -422,7 +434,8 @@
 
         function closeAdminSidebar() {
             if (sidebar) {
-                sidebar.classList.add('-translate-x-full');
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('translate-x-full');
                 if (adminBackdrop) adminBackdrop.classList.add('hidden');
                 document.body.classList.remove('overflow-hidden');
             }

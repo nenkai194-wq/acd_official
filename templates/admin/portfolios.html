@@ -36,7 +36,7 @@
         </div>
 
         <!-- Category Tabs -->
-        <div class="flex items-center space-x-2 overflow-x-auto pb-1 pt-1 border-t border-indigo-950/60 custom-scrollbar text-xs">
+        <div class="flex items-center space-x-2 overflow-x-auto no-scrollbar pb-1 pt-1 border-t border-indigo-950/60 custom-scrollbar text-xs">
             <a href="{{ url_for('admin_portfolios') }}" class="px-3 py-1.5 rounded-lg font-semibold whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white border border-slate-800{% endif %}">
                 Semua Kategori ({{ portfolios | length }})
             </a>
