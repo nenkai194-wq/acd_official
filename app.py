@@ -108,7 +108,7 @@ def get_seo_data():
 
     meta_title = s_val('seo_meta_title', 'PT. Aksara Cipta Digital | IT Consultant - AI, Software Developer')
     meta_desc = s_val('seo_meta_description', 'PT. Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.')
-    meta_keywords = s_val('seo_meta_keywords', 'IT Consultant, Konsultan IT Jakarta, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD')
+    meta_keywords = s_val('seo_meta_keywords', 'IT Consultant, Konsultan IT Indonesia, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD')
     canonical_url = s_val('seo_canonical_url', 'https://acd.co.id').rstrip('/')
     author = s_val('seo_author', 'PT. Aksara Cipta Digital')
     robots = s_val('seo_robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
@@ -161,7 +161,7 @@ def get_contact_data():
     email = s_val('contact_email', 'info@acd.co.id')
     phone = s_val('contact_phone', '+62 21 8299 8765')
     hours = s_val('contact_hours', 'Senin - Jumat: 08:30 - 17:00 WIB')
-    address_main = s_val('contact_address_main', 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950')
+    address_main = s_val('contact_address_main', 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182')
     address_branch = ''
     
     categories_raw = s_val('contact_categories', "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT")
@@ -201,7 +201,7 @@ def get_footer_data():
     brand_name = s_val('footer_brand_name', 'AKSARA CIPTA DIGITAL')
     brand_tagline = s_val('footer_brand_tagline', 'IT Consultant - AI, Software Developer')
     about = s_val('footer_about', 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
-    address_main = s_val('footer_address_main', 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950')
+    address_main = s_val('footer_address_main', 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182')
     address_branch = ''
     phone = s_val('footer_phone', '+62 21 8299 8765')
     email = s_val('footer_email', 'info@acd.co.id')
@@ -442,9 +442,44 @@ def career_detail(slug):
         abort(404)
     return render_template('career_detail.html', career=career)
 
-@app.route('/hubungi-kami')
-@app.route('/kontak')
+@app.route('/hubungi-kami', methods=['GET', 'POST'])
+@app.route('/kontak', methods=['GET', 'POST'])
 def contact():
+    if request.method == 'POST':
+        name = request.form.get('name', '').strip()
+        email = request.form.get('email', '').strip()
+        phone = request.form.get('phone', '').strip()
+        company = request.form.get('company', '').strip()
+        service_type = request.form.get('service_type', 'Aplikasi & Website').strip()
+        budget_range = request.form.get('budget_range', '').strip()
+        message = request.form.get('message', '').strip()
+
+        if not name or not email or not phone or not message:
+            flash('Mohon lengkapi semua kolom wajib yang bertanda bintang (*).', 'error')
+            return render_template('contact.html')
+
+        is_phone_valid, normalized_phone, phone_err = InquiryModel.validate_and_normalize_phone(phone)
+        if not is_phone_valid:
+            flash(phone_err, 'error')
+            return render_template('contact.html')
+
+        if InquiryModel.count_recent_by_email(email, hours=24) >= 2 or InquiryModel.count_recent_by_phone(normalized_phone, hours=24) >= 2:
+            flash('Batas maksimal pengiriman (2x dalam 24 jam) telah tercapai untuk nomor WhatsApp atau Email ini.', 'error')
+            return render_template('contact.html')
+
+        InquiryModel.create(
+            name=name,
+            email=email,
+            phone=normalized_phone,
+            company=company,
+            service_type=service_type,
+            budget_range=budget_range,
+            message=message,
+            ip_address=get_client_ip()
+        )
+        flash('Terima kasih! Formulir Kebutuhan Anda telah berhasil dikirim ke tim konsultan ACD. Kami akan segera menghubungi Anda.', 'success')
+        return redirect(url_for('contact'))
+
     return render_template('contact.html')
 
 # --- REST API ENDPOINTS ---
@@ -1372,7 +1407,7 @@ def admin_career_add():
         title = request.form.get('title', '').strip()
         slug = request.form.get('slug', '').strip()
         department = request.form.get('department', '').strip()
-        location = request.form.get('location', 'Jakarta / Yogyakarta / Hybrid').strip()
+        location = request.form.get('location', 'Onsite / Hybrid / Remote').strip()
         job_type = request.form.get('job_type', 'Full-time').strip()
         experience = request.form.get('experience', '').strip()
         description = request.form.get('description', '').strip()
@@ -1568,7 +1603,8 @@ def admin_contact_form():
 
     contact_data = get_contact_data()
     inquiries_count = InquiryModel.get_stats().get('total', 0)
-    return render_template('admin/contact_form.html', contact=contact_data, total_inquiries=inquiries_count)
+    recent_inquiries = InquiryModel.get_all()[:6]
+    return render_template('admin/contact_form.html', contact=contact_data, total_inquiries=inquiries_count, recent_inquiries=recent_inquiries)
 
 @app.route('/admin/contact-form/reset-defaults', methods=['POST'])
 @admin_required
@@ -1586,7 +1622,7 @@ def admin_contact_form_reset_defaults():
         'contact_email': 'info@acd.co.id',
         'contact_phone': '+62 21 8299 8765',
         'contact_hours': 'Senin - Jumat: 08:30 - 17:00 WIB',
-        'contact_address_main': 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950',
+        'contact_address_main': 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182',
         'contact_address_branch': '',
         'contact_categories': "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT",
         'contact_budget_ranges': "Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)"
@@ -1646,7 +1682,7 @@ def admin_footer_reset_defaults():
         'footer_brand_name': 'AKSARA CIPTA DIGITAL',
         'footer_brand_tagline': 'IT Consultant - AI, Software Developer',
         'footer_about': 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
-        'footer_address_main': 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950',
+        'footer_address_main': 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182',
         'footer_address_branch': '',
         'footer_phone': '+62 21 8299 8765',
         'footer_email': 'info@acd.co.id',
@@ -1714,7 +1750,7 @@ def admin_seo_reset_defaults():
     defaults = {
         'seo_meta_title': 'PT. Aksara Cipta Digital | IT Consultant - AI, Software Developer',
         'seo_meta_description': 'PT. Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.',
-        'seo_meta_keywords': 'IT Consultant, Konsultan IT Jakarta, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD',
+        'seo_meta_keywords': 'IT Consultant, Konsultan IT Indonesia, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD',
         'seo_canonical_url': 'https://acd.co.id',
         'seo_author': 'PT. Aksara Cipta Digital',
         'seo_robots': 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',

@@ -408,7 +408,7 @@ class CareerModel:
         cursor.execute('''
         INSERT INTO careers (slug, title, department, location, job_type, experience, description, requirements, responsibilities, is_published)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (slug, title, department, location or 'Jakarta / Yogyakarta', job_type or 'Full-time', experience or '', description or '', req_json, resp_json, 1 if is_published else 0))
+        ''', (slug, title, department, location or 'Onsite / Hybrid / Remote', job_type or 'Full-time', experience or '', description or '', req_json, resp_json, 1 if is_published else 0))
         c_id = cursor.lastrowid
         conn.commit()
         conn.close()

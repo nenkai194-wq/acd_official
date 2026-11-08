@@ -88,7 +88,7 @@
                 <a href="{{ url_for('admin_inquiries') }}" class="flex items-center justify-between px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'inquiries' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
                     <div class="flex items-center space-x-2.5">
                         <i data-lucide="inbox" class="w-4 h-4"></i>
-                        <span>Permintaan Klien</span>
+                        <span>Permintaan Masuk (Form Kebutuhan)</span>
                     </div>
                     {% if badge_new_inquiries and badge_new_inquiries > 0 %}
                     <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-rose-500 text-white animate-pulse">{{ badge_new_inquiries }}</span>

@@ -16,7 +16,7 @@ class Config:
     COMPANY_CONSULTATION_EMAIL = "konsultasi@acd.co.id"
     COMPANY_PHONE = "+62 21 8299 8765"
     COMPANY_WHATSAPP = "6281288882510"
-    COMPANY_ADDRESS = "Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950"
+    COMPANY_ADDRESS = "Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182"
     COMPANY_BRANCH = ""
     
     # Admin Credentials & Security

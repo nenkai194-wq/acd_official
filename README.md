@@ -42,7 +42,7 @@ Platform website korporat & konsultasi teknologi modern untuk **PT. Aksara Cipta
   - Visi & Misi Transformasi Digital
   - Core Values **CIPTA** (*Credible, Innovative, Professional, Transformative, Agile*)
   - 6 Tahap Metodologi Pengembangan Software (Discovery, Architecture, Sprint, Testing, Deployment, SLA)
-  - Lokasi Kantor Jakarta (Cyber 2 Tower) & Cabang Teknis Yogyakarta (Sleman)
+  - Lokasi Kantor Kantor Perusahaan
 - **Kalkulator Estimasi Biaya & Waktu Proyek Interaktif**
 - **Modal Konsultasi Cepat & Formulir Kontak AJAX**
 - **Floating WhatsApp Fast-Response Hotline & Back-to-Top**
@@ -84,5 +84,5 @@ Platform website korporat & konsultasi teknologi modern untuk **PT. Aksara Cipta
 - **Email**: `info@acd.co.id`
 - **Telepon**: `+62 21 8299 8765`
 - **WhatsApp**: `+62 812-8888-2510`
-- **Head Office**: Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950
-- **Delivery Center**: Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281
+- **Kantor Operasional**: Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182
+
