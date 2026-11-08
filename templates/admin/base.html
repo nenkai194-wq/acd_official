@@ -116,6 +116,10 @@
                     <i data-lucide="help-circle" class="w-4 h-4"></i>
                     <span>Tanya Jawab (FAQ)</span>
                 </a>
+                <a href="{{ url_for('admin_footer') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'footer' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <i data-lucide="layout-template" class="w-4 h-4"></i>
+                    <span>Kelola Footer</span>
+                </a>
 
                 <div class="px-3 pt-4 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Sistem & Profil</div>
                 <a href="{{ url_for('admin_settings') }}" class="flex items-center space-x-2.5 px-3 py-2.5 rounded-xl font-medium transition {% if active_page == 'settings' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">

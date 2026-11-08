@@ -83,6 +83,101 @@ def handle_language_preference():
     if lang in ['id', 'en']:
         session['lang'] = lang
 
+
+def parse_footer_links(raw_text):
+    items = []
+    for line in (raw_text or '').splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        if '|' in line:
+            parts = line.split('|', 1)
+            items.append({'label': parts[0].strip(), 'url': parts[1].strip()})
+        else:
+            items.append({'label': line, 'url': '#'})
+    return items
+
+def get_footer_data():
+    all_s = SettingModel.get_all()
+    
+    def s_val(k, fallback):
+        v = all_s.get(k)
+        return v if (v is not None and str(v).strip() != '') else fallback
+
+    brand_name = s_val('footer_brand_name', 'AKSARA CIPTA DIGITAL')
+    brand_tagline = s_val('footer_brand_tagline', 'IT Consultant - AI, Software Developer')
+    about = s_val('footer_about', 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
+    address_main = s_val('footer_address_main', 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950')
+    address_branch = s_val('footer_address_branch', 'Cabang Teknis: Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281')
+    phone = s_val('footer_phone', '+62 21 8299 8765')
+    email = s_val('footer_email', 'info@acd.co.id')
+    whatsapp = s_val('footer_whatsapp', '6281288882510')
+
+    col2_title = s_val('footer_col2_title', 'Aplikasi & Website')
+    col2_raw = s_val('footer_col2_links', "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nWebsite Korporat | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nIntegrasi Sistem & API | /layanan/integrasi-sistem\nSemua Aplikasi & Website \u2192 | /layanan/kategori/Aplikasi%20&%20Website")
+
+    col3_title = s_val('footer_col3_title', 'Aplikasi Bisnis ERP')
+    col3_raw = s_val('footer_col3_links', "HRIS / Kepegawaian | /layanan/erp-hris-kepegawaian\nPresensi & Geofencing | /layanan/erp-presensi-absensi\nPayroll & Pajak PPh21 | /layanan/erp-payroll-penggajian\nAkuntansi & Keuangan | /layanan/erp-accounting-keuangan\nAsset Management | /layanan/erp-asset-management\nWarehouse Management | /layanan/erp-warehouse-management\nDocument Management | /layanan/erp-document-management\nDashboard Eksekutif | /layanan/erp-dashboard-eksekutif")
+
+    col4_title = s_val('footer_col4_title', 'Aplikasi E-Gov')
+    col4_raw = s_val('footer_col4_links', "Website Pemerintah Daerah | /layanan/egov-portal-daerah\ne-Data Sektoral SDI | /layanan/egov-data-sektoral\ne-Planning Internal & Pokir | /layanan/egov-e-planning-musrenbang\ne-Monev & e-SAKIP | /layanan/egov-e-monev-sakip\ne-Lapor & Pengaduan Warga | /layanan/egov-e-lapor-pengaduan\ne-Perizinan MPP TTE | /layanan/egov-e-perizinan-mpp")
+
+    about_title = s_val('footer_about_title', 'Tentang Kami')
+    about_raw = s_val('footer_about_links', "Profil Perusahaan ACD | /tentang-kami\nStudi Kasus & Portofolio | /portofolio\nKarir di ACD | /karir\nTanya Jawab (FAQ) | /faq")
+
+    security_label = s_val('footer_security_label', 'Standar Keamanan & Mutu:')
+    badge1 = s_val('footer_badge1', 'ISO 27001 Certified')
+    badge2 = s_val('footer_badge2', 'OWASP Top 10 Compliant')
+    badge3 = s_val('footer_badge3', 'SLA 99.9% Uptime Support')
+    support_text = s_val('footer_support_text', 'Layanan Konsultasi & Aduan:')
+    support_label = s_val('footer_support_label', 'WhatsApp 24/7 Support')
+
+    copyright_text = s_val('footer_copyright', '\u00a9 2025 PT. Aksara Cipta Digital (acd.co.id). All rights reserved.')
+    privacy_label = s_val('footer_privacy_label', 'Kebijakan Privasi')
+    privacy_url = s_val('footer_privacy_url', '/tentang-kami')
+    terms_label = s_val('footer_terms_label', 'Syarat & Ketentuan Layanan')
+    terms_url = s_val('footer_terms_url', '/tentang-kami')
+    consult_label = s_val('footer_consult_label', 'Hubungi Konsultan')
+    consult_url = s_val('footer_consult_url', '/kontak')
+    show_admin_link = str(s_val('footer_show_admin_link', '1')).strip() in ('1', 'true', 'True')
+
+    return {
+        'brand_name': brand_name,
+        'brand_tagline': brand_tagline,
+        'about': about,
+        'address_main': address_main,
+        'address_branch': address_branch,
+        'phone': phone,
+        'email': email,
+        'whatsapp': whatsapp,
+        'col2_title': col2_title,
+        'col2_links': parse_footer_links(col2_raw),
+        'col2_raw': col2_raw,
+        'col3_title': col3_title,
+        'col3_links': parse_footer_links(col3_raw),
+        'col3_raw': col3_raw,
+        'col4_title': col4_title,
+        'col4_links': parse_footer_links(col4_raw),
+        'col4_raw': col4_raw,
+        'about_title': about_title,
+        'about_links': parse_footer_links(about_raw),
+        'about_raw': about_raw,
+        'security_label': security_label,
+        'badge1': badge1,
+        'badge2': badge2,
+        'badge3': badge3,
+        'support_text': support_text,
+        'support_label': support_label,
+        'copyright': copyright_text,
+        'privacy_label': privacy_label,
+        'privacy_url': privacy_url,
+        'terms_label': terms_label,
+        'terms_url': terms_url,
+        'consult_label': consult_label,
+        'consult_url': consult_url,
+        'show_admin_link': show_admin_link
+    }
+
 # Context Processor for global variables & multilingual translations
 @app.context_processor
 def inject_global_data():
@@ -110,7 +205,8 @@ def inject_global_data():
         't': t,
         'set_lang_url': set_lang_url,
         'badge_new_inquiries': badge_new,
-        'admin_inactivity_timeout': ADMIN_INACTIVITY_TIMEOUT
+        'admin_inactivity_timeout': ADMIN_INACTIVITY_TIMEOUT,
+        'footer': get_footer_data()
     }
 
 @app.route('/set-language/<lang>')
@@ -1297,6 +1393,92 @@ def admin_security_clear_logs():
     return redirect(url_for('admin_security'))
 
 # --- 10. PENGATURAN WEBSITE & PROFIL PERUSAHAAN ---
+
+
+# --- KELOLA FOOTER WEBSITE ---
+
+@app.route('/admin/footer', methods=['GET', 'POST'])
+@admin_required
+def admin_footer():
+    if request.method == 'POST':
+        updates = {
+            'footer_brand_name': request.form.get('footer_brand_name', '').strip(),
+            'footer_brand_tagline': request.form.get('footer_brand_tagline', '').strip(),
+            'footer_about': request.form.get('footer_about', '').strip(),
+            'footer_address_main': request.form.get('footer_address_main', '').strip(),
+            'footer_address_branch': request.form.get('footer_address_branch', '').strip(),
+            'footer_phone': request.form.get('footer_phone', '').strip(),
+            'footer_email': request.form.get('footer_email', '').strip(),
+            'footer_whatsapp': request.form.get('footer_whatsapp', '').strip(),
+            'footer_col2_title': request.form.get('footer_col2_title', '').strip(),
+            'footer_col2_links': request.form.get('footer_col2_links', '').strip(),
+            'footer_col3_title': request.form.get('footer_col3_title', '').strip(),
+            'footer_col3_links': request.form.get('footer_col3_links', '').strip(),
+            'footer_col4_title': request.form.get('footer_col4_title', '').strip(),
+            'footer_col4_links': request.form.get('footer_col4_links', '').strip(),
+            'footer_about_title': request.form.get('footer_about_title', '').strip(),
+            'footer_about_links': request.form.get('footer_about_links', '').strip(),
+            'footer_security_label': request.form.get('footer_security_label', '').strip(),
+            'footer_badge1': request.form.get('footer_badge1', '').strip(),
+            'footer_badge2': request.form.get('footer_badge2', '').strip(),
+            'footer_badge3': request.form.get('footer_badge3', '').strip(),
+            'footer_support_text': request.form.get('footer_support_text', '').strip(),
+            'footer_support_label': request.form.get('footer_support_label', '').strip(),
+            'footer_copyright': request.form.get('footer_copyright', '').strip(),
+            'footer_privacy_label': request.form.get('footer_privacy_label', '').strip(),
+            'footer_privacy_url': request.form.get('footer_privacy_url', '').strip(),
+            'footer_terms_label': request.form.get('footer_terms_label', '').strip(),
+            'footer_terms_url': request.form.get('footer_terms_url', '').strip(),
+            'footer_consult_label': request.form.get('footer_consult_label', '').strip(),
+            'footer_consult_url': request.form.get('footer_consult_url', '').strip(),
+            'footer_show_admin_link': '1' if request.form.get('footer_show_admin_link') == '1' else '0'
+        }
+        
+        SettingModel.update_many(updates)
+        flash('Konten dan pengaturan footer website berhasil diperbarui!', 'success')
+        return redirect(url_for('admin_footer'))
+
+    footer_data = get_footer_data()
+    return render_template('admin/footer.html', footer=footer_data)
+
+@app.route('/admin/footer/reset-defaults', methods=['POST'])
+@admin_required
+def admin_footer_reset_defaults():
+    defaults = {
+        'footer_brand_name': 'AKSARA CIPTA DIGITAL',
+        'footer_brand_tagline': 'IT Consultant - AI, Software Developer',
+        'footer_about': 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
+        'footer_address_main': 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950',
+        'footer_address_branch': 'Cabang Teknis: Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281',
+        'footer_phone': '+62 21 8299 8765',
+        'footer_email': 'info@acd.co.id',
+        'footer_whatsapp': '6281288882510',
+        'footer_col2_title': 'Aplikasi & Website',
+        'footer_col2_links': "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nWebsite Korporat | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nIntegrasi Sistem & API | /layanan/integrasi-sistem\nSemua Aplikasi & Website \u2192 | /layanan/kategori/Aplikasi%20&%20Website",
+        'footer_col3_title': 'Aplikasi Bisnis ERP',
+        'footer_col3_links': "HRIS / Kepegawaian | /layanan/erp-hris-kepegawaian\nPresensi & Geofencing | /layanan/erp-presensi-absensi\nPayroll & Pajak PPh21 | /layanan/erp-payroll-penggajian\nAkuntansi & Keuangan | /layanan/erp-accounting-keuangan\nAsset Management | /layanan/erp-asset-management\nWarehouse Management | /layanan/erp-warehouse-management\nDocument Management | /layanan/erp-document-management\nDashboard Eksekutif | /layanan/erp-dashboard-eksekutif",
+        'footer_col4_title': 'Aplikasi E-Gov',
+        'footer_col4_links': "Website Pemerintah Daerah | /layanan/egov-portal-daerah\ne-Data Sektoral SDI | /layanan/egov-data-sektoral\ne-Planning Internal & Pokir | /layanan/egov-e-planning-musrenbang\ne-Monev & e-SAKIP | /layanan/egov-e-monev-sakip\ne-Lapor & Pengaduan Warga | /layanan/egov-e-lapor-pengaduan\ne-Perizinan MPP TTE | /layanan/egov-e-perizinan-mpp",
+        'footer_about_title': 'Tentang Kami',
+        'footer_about_links': "Profil Perusahaan ACD | /tentang-kami\nStudi Kasus & Portofolio | /portofolio\nKarir di ACD | /karir\nTanya Jawab (FAQ) | /faq",
+        'footer_security_label': 'Standar Keamanan & Mutu:',
+        'footer_badge1': 'ISO 27001 Certified',
+        'footer_badge2': 'OWASP Top 10 Compliant',
+        'footer_badge3': 'SLA 99.9% Uptime Support',
+        'footer_support_text': 'Layanan Konsultasi & Aduan:',
+        'footer_support_label': 'WhatsApp 24/7 Support',
+        'footer_copyright': '\u00a9 2025 PT. Aksara Cipta Digital (acd.co.id). All rights reserved.',
+        'footer_privacy_label': 'Kebijakan Privasi',
+        'footer_privacy_url': '/tentang-kami',
+        'footer_terms_label': 'Syarat & Ketentuan Layanan',
+        'footer_terms_url': '/tentang-kami',
+        'footer_consult_label': 'Hubungi Konsultan',
+        'footer_consult_url': '/kontak',
+        'footer_show_admin_link': '1'
+    }
+    SettingModel.update_many(defaults)
+    flash('Pengaturan footer berhasil dikembalikan ke standar awal PT. Aksara Cipta Digital.', 'info')
+    return redirect(url_for('admin_footer'))
 
 @app.route('/admin/settings', methods=['GET', 'POST'])
 @admin_required

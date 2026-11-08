@@ -377,80 +377,76 @@
                 <!-- Col 1: About ACD -->
                 <div class="lg:col-span-2 space-y-4">
                     <div class="flex items-center space-x-3.5 mb-3">
-                        <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="AKSARA CIPTA DIGITAL" class="h-14 w-auto">
+                        <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="{{ footer.brand_name }}" class="h-14 w-auto">
                         <div class="flex flex-col justify-center">
-                            <span class="font-extrabold text-white text-base sm:text-lg leading-none tracking-tight">AKSARA CIPTA DIGITAL</span>
-                            <span class="text-[11px] font-semibold text-indigo-400 tracking-tight mt-1">IT Consultant - AI, Software Developer</span>
+                            <span class="font-extrabold text-white text-base sm:text-lg leading-none tracking-tight">{{ footer.brand_name }}</span>
+                            <span class="text-[11px] font-semibold text-indigo-400 tracking-tight mt-1">{{ footer.brand_tagline }}</span>
                         </div>
                     </div>
                     <p class="text-sm text-slate-400 leading-relaxed pr-6">
-                        <strong class="text-white">{{ config.COMPANY_NAME }}</strong> adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.
+                        {{ footer.about }}
                     </p>
                     <div class="pt-2 space-y-2 text-sm text-slate-300">
+                        {% if footer.address_main %}
                         <div class="flex items-start space-x-2.5">
                             <i data-lucide="map-pin" class="w-4 h-4 text-indigo-400 mt-1 shrink-0"></i>
-                            <span class="text-xs text-slate-400">{{ config.COMPANY_ADDRESS }}</span>
+                            <span class="text-xs text-slate-400">{{ footer.address_main }}</span>
                         </div>
+                        {% endif %}
+                        {% if footer.address_branch %}
                         <div class="flex items-start space-x-2.5">
                             <i data-lucide="building" class="w-4 h-4 text-indigo-400 mt-1 shrink-0"></i>
-                            <span class="text-xs text-slate-400">Cabang Teknis: {{ config.COMPANY_BRANCH }}</span>
+                            <span class="text-xs text-slate-400">{{ footer.address_branch }}</span>
                         </div>
+                        {% endif %}
+                        {% if footer.phone %}
                         <div class="flex items-center space-x-2.5">
                             <i data-lucide="phone" class="w-4 h-4 text-indigo-400 shrink-0"></i>
-                            <span class="text-xs text-slate-300">{{ config.COMPANY_PHONE }}</span>
+                            <span class="text-xs text-slate-300">{{ footer.phone }}</span>
                         </div>
+                        {% endif %}
+                        {% if footer.email %}
                         <div class="flex items-center space-x-2.5">
                             <i data-lucide="mail" class="w-4 h-4 text-indigo-400 shrink-0"></i>
-                            <a href="mailto:{{ config.COMPANY_EMAIL }}" class="text-xs text-slate-300 hover:text-white">{{ config.COMPANY_EMAIL }}</a>
+                            <a href="mailto:{{ footer.email }}" class="text-xs text-slate-300 hover:text-white">{{ footer.email }}</a>
                         </div>
+                        {% endif %}
                     </div>
                 </div>
 
                 <!-- Col 2: Aplikasi & Website -->
                 <div>
-                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">Aplikasi & Website</h4>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">{{ footer.col2_title }}</h4>
                     <ul class="space-y-2 text-xs text-slate-400">
-                        <li><a href="{{ url_for('service_detail', slug='mobile-apps') }}" class="hover:text-white transition">Mobile Apps (Android & iOS)</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='sistem-informasi') }}" class="hover:text-white transition">Web Base Apps</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='website-korporat') }}" class="hover:text-white transition">Website Korporat</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='gis-geoportal') }}" class="hover:text-white transition">Geographic Information System (GIS)</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='integrasi-sistem') }}" class="hover:text-white transition">Integrasi Sistem & API</a></li>
-                        <li><a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="text-indigo-400 hover:text-indigo-300 font-medium pt-1 inline-block">Semua Aplikasi & Website →</a></li>
+                        {% for link in footer.col2_links %}
+                        <li><a href="{{ link.url }}" class="hover:text-white transition">{{ link.label }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
 
                 <!-- Col 3: Aplikasi ERP -->
                 <div>
-                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">Aplikasi Bisnis ERP</h4>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">{{ footer.col3_title }}</h4>
                     <ul class="space-y-2 text-xs text-slate-400">
-                        <li><a href="{{ url_for('service_detail', slug='erp-hris-kepegawaian') }}" class="hover:text-white transition">HRIS / Kepegawaian</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='erp-presensi-absensi') }}" class="hover:text-white transition">Presensi & Geofencing</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='erp-payroll-penggajian') }}" class="hover:text-white transition">Payroll & Pajak PPh21</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='erp-accounting-keuangan') }}" class="hover:text-white transition">Akuntansi & Keuangan</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='erp-asset-management') }}" class="hover:text-white transition">Asset Management</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='erp-warehouse-management') }}" class="hover:text-white transition">Warehouse Management</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='erp-document-management') }}" class="hover:text-white transition">Document Management</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='erp-dashboard-eksekutif') }}" class="hover:text-white transition">Dashboard Eksekutif</a></li>
+                        {% for link in footer.col3_links %}
+                        <li><a href="{{ link.url }}" class="hover:text-white transition">{{ link.label }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
 
                 <!-- Col 4: Aplikasi E-Government & Navigasi -->
                 <div>
-                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">Aplikasi E-Gov</h4>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mb-4 pb-1 border-b border-indigo-950">{{ footer.col4_title }}</h4>
                     <ul class="space-y-2 text-xs text-slate-400">
-                        <li><a href="{{ url_for('service_detail', slug='egov-portal-daerah') }}" class="hover:text-white transition">Website Pemerintah Daerah</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='egov-data-sektoral') }}" class="hover:text-white transition">e-Data Sektoral SDI</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='egov-e-planning-musrenbang') }}" class="hover:text-white transition">e-Planning Internal & Pokir</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='egov-e-monev-sakip') }}" class="hover:text-white transition">e-Monev & e-SAKIP</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='egov-e-lapor-pengaduan') }}" class="hover:text-white transition">e-Lapor & Pengaduan Warga</a></li>
-                        <li><a href="{{ url_for('service_detail', slug='egov-e-perizinan-mpp') }}" class="hover:text-white transition">e-Perizinan MPP TTE</a></li>
+                        {% for link in footer.col4_links %}
+                        <li><a href="{{ link.url }}" class="hover:text-white transition">{{ link.label }}</a></li>
+                        {% endfor %}
                     </ul>
-                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mt-6 mb-3 pb-1 border-b border-indigo-950">Tentang Kami</h4>
+                    <h4 class="text-white font-bold text-sm tracking-wider uppercase mt-6 mb-3 pb-1 border-b border-indigo-950">{{ footer.about_title }}</h4>
                     <ul class="space-y-1.5 text-xs text-slate-400">
-                        <li><a href="{{ url_for('about') }}" class="hover:text-white transition">Profil Perusahaan ACD</a></li>
-                        <li><a href="{{ url_for('portfolio') }}" class="hover:text-white transition">Studi Kasus & Portofolio</a></li>
-                        <li><a href="{{ url_for('career') }}" class="hover:text-white transition">Karir di ACD</a></li>
-                        <li><a href="{{ url_for('blog') }}" class="hover:text-white transition">Blog & Wawasan IT</a></li>
+                        {% for link in footer.about_links %}
+                        <li><a href="{{ link.url }}" class="hover:text-white transition">{{ link.label }}</a></li>
+                        {% endfor %}
                     </ul>
                 </div>
             </div>
@@ -458,27 +454,41 @@
             <!-- Standard Compliance & Security Badges -->
             <div class="py-6 border-t border-b border-indigo-950/90 flex flex-wrap justify-between items-center gap-4 text-xs text-slate-400">
                 <div class="flex items-center space-x-6">
-                    <span class="font-semibold text-slate-300">Standar Keamanan & Mutu:</span>
-                    <span class="inline-flex items-center space-x-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-400"></i><span>ISO 27001 Certified</span></span>
-                    <span class="inline-flex items-center space-x-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-purple-400"></i><span>OWASP Top 10 Compliant</span></span>
-                    <span class="inline-flex items-center space-x-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>SLA 99.9% Uptime Support</span></span>
+                    <span class="font-semibold text-slate-300">{{ footer.security_label }}</span>
+                    {% if footer.badge1 %}
+                    <span class="inline-flex items-center space-x-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-400"></i><span>{{ footer.badge1 }}</span></span>
+                    {% endif %}
+                    {% if footer.badge2 %}
+                    <span class="inline-flex items-center space-x-1"><i data-lucide="shield-check" class="w-3.5 h-3.5 text-purple-400"></i><span>{{ footer.badge2 }}</span></span>
+                    {% endif %}
+                    {% if footer.badge3 %}
+                    <span class="inline-flex items-center space-x-1"><i data-lucide="check" class="w-3.5 h-3.5 text-emerald-400"></i><span>{{ footer.badge3 }}</span></span>
+                    {% endif %}
                 </div>
                 <div>
-                    <span class="text-slate-400">Layanan Konsultasi & Aduan: <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}" target="_blank" class="text-indigo-400 font-semibold hover:underline">WhatsApp 24/7 Support</a></span>
+                    <span class="text-slate-400">{{ footer.support_text }} <a href="https://wa.me/{{ footer.whatsapp }}" target="_blank" class="text-indigo-400 font-semibold hover:underline">{{ footer.support_label }}</a></span>
                 </div>
             </div>
 
             <!-- Copyright and Legal -->
             <div class="pt-8 flex flex-col sm:flex-row justify-between items-center text-xs text-slate-500">
-                <p>&copy; 2025 {{ config.COMPANY_NAME }} ({{ config.COMPANY_DOMAIN }}). All rights reserved.</p>
+                <p>{{ footer.copyright }}</p>
                 <div class="flex space-x-6 mt-4 sm:mt-0 items-center">
-                    <a href="{{ url_for('about') }}" class="hover:text-slate-400">Kebijakan Privasi</a>
-                    <a href="{{ url_for('about') }}" class="hover:text-slate-400">Syarat & Ketentuan Layanan</a>
-                    <a href="{{ url_for('contact') }}" class="hover:text-slate-400">Hubungi Konsultan</a>
+                    {% if footer.privacy_label %}
+                    <a href="{{ footer.privacy_url }}" class="hover:text-slate-400">{{ footer.privacy_label }}</a>
+                    {% endif %}
+                    {% if footer.terms_label %}
+                    <a href="{{ footer.terms_url }}" class="hover:text-slate-400">{{ footer.terms_label }}</a>
+                    {% endif %}
+                    {% if footer.consult_label %}
+                    <a href="{{ footer.consult_url }}" class="hover:text-slate-400">{{ footer.consult_label }}</a>
+                    {% endif %}
+                    {% if footer.show_admin_link %}
                     <a href="{{ url_for('admin_login') }}" class="text-indigo-400/70 hover:text-indigo-300 font-medium inline-flex items-center space-x-1 transition">
                         <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path></svg>
                         <span>Portal Admin</span>
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

@@ -1,0 +1,348 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'footer' %}
+
+{% block title %}Kelola Footer Website{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Kelola Konten & Tampilan Footer</h1>
+            <p class="text-xs text-slate-400 mt-1">Konfigurasi profil brand, navigasi kolom, standar keamanan, kontak cepat, dan hak cipta footer website</p>
+        </div>
+        <div class="flex items-center space-x-2.5">
+            <a href="{{ url_for('index') }}#footer" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                <span>Lihat Web Publik</span>
+            </a>
+            <form method="POST" action="{{ url_for('admin_footer_reset_defaults') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan seluruh konfigurasi footer ke standar bawaan PT. Aksara Cipta Digital?');" class="inline">
+                <button type="submit" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>Reset ke Standar</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Form -->
+    <form method="POST" action="{{ url_for('admin_footer') }}" class="space-y-8">
+        <!-- 1. Identitas Brand & Kontak Footer -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="building" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Kolom 1: Profil Brand, Deskripsi & Kontak</h3>
+                    <p class="text-[11px] text-slate-400">Identitas perusahaan yang tampil di kolom kiri utama footer</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Nama Brand Perusahaan</label>
+                    <input type="text" name="footer_brand_name" value="{{ footer.brand_name }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Tagline / Sub-Judul Brand</label>
+                    <input type="text" name="footer_brand_tagline" value="{{ footer.brand_tagline }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Deskripsi Singkat Perusahaan di Footer</label>
+                    <textarea name="footer_about" rows="3" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ footer.about }}</textarea>
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Alamat Kantor Pusat</label>
+                    <input type="text" name="footer_address_main" value="{{ footer.address_main }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Alamat Kantor Cabang / Teknis</label>
+                    <input type="text" name="footer_address_branch" value="{{ footer.address_branch }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Nomor Telepon / Hotline</label>
+                    <input type="text" name="footer_phone" value="{{ footer.phone }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Alamat Email Resmi</label>
+                    <input type="email" name="footer_email" value="{{ footer.email }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Navigasi Kolom Footer (Link Lists) -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center justify-between pb-3 border-b border-indigo-950/70">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Kolom 2, 3 & 4: Navigasi Tautan Footer</h3>
+                        <p class="text-[11px] text-slate-400">Atur judul kolom dan daftar menu tautan pada footer</p>
+                    </div>
+                </div>
+                <span class="text-[10px] bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 px-2.5 py-1 rounded-full font-mono">
+                    Format: Label Menu | /url/tujuan
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 text-xs">
+                <!-- Kolom 2 -->
+                <div class="space-y-3 bg-[#020617] p-4 rounded-xl border border-indigo-950/70">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Judul Kolom 2</label>
+                        <input type="text" name="footer_col2_title" value="{{ footer.col2_title }}" class="w-full px-3 py-2 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Tautan Kolom 2 <span class="text-slate-500 font-normal">(1 baris = 1 tautan)</span></label>
+                        <textarea name="footer_col2_links" rows="9" class="w-full px-3 py-2 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-slate-300 font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ footer.col2_raw }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Kolom 3 -->
+                <div class="space-y-3 bg-[#020617] p-4 rounded-xl border border-indigo-950/70">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Judul Kolom 3</label>
+                        <input type="text" name="footer_col3_title" value="{{ footer.col3_title }}" class="w-full px-3 py-2 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Tautan Kolom 3 <span class="text-slate-500 font-normal">(1 baris = 1 tautan)</span></label>
+                        <textarea name="footer_col3_links" rows="9" class="w-full px-3 py-2 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-slate-300 font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ footer.col3_raw }}</textarea>
+                    </div>
+                </div>
+
+                <!-- Kolom 4 -->
+                <div class="space-y-3 bg-[#020617] p-4 rounded-xl border border-indigo-950/70">
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Judul Kolom 4 (E-Gov)</label>
+                        <input type="text" name="footer_col4_title" value="{{ footer.col4_title }}" class="w-full px-3 py-2 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Tautan E-Gov <span class="text-slate-500 font-normal">(1 baris = 1 tautan)</span></label>
+                        <textarea name="footer_col4_links" rows="4" class="w-full px-3 py-2 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-slate-300 font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ footer.col4_raw }}</textarea>
+                    </div>
+
+                    <div class="pt-2 border-t border-indigo-950/80">
+                        <label class="block font-bold text-slate-300 mb-1">Judul Sub-Kolom (Tentang Perusahaan)</label>
+                        <input type="text" name="footer_about_title" value="{{ footer.about_title }}" class="w-full px-3 py-2 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-white font-semibold focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block font-bold text-slate-300 mb-1">Tautan Tentang Kami <span class="text-slate-500 font-normal">(1 baris = 1 tautan)</span></label>
+                        <textarea name="footer_about_links" rows="3" class="w-full px-3 py-2 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-slate-300 font-mono text-[11px] focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ footer.about_raw }}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Standar Keamanan & Mutu (Security Badges) -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="shield-check" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Baris Standar Keamanan, Kepatuhan & WhatsApp Hotline</h3>
+                    <p class="text-[11px] text-slate-400">Badge sertifikasi mutu dan link bantuan cepat WhatsApp 24/7</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Label Keterangan</label>
+                    <input type="text" name="footer_security_label" value="{{ footer.security_label }}" class="w-full px-3.5 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Badge Sertifikasi 1</label>
+                    <input type="text" name="footer_badge1" value="{{ footer.badge1 }}" class="w-full px-3.5 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Badge Sertifikasi 2</label>
+                    <input type="text" name="footer_badge2" value="{{ footer.badge2 }}" class="w-full px-3.5 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Badge Sertifikasi 3</label>
+                    <input type="text" name="footer_badge3" value="{{ footer.badge3 }}" class="w-full px-3.5 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Teks Label Layanan Aduan</label>
+                    <input type="text" name="footer_support_text" value="{{ footer.support_text }}" class="w-full px-3.5 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Label Tombol WhatsApp</label>
+                    <input type="text" name="footer_support_label" value="{{ footer.support_label }}" class="w-full px-3.5 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Nomor WhatsApp (Angka: 628...)</label>
+                    <input type="text" name="footer_whatsapp" value="{{ footer.whatsapp }}" class="w-full px-3.5 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-mono">
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Baris Bawah (Copyright & Link Legal) -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="copyright" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Baris Paling Bawah: Hak Cipta & Tautan Legal</h3>
+                    <p class="text-[11px] text-slate-400">Kalimat copyright, tautan kebijakan privasi, serta akses link portal admin</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Teks Copyright</label>
+                    <input type="text" name="footer_copyright" value="{{ footer.copyright }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Label Kebijakan Privasi</label>
+                    <input type="text" name="footer_privacy_label" value="{{ footer.privacy_label }}" class="w-full px-4 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">URL Kebijakan Privasi</label>
+                    <input type="text" name="footer_privacy_url" value="{{ footer.privacy_url }}" class="w-full px-4 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Label Syarat & Ketentuan</label>
+                    <input type="text" name="footer_terms_label" value="{{ footer.terms_label }}" class="w-full px-4 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">URL Syarat & Ketentuan</label>
+                    <input type="text" name="footer_terms_url" value="{{ footer.terms_url }}" class="w-full px-4 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Label Hubungi Konsultan</label>
+                    <input type="text" name="footer_consult_label" value="{{ footer.consult_label }}" class="w-full px-4 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">URL Hubungi Konsultan</label>
+                    <input type="text" name="footer_consult_url" value="{{ footer.consult_url }}" class="w-full px-4 py-2 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2 pt-2">
+                    <label class="flex items-center space-x-3 p-3.5 rounded-xl border border-indigo-950 bg-[#020617] cursor-pointer hover:border-indigo-800/60 transition">
+                        <input type="checkbox" name="footer_show_admin_link" value="1" {% if footer.show_admin_link %}checked{% endif %} class="w-4 h-4 rounded text-indigo-600 focus:ring-indigo-500 bg-slate-900 border-slate-700">
+                        <div>
+                            <span class="text-xs font-bold text-white flex items-center space-x-1.5">
+                                <i data-lucide="lock" class="w-3.5 h-3.5 text-indigo-400"></i>
+                                <span>Tampilkan Tautan "Portal Admin" di Footer Website</span>
+                            </span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Memudahkan admin login langsung dari footer publik. Jika dimatikan, halaman login tetap dapat diakses manual via /admin/login.</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Visual Live Preview Box -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-indigo-950/70">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="eye" class="w-4 h-4 text-emerald-400"></i>
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">Pratinjau Footer Saat Ini (Real-Time Render)</h3>
+                </div>
+                <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-0.5 rounded-full">
+                    Sesuai Tampilan Website
+                </span>
+            </div>
+
+            <!-- Embedded Live Miniature -->
+            <div class="bg-[#020617] p-6 rounded-xl border border-indigo-950 text-slate-300 text-xs space-y-6 pointer-events-none select-none opacity-90">
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                    <div class="space-y-2">
+                        <div class="flex items-center space-x-2">
+                            <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" class="h-8 w-auto" alt="Logo">
+                            <div>
+                                <div class="font-bold text-white text-xs">{{ footer.brand_name }}</div>
+                                <div class="text-[9px] text-indigo-400">{{ footer.brand_tagline }}</div>
+                            </div>
+                        </div>
+                        <p class="text-[10px] text-slate-400 line-clamp-3">{{ footer.about }}</p>
+                        <div class="text-[10px] text-slate-400 space-y-1 pt-1">
+                            <div>{{ footer.phone }}</div>
+                            <div>{{ footer.email }}</div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="font-bold text-white text-xs uppercase mb-2">{{ footer.col2_title }}</div>
+                        <ul class="text-[10px] text-slate-400 space-y-1">
+                            {% for l in footer.col2_links[:4] %}
+                            <li>{{ l.label }}</li>
+                            {% endfor %}
+                            {% if footer.col2_links | length > 4 %}
+                            <li class="text-indigo-400">... dan {{ (footer.col2_links | length) - 4 }} tautan lainnya</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <div class="font-bold text-white text-xs uppercase mb-2">{{ footer.col3_title }}</div>
+                        <ul class="text-[10px] text-slate-400 space-y-1">
+                            {% for l in footer.col3_links[:4] %}
+                            <li>{{ l.label }}</li>
+                            {% endfor %}
+                            {% if footer.col3_links | length > 4 %}
+                            <li class="text-indigo-400">... dan {{ (footer.col3_links | length) - 4 }} tautan lainnya</li>
+                            {% endif %}
+                        </ul>
+                    </div>
+
+                    <div>
+                        <div class="font-bold text-white text-xs uppercase mb-2">{{ footer.col4_title }} & {{ footer.about_title }}</div>
+                        <ul class="text-[10px] text-slate-400 space-y-1">
+                            {% for l in footer.col4_links[:2] %}
+                            <li>{{ l.label }}</li>
+                            {% endfor %}
+                            {% for l in footer.about_links[:2] %}
+                            <li>{{ l.label }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="pt-4 border-t border-indigo-950/80 flex justify-between items-center text-[10px] text-slate-500">
+                    <div>{{ footer.copyright }}</div>
+                    <div class="flex items-center space-x-3">
+                        <span>{{ footer.privacy_label }}</span>
+                        <span>{{ footer.terms_label }}</span>
+                        {% if footer.show_admin_link %}
+                        <span class="text-indigo-400 font-semibold">[Portal Admin Aktif]</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Bottom Action Bar -->
+        <div class="sticky bottom-4 z-20 bg-[#0a0f1d]/95 backdrop-blur-md border border-indigo-900/60 p-4 rounded-2xl shadow-2xl flex items-center justify-between">
+            <div class="flex items-center space-x-2 text-xs text-slate-400">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                <span>Perubahan akan langsung diterapkan ke seluruh halaman publik website.</span>
+            </div>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                <span>Simpan Perubahan Footer</span>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}
