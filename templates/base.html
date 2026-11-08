@@ -508,9 +508,9 @@
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
             <div class="mb-5">
-                <span class="inline-block text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-2.5 py-1 rounded-full uppercase tracking-wider mb-2">Konsultasi Solusi IT</span>
-                <h3 class="text-xl font-extrabold text-white">Rancang Aplikasi Bersama Konsultan ACD</h3>
-                <p class="text-xs text-slate-400 mt-1">Sampaikan kebutuhan atau kendala proses bisnis Anda. Tim kami akan menyiapkan analisis teknis & estimasi RAB gratis.</p>
+                <span class="inline-block text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-2.5 py-1 rounded-full uppercase tracking-wider mb-2">{{ contact_cfg.hero_badge }}</span>
+                <h3 class="text-xl font-extrabold text-white">{{ contact_cfg.form_title }}</h3>
+                <p class="text-xs text-slate-400 mt-1">{{ contact_cfg.form_subtitle }}</p>
             </div>
             
             <form class="ajax-consultation-form space-y-3.5">
@@ -538,13 +538,9 @@
                     <div>
                         <label class="block text-xs font-semibold text-slate-300 mb-1">Kategori Kebutuhan *</label>
                         <select id="modal-service-type" name="service_type" required class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white">
-                            <option value="Aplikasi Bisnis ERP" class="bg-[#030718] text-white">Aplikasi Bisnis ERP</option>
-                            <option value="Aplikasi E-Government" class="bg-[#030718] text-white">Aplikasi E-Government (Smart City)</option>
-                            <option value="Mobile Apps (Android & iOS)" class="bg-[#030718] text-white">Mobile Apps (Android & iOS)</option>
-                            <option value="Web Base App & Sistem Informasi" class="bg-[#030718] text-white">Web Base App & Sistem Informasi</option>
-                            <option value="Website Korporat & Portal" class="bg-[#030718] text-white">Website Korporat & Portal</option>
-                            <option value="GIS & Geoportal" class="bg-[#030718] text-white">GIS & Geoportal</option>
-                            <option value="Integrasi Sistem & API" class="bg-[#030718] text-white">Integrasi Sistem & API</option>
+                            {% for cat in contact_cfg.categories %}
+                            <option value="{{ cat }}" class="bg-[#030718] text-white">{{ cat }}</option>
+                            {% endfor %}
                         </select>
                     </div>
                 </div>
@@ -553,7 +549,7 @@
                     <textarea name="message" required rows="3" placeholder="Contoh: Kami ingin membangun sistem ERP penggajian dan presensi mobile geofencing untuk 300 staf cabang..." class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500"></textarea>
                 </div>
                 <button type="submit" class="w-full deptech-btn-primary py-3 font-bold text-xs uppercase tracking-wider shadow-lg">
-                    Kirim Permintaan Konsultasi Gratis
+                    {{ contact_cfg.submit_btn }}
                 </button>
             </form>
         </div>

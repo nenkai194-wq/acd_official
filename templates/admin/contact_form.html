@@ -1,0 +1,263 @@
+{% extends 'admin/base.html' %}
+{% set active_page = 'contact_form' %}
+
+{% block title %}Kelola Form Kontak & Konsultasi{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+        <div>
+            <h1 class="text-2xl font-black text-white tracking-tight">Kelola Form Kontak & Konsultasi</h1>
+            <p class="text-xs text-slate-400 mt-1">Konfigurasi teks judul, deskripsi, kontak hotline, opsi kategori solusi, dan range budget pada form konsultasi klien</p>
+        </div>
+        <div class="flex flex-wrap items-center gap-2.5">
+            <a href="{{ url_for('contact') }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
+                <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                <span>Lihat Form di Web</span>
+            </a>
+            <a href="{{ url_for('admin_inquiries') }}" class="px-3.5 py-2 rounded-xl bg-indigo-600/20 hover:bg-indigo-600/30 text-indigo-300 text-xs font-semibold border border-indigo-500/30 transition inline-flex items-center space-x-1.5">
+                <i data-lucide="inbox" class="w-3.5 h-3.5"></i>
+                <span>Permintaan Masuk ({{ total_inquiries }})</span>
+            </a>
+            <form method="POST" action="{{ url_for('admin_contact_form_reset_defaults') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan seluruh teks dan opsi form kontak ke standar bawaan PT. Aksara Cipta Digital?');" class="inline">
+                <button type="submit" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
+                    <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
+                    <span>Reset Standar</span>
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Alert Context Notice -->
+    <div class="p-4 rounded-2xl bg-indigo-950/40 border border-indigo-800/40 flex items-start space-x-3 text-xs text-slate-300">
+        <div class="w-6 h-6 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center shrink-0 mt-0.5">
+            <i data-lucide="info" class="w-3.5 h-3.5"></i>
+        </div>
+        <div class="leading-relaxed">
+            <strong class="text-white">Informasi Keterkaitan Form:</strong> Formulir kontak ini adalah form yang muncul ketika calon klien mengklik tombol <em>"Hubungi Kami"</em>, <em>"Hubungi Konsultan"</em>, <em>"Mulai Konsultasi Gratis"</em>, maupun <em>"Mulai Diskusi Teknis Gratis"</em> di seluruh halaman website, baik melalui halaman publik <strong>/kontak</strong> maupun popup <strong>modal konsultasi cepat</strong>.
+        </div>
+    </div>
+
+    <!-- Main Form -->
+    <form method="POST" action="{{ url_for('admin_contact_form') }}" class="space-y-8">
+        <!-- 1. Header & Hero Kontak -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="layout" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Bagian 1: Judul & Hero Halaman Kontak</h3>
+                    <p class="text-[11px] text-slate-400">Header yang tampil di bagian atas halaman /kontak</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Badge Teks Hero</label>
+                    <input type="text" name="contact_hero_badge" value="{{ contact.hero_badge }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Judul Utama Hero Kontak</label>
+                    <input type="text" name="contact_hero_title" value="{{ contact.hero_title }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Subjudul / Penjelasan Hero</label>
+                    <textarea name="contact_hero_subtitle" rows="2" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ contact.hero_subtitle }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Formulir Kebutuhan (Form Headers & Button) -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="edit-3" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Bagian 2: Teks & Header Formulir Kebutuhan</h3>
+                    <p class="text-[11px] text-slate-400">Judul form, jaminan kerahasiaan NDA, dan teks tombol kirim</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Badge Formulir</label>
+                    <input type="text" name="contact_form_badge" value="{{ contact.form_badge }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Judul Formulir</label>
+                    <input type="text" name="contact_form_title" value="{{ contact.form_title }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Catatan Kerahasiaan Data (NDA)</label>
+                    <input type="text" name="contact_form_subtitle" value="{{ contact.form_subtitle }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Teks Tombol Kirim Form</label>
+                    <input type="text" name="contact_submit_btn" value="{{ contact.submit_btn }}" required class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500 font-bold">
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Pilihan Dropdown Kategori Solusi & Range Budget -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center justify-between pb-3 border-b border-indigo-950/70">
+                <div class="flex items-center space-x-2.5">
+                    <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                        <i data-lucide="list" class="w-4 h-4"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-sm font-bold text-white">Bagian 3: Pilihan Kategori Solusi & Range Budget</h3>
+                        <p class="text-[11px] text-slate-400">Atur pilihan dropdown yang dapat dipilih calon klien pada form</p>
+                    </div>
+                </div>
+                <span class="text-[10px] bg-indigo-950/80 text-indigo-300 border border-indigo-800/60 px-2.5 py-1 rounded-full font-mono">
+                    1 Baris = 1 Pilihan
+                </span>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 text-xs">
+                <!-- Dropdown Kategori -->
+                <div class="space-y-2 bg-[#020617] p-4 rounded-xl border border-indigo-950/70">
+                    <div class="flex items-center justify-between">
+                        <label class="block font-bold text-slate-300">Pilihan Kategori Solusi Software</label>
+                        <span class="text-[10px] text-indigo-400 font-mono">{{ contact.categories | length }} Pilihan</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500">Tulis satu nama kategori per baris. Pilihan ini akan tampil di dropdown <em>Kategori Solusi Software</em>.</p>
+                    <textarea name="contact_categories" rows="9" required class="w-full px-3 py-2.5 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-slate-200 font-mono text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ contact.categories_raw }}</textarea>
+                </div>
+
+                <!-- Dropdown Budget -->
+                <div class="space-y-2 bg-[#020617] p-4 rounded-xl border border-indigo-950/70">
+                    <div class="flex items-center justify-between">
+                        <label class="block font-bold text-slate-300">Pilihan Perkiraan Range Budget</label>
+                        <span class="text-[10px] text-indigo-400 font-mono">{{ contact.budget_ranges | length }} Pilihan</span>
+                    </div>
+                    <p class="text-[11px] text-slate-500">Tulis satu opsi range budget per baris. Pilihan ini akan tampil di dropdown <em>Perkiraan Range Budget</em>.</p>
+                    <textarea name="contact_budget_ranges" rows="9" required class="w-full px-3 py-2.5 bg-[#0a0f1d] border border-indigo-950 rounded-lg text-slate-200 font-mono text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500 leading-relaxed">{{ contact.budget_raw }}</textarea>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Informasi Kontak Langsung & Alamat Kantor -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">
+                <div class="w-7 h-7 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center">
+                    <i data-lucide="phone-call" class="w-4 h-4"></i>
+                </div>
+                <div>
+                    <h3 class="text-sm font-bold text-white">Bagian 4: Informasi Kontak Langsung & Alamat Kantor</h3>
+                    <p class="text-[11px] text-slate-400">Kontak WhatsApp, email konsultasi, telepon kantor, jam kerja, dan lokasi kantor</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 text-xs">
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Label WhatsApp Hotline</label>
+                    <input type="text" name="contact_wa_label" value="{{ contact.wa_label }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Nomor WhatsApp Tujuan (Angka: 628...)</label>
+                    <input type="text" name="contact_wa_number" value="{{ contact.wa_number }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white font-mono focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Email Konsultasi Resmi</label>
+                    <input type="email" name="contact_email" value="{{ contact.email }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div>
+                    <label class="block font-bold text-slate-300 mb-1.5">Telepon Kantor</label>
+                    <input type="text" name="contact_phone" value="{{ contact.phone }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Jam Operasional Layanan</label>
+                    <input type="text" name="contact_hours" value="{{ contact.hours }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Alamat Head Office Jakarta</label>
+                    <input type="text" name="contact_address_main" value="{{ contact.address_main }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+
+                <div class="sm:col-span-2">
+                    <label class="block font-bold text-slate-300 mb-1.5">Alamat Engineering Center Yogyakarta</label>
+                    <input type="text" name="contact_address_branch" value="{{ contact.address_branch }}" class="w-full px-4 py-2.5 bg-[#020617] border border-indigo-950 rounded-xl text-white focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Visual Live Preview Box -->
+        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 space-y-4">
+            <div class="flex items-center justify-between pb-3 border-b border-indigo-950/70">
+                <div class="flex items-center space-x-2">
+                    <i data-lucide="eye" class="w-4 h-4 text-emerald-400"></i>
+                    <h3 class="text-xs font-bold text-white uppercase tracking-wider">Pratinjau Tampilan Form Kontak Saat Ini</h3>
+                </div>
+                <span class="text-[10px] text-emerald-400 font-semibold bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-0.5 rounded-full">
+                    Live Render
+                </span>
+            </div>
+
+            <!-- Embedded Live Miniature -->
+            <div class="bg-[#020617] p-6 rounded-xl border border-indigo-950 text-slate-300 text-xs space-y-5 pointer-events-none select-none opacity-90">
+                <div class="text-center max-w-xl mx-auto space-y-1 pb-4 border-b border-indigo-950/60">
+                    <span class="text-[10px] font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-2.5 py-0.5 rounded-full uppercase">{{ contact.hero_badge }}</span>
+                    <h4 class="text-base font-extrabold text-white mt-1">{{ contact.hero_title }}</h4>
+                    <p class="text-[11px] text-slate-400 line-clamp-2">{{ contact.hero_subtitle }}</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Left direct info preview -->
+                    <div class="space-y-3 bg-[#0a0f1d] p-4 rounded-xl border border-indigo-950/60">
+                        <div class="font-bold text-white text-xs pb-1 border-b border-indigo-950">Informasi Kontak Langsung</div>
+                        <div class="text-[11px] space-y-1.5 text-slate-300">
+                            <div><strong class="text-slate-400">WhatsApp:</strong> {{ contact.wa_label }}</div>
+                            <div><strong class="text-slate-400">Email:</strong> {{ contact.email }}</div>
+                            <div><strong class="text-slate-400">Telepon:</strong> {{ contact.phone }}</div>
+                            <div><strong class="text-slate-400">Jam Kerja:</strong> {{ contact.hours }}</div>
+                        </div>
+                    </div>
+
+                    <!-- Right form preview -->
+                    <div class="space-y-3 bg-[#0a0f1d] p-4 rounded-xl border border-indigo-950/60">
+                        <div class="space-y-0.5">
+                            <span class="text-[9px] font-bold text-indigo-400 uppercase">{{ contact.form_badge }}</span>
+                            <div class="font-bold text-white text-xs">{{ contact.form_title }}</div>
+                            <div class="text-[10px] text-slate-400 line-clamp-1">{{ contact.form_subtitle }}</div>
+                        </div>
+                        <div class="text-[10px] text-slate-400 space-y-1">
+                            <div>&bull; {{ contact.categories | length }} Kategori Solusi Software Tersedia</div>
+                            <div>&bull; {{ contact.budget_ranges | length }} Opsi Range Budget Tersedia</div>
+                        </div>
+                        <div class="w-full py-2 rounded-lg bg-indigo-600 text-white font-bold text-center text-[10px] uppercase">
+                            {{ contact.submit_btn }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sticky Bottom Action Bar -->
+        <div class="sticky bottom-4 z-20 bg-[#0a0f1d]/95 backdrop-blur-md border border-indigo-900/60 p-4 rounded-2xl shadow-2xl flex items-center justify-between">
+            <div class="flex items-center space-x-2 text-xs text-slate-400">
+                <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+                <span>Perubahan langsung tersinkronisasi ke halaman /kontak dan popup modal konsultasi di seluruh website.</span>
+            </div>
+            <button type="submit" class="px-6 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30 flex items-center space-x-2">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                <span>Simpan Perubahan Form Kontak</span>
+            </button>
+        </div>
+    </form>
+</div>
+{% endblock %}

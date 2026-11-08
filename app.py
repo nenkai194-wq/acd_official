@@ -97,6 +97,56 @@ def parse_footer_links(raw_text):
             items.append({'label': line, 'url': '#'})
     return items
 
+
+def get_contact_data():
+    all_s = SettingModel.get_all()
+    
+    def s_val(k, fallback):
+        v = all_s.get(k)
+        return v if (v is not None and str(v).strip() != '') else fallback
+
+    hero_badge = s_val('contact_hero_badge', 'Hubungi Kami')
+    hero_title = s_val('contact_hero_title', 'Konsultasi Gratis Rancang Bangun Software')
+    hero_subtitle = s_val('contact_hero_subtitle', 'Diskusikan kebutuhan aplikasi atau sistem perusahaan Anda dengan System Analyst senior kami. Kami siap memberikan masukan arsitektur dan estimasi anggaran tanpa biaya.')
+    form_badge = s_val('contact_form_badge', 'FORMULIR KEBUTUHAN')
+    form_title = s_val('contact_form_title', 'Kirimkan Deskripsi Kebutuhan Anda')
+    form_subtitle = s_val('contact_form_subtitle', 'Kami menghargai kerahasiaan data bisnis Anda (Non-Disclosure Agreement siap ditandatangani)')
+    submit_btn = s_val('contact_submit_btn', 'Kirim Formulir Konsultasi Gratis')
+    wa_label = s_val('contact_wa_label', '+62 812-8888-2510 (Fast Response)')
+    wa_number = s_val('contact_wa_number', '6281288882510')
+    email = s_val('contact_email', 'info@acd.co.id')
+    phone = s_val('contact_phone', '+62 21 8299 8765')
+    hours = s_val('contact_hours', 'Senin - Jumat: 08:30 - 17:00 WIB')
+    address_main = s_val('contact_address_main', 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950')
+    address_branch = s_val('contact_address_branch', 'Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281')
+    
+    categories_raw = s_val('contact_categories', "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT")
+    categories_list = [line.strip() for line in categories_raw.splitlines() if line.strip()]
+
+    budget_raw = s_val('contact_budget_ranges', "Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)")
+    budget_list = [line.strip() for line in budget_raw.splitlines() if line.strip()]
+
+    return {
+        'hero_badge': hero_badge,
+        'hero_title': hero_title,
+        'hero_subtitle': hero_subtitle,
+        'form_badge': form_badge,
+        'form_title': form_title,
+        'form_subtitle': form_subtitle,
+        'submit_btn': submit_btn,
+        'wa_label': wa_label,
+        'wa_number': wa_number,
+        'email': email,
+        'phone': phone,
+        'hours': hours,
+        'address_main': address_main,
+        'address_branch': address_branch,
+        'categories': categories_list,
+        'categories_raw': categories_raw,
+        'budget_ranges': budget_list,
+        'budget_raw': budget_raw
+    }
+
 def get_footer_data():
     all_s = SettingModel.get_all()
     
@@ -204,7 +254,8 @@ def inject_global_data():
         'set_lang_url': set_lang_url,
         'badge_new_inquiries': badge_new,
         'admin_inactivity_timeout': ADMIN_INACTIVITY_TIMEOUT,
-        'footer': get_footer_data()
+        'footer': get_footer_data(),
+        'contact_cfg': get_contact_data()
     }
 
 @app.route('/set-language/<lang>')
@@ -1392,6 +1443,64 @@ def admin_security_clear_logs():
 
 # --- 10. PENGATURAN WEBSITE & PROFIL PERUSAHAAN ---
 
+
+
+# --- KELOLA FORM KONTAK & KONSULTASI ---
+
+@app.route('/admin/contact-form', methods=['GET', 'POST'])
+@admin_required
+def admin_contact_form():
+    if request.method == 'POST':
+        updates = {
+            'contact_hero_badge': request.form.get('contact_hero_badge', '').strip(),
+            'contact_hero_title': request.form.get('contact_hero_title', '').strip(),
+            'contact_hero_subtitle': request.form.get('contact_hero_subtitle', '').strip(),
+            'contact_form_badge': request.form.get('contact_form_badge', '').strip(),
+            'contact_form_title': request.form.get('contact_form_title', '').strip(),
+            'contact_form_subtitle': request.form.get('contact_form_subtitle', '').strip(),
+            'contact_submit_btn': request.form.get('contact_submit_btn', '').strip(),
+            'contact_wa_label': request.form.get('contact_wa_label', '').strip(),
+            'contact_wa_number': request.form.get('contact_wa_number', '').strip(),
+            'contact_email': request.form.get('contact_email', '').strip(),
+            'contact_phone': request.form.get('contact_phone', '').strip(),
+            'contact_hours': request.form.get('contact_hours', '').strip(),
+            'contact_address_main': request.form.get('contact_address_main', '').strip(),
+            'contact_address_branch': request.form.get('contact_address_branch', '').strip(),
+            'contact_categories': request.form.get('contact_categories', '').strip(),
+            'contact_budget_ranges': request.form.get('contact_budget_ranges', '').strip(),
+        }
+        SettingModel.update_many(updates)
+        flash('Pengaturan konten, opsi dropdown, dan informasi formulir kontak berhasil diperbarui!', 'success')
+        return redirect(url_for('admin_contact_form'))
+
+    contact_data = get_contact_data()
+    inquiries_count = InquiryModel.get_stats().get('total', 0)
+    return render_template('admin/contact_form.html', contact=contact_data, total_inquiries=inquiries_count)
+
+@app.route('/admin/contact-form/reset-defaults', methods=['POST'])
+@admin_required
+def admin_contact_form_reset_defaults():
+    defaults = {
+        'contact_hero_badge': 'Hubungi Kami',
+        'contact_hero_title': 'Konsultasi Gratis Rancang Bangun Software',
+        'contact_hero_subtitle': 'Diskusikan kebutuhan aplikasi atau sistem perusahaan Anda dengan System Analyst senior kami. Kami siap memberikan masukan arsitektur dan estimasi anggaran tanpa biaya.',
+        'contact_form_badge': 'FORMULIR KEBUTUHAN',
+        'contact_form_title': 'Kirimkan Deskripsi Kebutuhan Anda',
+        'contact_form_subtitle': 'Kami menghargai kerahasiaan data bisnis Anda (Non-Disclosure Agreement siap ditandatangani)',
+        'contact_submit_btn': 'Kirim Formulir Konsultasi Gratis',
+        'contact_wa_label': '+62 812-8888-2510 (Fast Response)',
+        'contact_wa_number': '6281288882510',
+        'contact_email': 'info@acd.co.id',
+        'contact_phone': '+62 21 8299 8765',
+        'contact_hours': 'Senin - Jumat: 08:30 - 17:00 WIB',
+        'contact_address_main': 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950',
+        'contact_address_branch': 'Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281',
+        'contact_categories': "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT",
+        'contact_budget_ranges': "Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)"
+    }
+    SettingModel.update_many(defaults)
+    flash('Pengaturan form kontak berhasil dikembalikan ke standar awal PT. Aksara Cipta Digital.', 'info')
+    return redirect(url_for('admin_contact_form'))
 
 # --- KELOLA FOOTER WEBSITE ---
 

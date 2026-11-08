@@ -220,6 +220,22 @@ def init_db():
         ('footer_terms_url', '/tentang-kami'),
         ('footer_consult_label', 'Hubungi Konsultan'),
         ('footer_consult_url', '/kontak'),
+        ('contact_hero_badge', 'Hubungi Kami'),
+        ('contact_hero_title', 'Konsultasi Gratis Rancang Bangun Software'),
+        ('contact_hero_subtitle', 'Diskusikan kebutuhan aplikasi atau sistem perusahaan Anda dengan System Analyst senior kami. Kami siap memberikan masukan arsitektur dan estimasi anggaran tanpa biaya.'),
+        ('contact_form_badge', 'FORMULIR KEBUTUHAN'),
+        ('contact_form_title', 'Kirimkan Deskripsi Kebutuhan Anda'),
+        ('contact_form_subtitle', 'Kami menghargai kerahasiaan data bisnis Anda (Non-Disclosure Agreement siap ditandatangani)'),
+        ('contact_submit_btn', 'Kirim Formulir Konsultasi Gratis'),
+        ('contact_wa_label', '+62 812-8888-2510 (Fast Response)'),
+        ('contact_wa_number', '6281288882510'),
+        ('contact_email', 'info@acd.co.id'),
+        ('contact_phone', '+62 21 8299 8765'),
+        ('contact_hours', 'Senin - Jumat: 08:30 - 17:00 WIB'),
+        ('contact_address_main', 'Gedung Cyber 2 Tower Lt. 18, Jl. H. R. Rasuna Said Blok X-5 No. 13, Kuningan Barat, Jakarta Selatan 12950'),
+        ('contact_address_branch', 'Komp. Graha Cipta Technopark Kav. 8, Seturan, Sleman, D.I. Yogyakarta 55281'),
+        ('contact_categories', 'Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT'),
+        ('contact_budget_ranges', 'Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)'),
     ]
     for k, v in default_settings:
         cursor.execute('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)', (k, v))
