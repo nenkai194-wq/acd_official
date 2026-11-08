@@ -14,8 +14,8 @@ class Config:
     COMPANY_DOMAIN = "acd.co.id"
     COMPANY_EMAIL = "info@acd.co.id"
     COMPANY_CONSULTATION_EMAIL = "konsultasi@acd.co.id"
-    COMPANY_PHONE = "+62 21 8299 8765"
-    COMPANY_WHATSAPP = "6281288882510"
+    COMPANY_PHONE = "+62 852-8789-8937"
+    COMPANY_WHATSAPP = "6285287898937"
     COMPANY_ADDRESS = "Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182"
     COMPANY_BRANCH = ""
     

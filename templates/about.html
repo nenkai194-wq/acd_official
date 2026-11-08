@@ -192,13 +192,13 @@
             <div class="p-8 rounded-2xl deptech-card-dark border border-indigo-950/80">
                 <span class="text-xs font-bold text-indigo-300 bg-indigo-950/80 border border-indigo-800/60 px-3 py-1 rounded-full uppercase tracking-wider">Kantor Perusahaan</span>
                 <p class="text-sm text-slate-300 leading-relaxed my-4">
-                    {{ config.COMPANY_ADDRESS }}
+                    {{ contact_cfg.address_main }}
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-slate-300 pt-4 border-t border-indigo-950/60">
-                    <p>Telepon: <span class="text-white font-medium">{{ config.COMPANY_PHONE }}</span></p>
-                    <p>Email: <span class="text-white font-medium">{{ config.COMPANY_EMAIL }}</span></p>
-                    <p>WhatsApp: <span class="text-white font-medium">+62 812-8888-2510</span></p>
-                    <p>Jam Kerja: <span class="text-white font-medium">Senin - Jumat (08:30 - 17:00 WIB)</span></p>
+                    <p>Telepon: <a href="tel:{{ contact_cfg.phone.replace(' ', '').replace('-', '') }}" class="text-white font-medium hover:text-indigo-400 transition">{{ contact_cfg.phone }}</a></p>
+                    <p>Email: <a href="mailto:{{ contact_cfg.email }}" class="text-white font-medium hover:text-indigo-400 transition">{{ contact_cfg.email }}</a></p>
+                    <p>WhatsApp: <a href="https://wa.me/{{ contact_cfg.wa_number }}" target="_blank" class="text-white font-medium hover:text-emerald-400 transition">{{ contact_cfg.wa_label.split('(')[0].strip() }}</a></p>
+                    <p>Jam Kerja: <span class="text-white font-medium">{{ contact_cfg.hours }}</span></p>
                 </div>
             </div>
         </div>
