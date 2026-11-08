@@ -338,9 +338,12 @@ class BlogModel:
 
 class CareerModel:
     @staticmethod
-    def get_all():
+    def get_all(only_published=False):
         conn = get_db_connection()
-        rows = conn.execute('SELECT * FROM careers ORDER BY id DESC').fetchall()
+        if only_published:
+            rows = conn.execute('SELECT * FROM careers WHERE is_published = 1 ORDER BY id DESC').fetchall()
+        else:
+            rows = conn.execute('SELECT * FROM careers ORDER BY id DESC').fetchall()
         conn.close()
         res = []
         for r in rows:
@@ -363,9 +366,12 @@ class CareerModel:
         return res
 
     @staticmethod
-    def get_by_slug(slug):
+    def get_by_slug(slug, only_published=False):
         conn = get_db_connection()
-        row = conn.execute('SELECT * FROM careers WHERE slug = ?', (slug,)).fetchone()
+        if only_published:
+            row = conn.execute('SELECT * FROM careers WHERE slug = ? AND is_published = 1', (slug,)).fetchone()
+        else:
+            row = conn.execute('SELECT * FROM careers WHERE slug = ?', (slug,)).fetchone()
         conn.close()
         if not row:
             return None
@@ -375,7 +381,22 @@ class CareerModel:
         return res
 
     @staticmethod
-    def create(slug, title, department, location, job_type, experience, description, requirements, responsibilities):
+    def toggle_published(career_id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+        UPDATE careers
+        SET is_published = CASE WHEN is_published = 1 THEN 0 ELSE 1 END
+        WHERE id = ?
+        ''', (career_id,))
+        conn.commit()
+        cursor.execute('SELECT is_published FROM careers WHERE id = ?', (career_id,))
+        row = cursor.fetchone()
+        conn.close()
+        return row['is_published'] if row else None
+
+    @staticmethod
+    def create(slug, title, department, location, job_type, experience, description, requirements, responsibilities, is_published=1):
         conn = get_db_connection()
         cursor = conn.cursor()
         if not slug:
@@ -385,16 +406,16 @@ class CareerModel:
         resp_json = json.dumps(responsibilities if isinstance(responsibilities, list) else [r.strip() for r in str(responsibilities).splitlines() if r.strip()])
         
         cursor.execute('''
-        INSERT INTO careers (slug, title, department, location, job_type, experience, description, requirements, responsibilities)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', (slug, title, department, location or 'Jakarta / Yogyakarta', job_type or 'Full-time', experience or '', description or '', req_json, resp_json))
+        INSERT INTO careers (slug, title, department, location, job_type, experience, description, requirements, responsibilities, is_published)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', (slug, title, department, location or 'Jakarta / Yogyakarta', job_type or 'Full-time', experience or '', description or '', req_json, resp_json, 1 if is_published else 0))
         c_id = cursor.lastrowid
         conn.commit()
         conn.close()
         return c_id
 
     @staticmethod
-    def update(career_id, slug, title, department, location, job_type, experience, description, requirements, responsibilities):
+    def update(career_id, slug, title, department, location, job_type, experience, description, requirements, responsibilities, is_published=1):
         conn = get_db_connection()
         cursor = conn.cursor()
         if not slug:
@@ -405,9 +426,9 @@ class CareerModel:
 
         cursor.execute('''
         UPDATE careers
-        SET slug = ?, title = ?, department = ?, location = ?, job_type = ?, experience = ?, description = ?, requirements = ?, responsibilities = ?
+        SET slug = ?, title = ?, department = ?, location = ?, job_type = ?, experience = ?, description = ?, requirements = ?, responsibilities = ?, is_published = ?
         WHERE id = ?
-        ''', (slug, title, department, location, job_type, experience, description, req_json, resp_json, career_id))
+        ''', (slug, title, department, location, job_type, experience, description, req_json, resp_json, 1 if is_published else 0, career_id))
         conn.commit()
         conn.close()
         return True

@@ -61,6 +61,34 @@
                 </select>
             </div>
 
+            <!-- Status Tayang (Publik vs Draft) -->
+            <div class="sm:col-span-2 bg-[#020617] border border-indigo-950/80 rounded-xl p-4">
+                <label class="block text-xs font-bold text-slate-300 mb-2">Status Publikasi & Tayang di Website</label>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <label class="flex items-center space-x-3 p-3 rounded-xl border border-indigo-900/60 bg-indigo-950/20 hover:bg-indigo-950/40 cursor-pointer transition">
+                        <input type="radio" name="is_published" value="1" {% if not career or career.is_published == 1 %}checked{% endif %} class="text-indigo-600 focus:ring-indigo-500">
+                        <div>
+                            <span class="text-xs font-bold text-emerald-400 flex items-center space-x-1.5">
+                                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                                <span>Tayang di Website (Publik)</span>
+                            </span>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Lowongan tampil pada halaman /karir dan dapat dilihat oleh calon pelamar.</p>
+                        </div>
+                    </label>
+
+                    <label class="flex items-center space-x-3 p-3 rounded-xl border border-slate-800 bg-slate-900/40 hover:bg-slate-900/70 cursor-pointer transition">
+                        <input type="radio" name="is_published" value="0" {% if career and career.is_published == 0 %}checked{% endif %} class="text-slate-500 focus:ring-slate-500">
+                        <div>
+                            <span class="text-xs font-bold text-slate-400 flex items-center space-x-1.5">
+                                <span class="w-2 h-2 rounded-full bg-slate-500"></span>
+                                <span>Tidak Tayang (Simpan sebagai Draft)</span>
+                            </span>
+                            <p class="text-[11px] text-slate-500 mt-0.5">Disembunyikan dari publik. Bila seluruh lowongan tidak tayang, halaman akan menampilkan "Belum Ada Lowongan Kerja".</p>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
             <!-- Experience -->
             <div class="sm:col-span-2">
                 <label class="block text-xs font-bold text-slate-300 mb-1.5">Pengalaman Kerja yang Dibutuhkan</label>

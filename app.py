@@ -191,12 +191,14 @@ def blog_detail(slug):
 
 @app.route('/karir')
 def career():
-    careers = CareerModel.get_all()
+    careers = CareerModel.get_all(only_published=True)
     return render_template('career.html', careers=careers)
 
 @app.route('/karir/<slug>')
 def career_detail(slug):
-    career = CareerModel.get_by_slug(slug)
+    # Admin preview allows viewing unpublished
+    is_admin = bool(session.get('admin_logged_in'))
+    career = CareerModel.get_by_slug(slug, only_published=not is_admin)
     if not career:
         abort(404)
     return render_template('career_detail.html', career=career)
@@ -1082,8 +1084,47 @@ def admin_testimonial_delete(testimonial_id):
 @app.route('/admin/careers')
 @admin_required
 def admin_careers():
-    careers = CareerModel.get_all()
-    return render_template('admin/careers.html', careers=careers)
+    status_filter = request.args.get('status', 'all')
+    search_query = request.args.get('q', '').strip()
+    
+    all_careers = CareerModel.get_all(only_published=False)
+    
+    # Filter
+    careers = []
+    for c in all_careers:
+        # Status match
+        if status_filter == 'tayang' and not c.get('is_published'):
+            continue
+        if status_filter == 'draft' and c.get('is_published'):
+            continue
+            
+        # Search match
+        if search_query:
+            q = search_query.lower()
+            match = (q in c.get('title', '').lower() or
+                     q in c.get('department', '').lower() or
+                     q in c.get('location', '').lower())
+            if not match:
+                continue
+        careers.append(c)
+        
+    counts = {
+        'total': len(all_careers),
+        'tayang': len([c for c in all_careers if c.get('is_published')]),
+        'draft': len([c for c in all_careers if not c.get('is_published')])
+    }
+    return render_template('admin/careers.html', careers=careers, counts=counts, current_status=status_filter, current_q=search_query)
+
+@app.route('/admin/careers/<int:career_id>/toggle-status', methods=['POST'])
+@admin_required
+def admin_career_toggle_status(career_id):
+    new_status = CareerModel.toggle_published(career_id)
+    if new_status is None:
+        flash('Lowongan tidak ditemukan.', 'danger')
+    else:
+        status_text = 'Ditayangkan di website publik' if new_status == 1 else 'Disembunyikan (Tidak Tayang)'
+        flash(f'Status lowongan berhasil diubah menjadi: {status_text}', 'success')
+    return redirect(request.referrer or url_for('admin_careers'))
 
 @app.route('/admin/careers/add', methods=['GET', 'POST'])
 @admin_required
@@ -1098,6 +1139,7 @@ def admin_career_add():
         description = request.form.get('description', '').strip()
         requirements = request.form.get('requirements', '').strip()
         responsibilities = request.form.get('responsibilities', '').strip()
+        is_published = int(request.form.get('is_published', 1))
 
         if not title or not department or not description:
             flash('Harap lengkapi posisi, departemen, dan deskripsi pekerjaan.', 'danger')
@@ -1113,9 +1155,10 @@ def admin_career_add():
                 experience=experience,
                 description=description,
                 requirements=requirements,
-                responsibilities=responsibilities
+                responsibilities=responsibilities,
+                is_published=is_published
             )
-            flash(f'Lowongan "{title}" berhasil dibuka!', 'success')
+            flash(f'Lowongan "{title}" berhasil disimpan ({ "Tayang" if is_published else "Draft / Tidak Tayang" })!', 'success')
             return redirect(url_for('admin_careers'))
         except Exception as e:
             flash(f'Gagal menambahkan lowongan: {e}', 'danger')
@@ -1140,6 +1183,7 @@ def admin_career_edit(career_id):
         description = request.form.get('description', '').strip()
         requirements = request.form.get('requirements', '').strip()
         responsibilities = request.form.get('responsibilities', '').strip()
+        is_published = int(request.form.get('is_published', 1))
 
         if not title or not department or not description:
             flash('Harap lengkapi posisi, departemen, dan deskripsi pekerjaan.', 'danger')
@@ -1156,9 +1200,10 @@ def admin_career_edit(career_id):
                 experience=experience,
                 description=description,
                 requirements=requirements,
-                responsibilities=responsibilities
+                responsibilities=responsibilities,
+                is_published=is_published
             )
-            flash(f'Lowongan "{title}" berhasil diperbarui!', 'success')
+            flash(f'Lowongan "{title}" berhasil diperbarui ({ "Tayang" if is_published else "Draft / Tidak Tayang" })!', 'success')
             return redirect(url_for('admin_careers'))
         except Exception as e:
             flash(f'Gagal memperbarui lowongan: {e}', 'danger')

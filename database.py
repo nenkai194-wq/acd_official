@@ -126,7 +126,8 @@ def init_db():
         experience TEXT,
         description TEXT,
         requirements TEXT, -- JSON
-        responsibilities TEXT -- JSON
+        responsibilities TEXT, -- JSON
+        is_published INTEGER DEFAULT 1
     )
     ''')
 
@@ -748,9 +749,9 @@ Investasi pada Custom ERP terbukti memberikan penghematan biaya total (TCO - Tot
 
     for c in careers:
         cursor.execute('''
-        INSERT INTO careers (slug, title, department, location, job_type, experience, description, requirements, responsibilities)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
-        ''', c)
+        INSERT INTO careers (slug, title, department, location, job_type, experience, description, requirements, responsibilities, is_published)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        ''', c + (1,))
 
     # --- FAQS SEED ---
     faqs = [

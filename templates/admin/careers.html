@@ -17,53 +17,129 @@
         </a>
     </div>
 
-    <!-- Career Cards / Table -->
+    <!-- Filter & Search Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <!-- Status Tabs -->
+        <div class="flex flex-wrap items-center gap-1.5 p-1 bg-[#0a0f1d] border border-indigo-950/80 rounded-xl">
+            <a href="{{ url_for('admin_careers', status='all', q=current_q) }}"
+               class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition {{ 'bg-indigo-600 text-white shadow-md' if current_status == 'all' or not current_status else 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                Semua Lowongan ({{ counts.total }})
+            </a>
+            <a href="{{ url_for('admin_careers', status='tayang', q=current_q) }}"
+               class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 {{ 'bg-emerald-600 text-white shadow-md' if current_status == 'tayang' else 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>Tayang di Web ({{ counts.tayang }})</span>
+            </a>
+            <a href="{{ url_for('admin_careers', status='draft', q=current_q) }}"
+               class="px-3.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center space-x-1.5 {{ 'bg-rose-600/90 text-white shadow-md' if current_status == 'draft' else 'text-slate-400 hover:text-white hover:bg-slate-900' }}">
+                <span class="w-2 h-2 rounded-full bg-rose-400"></span>
+                <span>Tidak Tayang / Draft ({{ counts.draft }})</span>
+            </a>
+        </div>
+
+        <!-- Search Form -->
+        <form method="GET" action="{{ url_for('admin_careers') }}" class="flex items-center gap-2">
+            {% if current_status and current_status != 'all' %}
+            <input type="hidden" name="status" value="{{ current_status }}">
+            {% endif %}
+            <div class="relative">
+                <i data-lucide="search" class="w-3.5 h-3.5 text-slate-500 absolute left-3 top-1/2 -translate-y-1/2"></i>
+                <input type="text" name="q" value="{{ current_q or '' }}" placeholder="Cari posisi, departemen..." class="pl-8 pr-3 py-1.5 text-xs bg-[#0a0f1d] border border-indigo-950/80 rounded-xl text-white placeholder-slate-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 w-56">
+            </div>
+            {% if current_q %}
+            <a href="{{ url_for('admin_careers', status=current_status) }}" class="p-1.5 text-slate-400 hover:text-white" title="Reset Pencarian">
+                <i data-lucide="x" class="w-4 h-4"></i>
+            </a>
+            {% endif %}
+        </form>
+    </div>
+
+    <!-- Career Cards Grid -->
     {% if careers %}
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {% for c in careers %}
-        <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 flex flex-col justify-between hover:border-indigo-600/40 transition">
+        <div class="bg-[#0a0f1d] border {{ 'border-indigo-950/80 hover:border-indigo-600/50' if c.is_published else 'border-dashed border-slate-800 opacity-90 hover:border-slate-700' }} rounded-2xl p-6 flex flex-col justify-between transition">
             <div class="space-y-3">
-                <div class="flex items-center justify-between">
-                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/60 text-indigo-300 border border-indigo-900/60">
+                <!-- Badges (Department + Status Tayang) -->
+                <div class="flex items-center justify-between gap-2">
+                    <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/60 text-indigo-300 border border-indigo-900/60 truncate">
                         {{ c.department }}
                     </span>
-                    <span class="text-[10px] font-mono text-emerald-400 font-semibold">
-                        {{ c.job_type }}
+                    
+                    {% if c.is_published %}
+                    <span class="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-emerald-950/80 text-emerald-400 border border-emerald-800/80 shrink-0">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                        <span>Tayang</span>
                     </span>
+                    {% else %}
+                    <span class="inline-flex items-center space-x-1 px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-slate-900 text-slate-400 border border-slate-700 shrink-0">
+                        <span class="w-1.5 h-1.5 rounded-full bg-slate-500"></span>
+                        <span>Tidak Tayang</span>
+                    </span>
+                    {% endif %}
                 </div>
 
-                <h3 class="text-sm font-bold text-white">{{ c.title }}</h3>
-
-                <div class="flex items-center space-x-2 text-[11px] text-slate-400">
-                    <i data-lucide="map-pin" class="w-3.5 h-3.5 text-slate-500"></i>
-                    <span>{{ c.location }}</span>
+                <div class="pt-1">
+                    <h3 class="text-sm font-bold text-white">{{ c.title }}</h3>
+                    <div class="flex items-center space-x-2 text-[11px] text-slate-400 mt-1">
+                        <span class="font-mono text-indigo-400 font-semibold">{{ c.job_type }}</span>
+                        <span>&bull;</span>
+                        <span class="flex items-center space-x-1">
+                            <i data-lucide="map-pin" class="w-3 h-3 text-slate-500"></i>
+                            <span>{{ c.location }}</span>
+                        </span>
+                    </div>
                 </div>
 
                 <p class="text-xs text-slate-400 line-clamp-3 leading-relaxed">
                     {{ c.description }}
                 </p>
 
-                <div class="text-[10px] text-slate-500 space-y-1 pt-1">
-                    <div>Syarat: <strong class="text-slate-300">{{ c.requirements | length }} poin</strong></div>
-                    <div>Tanggung Jawab: <strong class="text-slate-300">{{ c.responsibilities | length }} poin</strong></div>
+                <div class="text-[10px] text-slate-500 space-y-0.5 pt-1 bg-slate-950/40 p-2.5 rounded-xl border border-slate-900">
+                    <div>Pengalaman: <strong class="text-slate-300">{{ c.experience or '-' }}</strong></div>
+                    <div class="flex items-center justify-between pt-0.5">
+                        <span>Syarat: <strong class="text-slate-300">{{ c.requirements | length }} poin</strong></span>
+                        <span>Tanggung Jawab: <strong class="text-slate-300">{{ c.responsibilities | length }} poin</strong></span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Action Controls -->
-            <div class="pt-4 mt-4 border-t border-indigo-950/60 flex items-center justify-between">
-                <a href="{{ url_for('career_detail', slug=c.slug) }}" target="_blank" class="text-xs text-slate-400 hover:text-white font-medium inline-flex items-center space-x-1">
-                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
-                    <span>Pratinjau</span>
-                </a>
-                <div class="flex items-center space-x-2">
-                    <a href="{{ url_for('admin_career_edit', career_id=c.id) }}" class="p-2 rounded-lg bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-600/30 transition" title="Edit Lowongan">
-                        <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
-                    </a>
-                    <form method="POST" action="{{ url_for('admin_career_delete', career_id=c.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus lowongan \'{{ c.title }}\'?');" class="inline">
-                        <button type="submit" class="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Lowongan">
-                            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+            <!-- Action Controls & Status Switcher -->
+            <div class="pt-4 mt-4 border-t border-indigo-950/60 space-y-3">
+                <!-- Status Toggle Bar -->
+                <div class="flex items-center justify-between bg-[#050a17] px-3 py-2 rounded-xl border border-indigo-950/50 text-[11px]">
+                    <span class="text-slate-400 font-medium">Status Tayang:</span>
+                    <form method="POST" action="{{ url_for('admin_career_toggle_status', career_id=c.id) }}" class="inline">
+                        {% if c.is_published %}
+                        <button type="submit" class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-amber-500/10 hover:bg-amber-500/20 text-amber-400 border border-amber-500/30 transition" title="Sembunyikan lowongan dari publik">
+                            <i data-lucide="eye-off" class="w-3 h-3"></i>
+                            <span>Sembunyikan</span>
                         </button>
+                        {% else %}
+                        <button type="submit" class="inline-flex items-center space-x-1.5 px-2.5 py-1 rounded-lg text-[10px] font-bold bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 transition" title="Tayangkan lowongan di website">
+                            <i data-lucide="eye" class="w-3 h-3"></i>
+                            <span>Tayangkan</span>
+                        </button>
+                        {% endif %}
                     </form>
+                </div>
+
+                <!-- Footer Actions -->
+                <div class="flex items-center justify-between">
+                    <a href="{{ url_for('career_detail', slug=c.slug) }}" target="_blank" class="text-xs text-slate-400 hover:text-white font-medium inline-flex items-center space-x-1">
+                        <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+                        <span>Pratinjau</span>
+                    </a>
+                    <div class="flex items-center space-x-2">
+                        <a href="{{ url_for('admin_career_edit', career_id=c.id) }}" class="p-2 rounded-lg bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-600/30 transition" title="Edit Lowongan">
+                            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                        </a>
+                        <form method="POST" action="{{ url_for('admin_career_delete', career_id=c.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus lowongan \'{{ c.title }}\'?');" class="inline">
+                            <button type="submit" class="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Lowongan">
+                                <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -71,9 +147,18 @@
     </div>
     {% else %}
     <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-12 text-center text-slate-400 space-y-3">
-        <i data-lucide="users" class="w-12 h-12 text-slate-600 mx-auto"></i>
-        <h4 class="text-sm font-bold text-white">Belum Ada Lowongan Aktif</h4>
-        <p class="text-xs text-slate-500">Klik tombol Buka Lowongan Baru untuk memposting kesempatan karir.</p>
+        <div class="w-12 h-12 rounded-xl bg-slate-900 border border-slate-800 text-slate-500 flex items-center justify-center mx-auto">
+            <i data-lucide="users" class="w-6 h-6"></i>
+        </div>
+        <h4 class="text-sm font-bold text-white">Tidak Ada Lowongan Ditemukan</h4>
+        <p class="text-xs text-slate-500 max-w-md mx-auto">
+            {% if current_status != 'all' or current_q %}
+            Tidak ada data yang cocok dengan kriteria filter atau pencarian saat ini.
+            <a href="{{ url_for('admin_careers') }}" class="text-indigo-400 hover:underline block mt-1 font-semibold">Tampilkan Semua Lowongan</a>
+            {% else %}
+            Belum ada lowongan pekerjaan yang dibuat. Klik tombol Buka Lowongan Baru di atas untuk mulai membuat lowongan kerja.
+            {% endif %}
+        </p>
     </div>
     {% endif %}
 </div>
