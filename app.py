@@ -2,6 +2,7 @@ import os
 import json
 import re
 import io
+import time
 import random
 from PIL import Image, ImageDraw, ImageFont
 from functools import wraps
@@ -48,12 +49,31 @@ def add_security_headers(response):
     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
     return response
 
+ADMIN_INACTIVITY_TIMEOUT = 15 * 60  # 15 menit (900 detik) batas waktu otomatis logout saat tidak aktif
+
 def admin_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         if not session.get('admin_logged_in'):
             flash('Sesi login telah berakhir atau belum terautentikasi. Silakan login kembali.', 'warning')
             return redirect(url_for('admin_login'))
+            
+        last_activity = session.get('last_activity')
+        now = time.time()
+        if last_activity and (now - last_activity > ADMIN_INACTIVITY_TIMEOUT):
+            user = session.get('admin_user', 'admin')
+            ip = get_client_ip()
+            user_agent = request.headers.get('User-Agent', '')
+            SecurityModel.record_security_event(
+                ip, user, 'SESSION_TIMEOUT',
+                f'Sesi admin logout otomatis karena tidak aktif selama {int(ADMIN_INACTIVITY_TIMEOUT // 60)} menit (Auto-Logout Protection)',
+                user_agent
+            )
+            session.clear()
+            flash(f'Sesi Anda telah logout otomatis karena tidak ada aktivitas selama {int(ADMIN_INACTIVITY_TIMEOUT // 60)} menit demi keamanan sistem. Silakan masuk kembali.', 'warning')
+            return redirect(url_for('admin_login'))
+
+        session['last_activity'] = now
         return f(*args, **kwargs)
     return decorated_function
 
@@ -89,7 +109,8 @@ def inject_global_data():
         'current_lang': current_lang,
         't': t,
         'set_lang_url': set_lang_url,
-        'badge_new_inquiries': badge_new
+        'badge_new_inquiries': badge_new,
+        'admin_inactivity_timeout': ADMIN_INACTIVITY_TIMEOUT
     }
 
 @app.route('/set-language/<lang>')
@@ -530,6 +551,7 @@ def admin_verify_pin():
             session['admin_logged_in'] = True
             session['admin_user'] = user
             session['login_ip'] = ip_address
+            session['last_activity'] = time.time()
 
             flash('Otorisasi Two-Factor PIN berhasil! Selamat datang di Panel CMS ACD.', 'success')
             return redirect(url_for('admin_dashboard'))
@@ -564,10 +586,44 @@ def admin_verify_pin_cancel():
 def admin_logout():
     user = session.get('admin_user', 'admin')
     ip = get_client_ip()
-    SecurityModel.record_security_event(ip, user, 'LOGOUT', 'Sesi staf keluar secara normal', request.headers.get('User-Agent', ''))
+    reason = request.args.get('reason')
+    if reason == 'timeout':
+        event_type = 'SESSION_TIMEOUT'
+        event_note = f'Sesi admin logout otomatis karena tidak aktif selama {int(ADMIN_INACTIVITY_TIMEOUT // 60)} menit (Inactivity Watchdog)'
+        flash_msg = f'Sesi Anda telah logout otomatis karena tidak ada aktivitas selama {int(ADMIN_INACTIVITY_TIMEOUT // 60)} menit demi keamanan sistem. Silakan masuk kembali.'
+        flash_cat = 'warning'
+    else:
+        event_type = 'LOGOUT'
+        event_note = 'Sesi staf keluar secara normal'
+        flash_msg = 'Anda telah berhasil keluar dari panel manajemen.'
+        flash_cat = 'info'
+
+    SecurityModel.record_security_event(ip, user, event_type, event_note, request.headers.get('User-Agent', ''))
     session.clear()
-    flash('Anda telah berhasil keluar dari panel manajemen.', 'info')
+    flash(flash_msg, flash_cat)
     return redirect(url_for('admin_login'))
+
+@app.route('/admin/ping-session', methods=['POST'])
+@admin_required
+def admin_ping_session():
+    return jsonify({
+        'status': 'ok',
+        'refreshed_at': time.time(),
+        'timeout_seconds': ADMIN_INACTIVITY_TIMEOUT
+    })
+
+@app.route('/admin/session-status')
+def admin_session_status():
+    if not session.get('admin_logged_in'):
+        return jsonify({'logged_in': False, 'remaining': 0})
+    last_act = session.get('last_activity', time.time())
+    elapsed = time.time() - last_act
+    remaining = max(0, int(ADMIN_INACTIVITY_TIMEOUT - elapsed))
+    return jsonify({
+        'logged_in': True,
+        'remaining': remaining,
+        'timeout_total': ADMIN_INACTIVITY_TIMEOUT
+    })
 
 @app.route('/admin')
 @app.route('/admin/dashboard')

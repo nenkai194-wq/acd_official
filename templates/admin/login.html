@@ -19,6 +19,24 @@
             <p class="text-xs text-indigo-300 mt-1">PT. Aksara Cipta Digital (acd.co.id)</p>
         </div>
 
+        <!-- Flashed Messages (e.g. Session Timeout or Logout) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="mb-4 p-3 rounded-xl text-xs flex items-center space-x-2 {% if category == 'warning' %}bg-amber-500/20 border border-amber-500/40 text-amber-300{% elif category == 'success' %}bg-emerald-500/20 border border-emerald-500/40 text-emerald-300{% else %}bg-indigo-500/20 border border-indigo-500/40 text-indigo-300{% endif %}">
+                    {% if category == 'warning' %}
+                    <i data-lucide="shield-alert" class="w-4 h-4 shrink-0 text-amber-400"></i>
+                    {% elif category == 'success' %}
+                    <i data-lucide="check-circle" class="w-4 h-4 shrink-0 text-emerald-400"></i>
+                    {% else %}
+                    <i data-lucide="info" class="w-4 h-4 shrink-0 text-indigo-400"></i>
+                    {% endif %}
+                    <span>{{ message }}</span>
+                </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
         <!-- Lockout Notice (Anti Brute-Force) -->
         {% if is_locked %}
         <div class="mb-4 p-3.5 rounded-2xl bg-rose-500/20 border border-rose-500/40 text-rose-300 text-xs">

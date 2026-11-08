@@ -55,9 +55,15 @@
             <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-11 w-auto drop-shadow-md">
             <span class="font-extrabold text-white text-xs">IT Consultant - AI, Software Developer.</span>
         </div>
-        <button id="mobileMenuBtn" class="p-2 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
-            <i data-lucide="menu" class="w-5 h-5"></i>
-        </button>
+        <div class="flex items-center space-x-2">
+            <div class="flex items-center space-x-1 px-2.5 py-1 rounded-lg bg-slate-900/90 border border-slate-800 text-[10px] font-mono text-slate-300" title="Proteksi Keamanan: Logout otomatis saat tidak ada aktivitas">
+                <i data-lucide="shield" class="w-3 h-3 text-amber-400"></i>
+                <span id="mobileSessionTimerText" class="font-bold text-white">15:00</span>
+            </div>
+            <button id="mobileMenuBtn" class="p-2 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+        </div>
     </div>
 
     <!-- Sidebar Navigation -->
@@ -159,7 +165,14 @@
                 <span class="text-slate-600 text-base font-bold">•</span>
                 <span class="text-sm sm:text-base text-indigo-400 font-bold">PT. Aksara Cipta Digital</span>
             </div>
-            <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-3.5">
+                <!-- Auto-Logout Inactivity Protection Badge -->
+                <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-slate-900/90 border border-indigo-950 text-xs font-mono shadow-sm" title="Proteksi Keamanan: Logout otomatis saat tidak ada aktivitas selama 15 menit">
+                    <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400"></i>
+                    <span class="text-slate-400 hidden xl:inline text-[11px]">Auto-Logout:</span>
+                    <span id="sessionTimerText" class="font-bold text-white tracking-wider">15:00</span>
+                </div>
+
                 <div class="flex items-center space-x-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
                     <span>Database & Server Online</span>
@@ -213,5 +226,157 @@
         }
     </script>
     {% block scripts %}{% endblock %}
+    <!-- Inactivity Auto-Logout Warning Modal -->
+    <div id="inactivityModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-[#0d1124] border border-amber-500/50 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center space-y-5">
+            <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto shadow-lg shadow-amber-500/20 animate-bounce">
+                <i data-lucide="shield-alert" class="w-8 h-8"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white tracking-tight">Peringatan Keamanan: Sesi Tidak Aktif</h3>
+                <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                    Sistem mendeteksi tidak ada aktivitas di panel admin. Demi mencegah akses pihak tak berwenang saat komputer ditinggal, sesi Anda akan logout otomatis dalam:
+                </p>
+                <div class="my-4 py-3 px-6 rounded-2xl bg-[#020617] border border-amber-500/40 inline-block shadow-inner">
+                    <span id="modalCountdownText" class="text-3xl font-black font-mono text-amber-400 tracking-widest">02:00</span>
+                </div>
+                <p class="text-[11px] text-slate-400">
+                    Klik tombol di bawah untuk memperpanjang sesi dan tetap masuk di panel CMS.
+                </p>
+            </div>
+            <div class="flex items-center justify-center space-x-3 pt-2">
+                <a href="{{ url_for('admin_logout') }}" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold border border-slate-800 transition">
+                    Logout Sekarang
+                </a>
+                <button type="button" id="btnExtendSession" class="flex-1 py-2.5 px-4 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition shadow-lg shadow-indigo-600/30">
+                    Tetap Masuk
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inactivity Auto-Logout Watchdog Script -->
+    <script>
+        (function() {
+            const TOTAL_TIMEOUT = {{ admin_inactivity_timeout or 900 }}; // Default 15 menit (900 detik)
+            const WARNING_THRESHOLD = 120; // Peringatan muncul saat sisa 2 menit (120 detik)
+            let remainingSeconds = TOTAL_TIMEOUT;
+            let lastPingTime = Date.now();
+            let isWarningShown = false;
+
+            const timerDisplay = document.getElementById('sessionTimerText');
+            const mobileTimerDisplay = document.getElementById('mobileSessionTimerText');
+            const modal = document.getElementById('inactivityModal');
+            const modalCountdown = document.getElementById('modalCountdownText');
+            const btnExtend = document.getElementById('btnExtendSession');
+
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+
+            function updateDisplays() {
+                const formatted = formatTime(remainingSeconds);
+                if (timerDisplay) timerDisplay.textContent = formatted;
+                if (mobileTimerDisplay) mobileTimerDisplay.textContent = formatted;
+                if (modalCountdown) modalCountdown.textContent = formatted;
+
+                if (remainingSeconds <= WARNING_THRESHOLD) {
+                    if (timerDisplay) {
+                        timerDisplay.classList.add('text-amber-400');
+                        timerDisplay.classList.remove('text-white');
+                    }
+                    if (!isWarningShown && modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        isWarningShown = true;
+                        if (window.lucide) lucide.createIcons();
+                    }
+                } else {
+                    if (timerDisplay) {
+                        timerDisplay.classList.remove('text-amber-400');
+                        timerDisplay.classList.add('text-white');
+                    }
+                    if (isWarningShown && modal) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                        isWarningShown = false;
+                    }
+                }
+            }
+
+            function extendSession() {
+                fetch('{{ url_for("admin_ping_session") }}', {
+                    method: 'POST',
+                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    remainingSeconds = TOTAL_TIMEOUT;
+                    lastPingTime = Date.now();
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }
+                    isWarningShown = false;
+                    updateDisplays();
+                })
+                .catch(() => {
+                    remainingSeconds = TOTAL_TIMEOUT;
+                    updateDisplays();
+                });
+            }
+
+            if (btnExtend) {
+                btnExtend.addEventListener('click', extendSession);
+            }
+
+            // Aktivitas pengguna mereset timer (throttled agar tidak spam request)
+            const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+            let activityThrottle = null;
+
+            function onUserActivity() {
+                if (!isWarningShown) {
+                    remainingSeconds = TOTAL_TIMEOUT;
+                    updateDisplays();
+
+                    // Jika staf aktif bekerja, sinkronkan ke server setiap 2.5 menit
+                    const now = Date.now();
+                    if (now - lastPingTime > 150000) {
+                        lastPingTime = now;
+                        fetch('{{ url_for("admin_ping_session") }}', {
+                            method: 'POST',
+                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                        }).catch(() => {});
+                    }
+                }
+            }
+
+            activityEvents.forEach(evt => {
+                window.addEventListener(evt, () => {
+                    if (!activityThrottle) {
+                        activityThrottle = setTimeout(() => {
+                            onUserActivity();
+                            activityThrottle = null;
+                        }, 1000);
+                    }
+                }, { passive: true });
+            });
+
+            // Hitung mundur setiap 1 detik
+            setInterval(() => {
+                remainingSeconds--;
+                if (remainingSeconds <= 0) {
+                    // Waktu habis! Alihkan ke auto-logout
+                    window.location.href = '{{ url_for("admin_logout") }}?reason=timeout';
+                } else {
+                    updateDisplays();
+                }
+            }, 1000);
+
+            updateDisplays();
+        })();
+    </script>
 </body>
 </html>
