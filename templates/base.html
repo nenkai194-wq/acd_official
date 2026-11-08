@@ -674,9 +674,14 @@
                     <label class="block text-xs font-semibold text-slate-300 mb-1">Ceritakan Kebutuhan Proyek atau Kendala Sistem Anda *</label>
                     <textarea name="message" required rows="3" placeholder="Contoh: Kami ingin membangun sistem ERP penggajian dan presensi mobile geofencing untuk 300 staf cabang..." class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500"></textarea>
                 </div>
-                <button type="submit" class="w-full deptech-btn-primary py-3 font-bold text-xs uppercase tracking-wider shadow-lg">
-                    {{ contact_cfg.submit_btn }}
+                <button type="submit" class="w-full deptech-btn-primary py-3 font-bold text-xs uppercase tracking-wider shadow-lg flex items-center justify-center space-x-2">
+                    <i data-lucide="message-circle" class="w-4 h-4 text-emerald-400"></i>
+                    <span>{{ contact_cfg.submit_btn }}</span>
                 </button>
+                <p class="text-[10px] text-center text-slate-400 mt-2 flex items-center justify-center space-x-1.5">
+                    <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
+                    <span>Tersimpan di sistem & langsung terhubung ke WhatsApp: <strong class="text-white font-mono">+62 852-8789-8937</strong></span>
+                </p>
             </form>
         </div>
     </div>

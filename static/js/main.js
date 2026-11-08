@@ -152,13 +152,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 const data = await res.json();
                 if (res.status === 200 && data.status === 'success') {
-                    let successMsg = 'Terima kasih ' + name + '!\n\nPermintaan konsultasi Anda telah berhasil dikirim ke tim ACD. Kami akan segera menghubungi dalam 1x24 jam.';
-                    if (typeof data.remaining_submissions !== 'undefined') {
-                        successMsg += '\n\n(Sisa kuota pengiriman Anda: ' + data.remaining_submissions + ' kali dalam 24 jam ini)';
-                    }
-                    alert(successMsg);
                     form.reset();
                     if (window.closeConsultationModal) window.closeConsultationModal();
+
+                    if (submitBtn) {
+                        submitBtn.innerHTML = '<span class="inline-block animate-spin mr-2">✓</span> Membuka WhatsApp (+62 852-8789-8937)...';
+                    }
+
+                    // Arahkan langsung ke WhatsApp resmi konsultan ACD (+62 852-8789-8937)
+                    if (data.whatsapp_url) {
+                        setTimeout(() => {
+                            window.location.href = data.whatsapp_url;
+                        }, 250);
+                    } else {
+                        alert('Terima kasih ' + name + '!\n\nPermintaan konsultasi Anda telah berhasil dikirim ke tim ACD.');
+                    }
                 } else if (res.status === 429) {
                     alert('⚠️ KUOTA PENGIRIMAN MAKSIMAL TERCAPAI\n\n' + data.message);
                 } else {

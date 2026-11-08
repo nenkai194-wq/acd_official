@@ -446,6 +446,32 @@ def career_detail(slug):
 def faq():
     return redirect('/#faq')
 
+def generate_consultation_whatsapp_url(name, company, email, phone, service_type, budget_range, message):
+    import urllib.parse
+    target_wa = SettingModel.get('contact_wa_number') or SettingModel.get('company_whatsapp') or '6285287898937'
+    target_wa = re.sub(r'[^0-9]', '', str(target_wa))
+    if not target_wa:
+        target_wa = '6285287898937'
+    elif target_wa.startswith('08'):
+        target_wa = '62' + target_wa[1:]
+
+    company_display = company if company else '-'
+    budget_display = budget_range if budget_range else '-'
+
+    wa_text = (
+        "Halo Tim Konsultan PT. Aksara Cipta Digital (ACD),\n\n"
+        "Saya ingin mengirimkan *Formulir Kebutuhan / Konsultasi Gratis* melalui website:\n\n"
+        f"👤 *Nama Lengkap*: {name}\n"
+        f"🏢 *Instansi / Perusahaan*: {company_display}\n"
+        f"📧 *Email*: {email}\n"
+        f"📱 *Nomor WhatsApp*: {phone}\n"
+        f"💼 *Kategori Solusi*: {service_type}\n"
+        f"💰 *Estimasi Budget*: {budget_display}\n\n"
+        f"📝 *Deskripsi Kebutuhan Proyek*:\n{message}\n\n"
+        "Mohon informasi ketersediaan jadwal diskusi teknis dan penawaran solusinya. Terima kasih."
+    )
+    return f"https://wa.me/{target_wa}?text={urllib.parse.quote(wa_text)}"
+
 @app.route('/hubungi-kami', methods=['GET', 'POST'])
 @app.route('/kontak', methods=['GET', 'POST'])
 def contact():
@@ -481,8 +507,9 @@ def contact():
             message=message,
             ip_address=get_client_ip()
         )
-        flash('Terima kasih! Formulir Kebutuhan Anda telah berhasil dikirim ke tim konsultan ACD. Kami akan segera menghubungi Anda.', 'success')
-        return redirect(url_for('contact'))
+        wa_url = generate_consultation_whatsapp_url(name, company, email, normalized_phone, service_type, budget_range, message)
+        flash('Terima kasih! Formulir Kebutuhan Anda telah berhasil dikirim. Mengarahkan ke WhatsApp resmi ACD (+62 852-8789-8937)...', 'success')
+        return redirect(wa_url)
 
     return render_template('contact.html')
 
@@ -549,11 +576,14 @@ def api_consultation():
     )
 
     remaining = max(0, 2 - (max(email_count, phone_count) + 1))
+    wa_url = generate_consultation_whatsapp_url(name, company, email, normalized_phone, service_type, budget_range, message)
+
     return jsonify({
         'status': 'success',
-        'message': 'Permintaan konsultasi berhasil dikirim! Tim konsultan ACD akan segera menghubungi Anda.',
+        'message': 'Permintaan konsultasi berhasil dikirim! Menghubungkan Anda langsung ke WhatsApp tim konsultan ACD...',
         'inquiry_id': inquiry_id,
-        'remaining_submissions': remaining
+        'remaining_submissions': remaining,
+        'whatsapp_url': wa_url
     })
 
 @app.route('/api/v1/track-wa-click', methods=['POST', 'GET'])

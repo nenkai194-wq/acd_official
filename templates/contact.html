@@ -138,9 +138,14 @@
                             <textarea name="message" required rows="4" placeholder="Jelaskan secara singkat fitur utama yang Anda butuhkan, jumlah calon pengguna, serta target jadwal peluncuran sistem..." class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">{% if request.args.get('service') %}Halo Tim Konsultan ACD, saya tertarik untuk mendiskusikan kebutuhan sistem/proyek: {{ request.args.get('service') }}. Mohon informasi jadwal diskusi dan estimasi penawaran teknis.{% endif %}</textarea>
                         </div>
 
-                        <button type="submit" class="w-full py-4 deptech-btn-primary font-extrabold text-xs uppercase tracking-wider shadow-xl rounded-xl">
-                            {{ contact_cfg.submit_btn }}
+                        <button type="submit" class="w-full py-4 deptech-btn-primary font-extrabold text-xs uppercase tracking-wider shadow-xl rounded-xl flex items-center justify-center space-x-2.5">
+                            <i data-lucide="message-circle" class="w-5 h-5 text-emerald-400"></i>
+                            <span>{{ contact_cfg.submit_btn }}</span>
                         </button>
+                        <div class="mt-3 flex items-center justify-center space-x-2 text-xs text-slate-400 text-center">
+                            <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                            <span>Formulir otomatis tersimpan & diteruskan langsung ke WhatsApp: <strong class="text-white font-mono">+62 852-8789-8937</strong></span>
+                        </div>
                     </form>
                 </div>
             </div>
