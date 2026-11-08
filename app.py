@@ -66,7 +66,7 @@ def handle_language_preference():
 # Context Processor for global variables & multilingual translations
 @app.context_processor
 def inject_global_data():
-    services_by_cat = ServiceModel.get_grouped_by_category()
+    services_by_cat = ServiceModel.get_grouped_by_category(only_published=True)
     current_lang = session.get('lang', 'id')
     if current_lang not in TRANSLATIONS:
         current_lang = 'id'
@@ -119,17 +119,18 @@ def index():
 
 @app.route('/layanan')
 def services():
-    all_services = ServiceModel.get_all()
+    all_services = ServiceModel.get_all(only_published=True)
     return render_template('services.html', services=all_services, current_category='Semua')
 
 @app.route('/layanan/kategori/<category>')
 def services_category(category):
-    cat_services = ServiceModel.get_all(category=category)
+    cat_services = ServiceModel.get_all(category=category, only_published=True)
     return render_template('services.html', services=cat_services, current_category=category)
 
 @app.route('/layanan/<slug>')
 def service_detail(slug):
-    service = ServiceModel.get_by_slug(slug)
+    is_admin = session.get('admin_logged_in', False)
+    service = ServiceModel.get_by_slug(slug, only_published=not is_admin)
     if not service:
         abort(404)
     return render_template('service_detail.html', service=service)
@@ -634,7 +635,19 @@ def admin_delete_inquiry(inquiry_id):
 @admin_required
 def admin_services():
     category = request.args.get('category')
-    services = ServiceModel.get_all(category=category)
+    status_filter = request.args.get('status')  # 'tayang', 'draft', or None
+    all_services = ServiceModel.get_all(category=category)
+    
+    total_count = len(all_services)
+    published_count = sum(1 for s in all_services if s.get('is_published') == 1)
+    draft_count = total_count - published_count
+    
+    services = all_services
+    if status_filter == 'tayang':
+        services = [s for s in all_services if s.get('is_published') == 1]
+    elif status_filter == 'draft':
+        services = [s for s in all_services if s.get('is_published') == 0]
+
     categories = [
         'Aplikasi & Website',
         'Aplikasi Bisnis ERP',
@@ -646,8 +659,23 @@ def admin_services():
         'admin/services.html',
         services=services,
         categories=categories,
-        current_category=category or 'Semua'
+        current_category=category or 'Semua',
+        current_status=status_filter or 'semua',
+        total_count=total_count,
+        published_count=published_count,
+        draft_count=draft_count
     )
+
+@app.route('/admin/services/<int:service_id>/toggle-status', methods=['POST'])
+@admin_required
+def admin_service_toggle_status(service_id):
+    updated = ServiceModel.toggle_published(service_id)
+    if updated:
+        status_text = 'TAYANG di Website Publik' if updated['is_published'] == 1 else 'TIDAK TAYANG (Disembunyikan dari Publik)'
+        flash(f'Status layanan "{updated["title"]}" berhasil diubah menjadi: {status_text}.', 'success')
+    else:
+        flash('Layanan tidak ditemukan.', 'danger')
+    return redirect(request.referrer or url_for('admin_services'))
 
 @app.route('/admin/services/add', methods=['GET', 'POST'])
 @admin_required
@@ -663,6 +691,7 @@ def admin_service_add():
         tech_stack = request.form.get('tech_stack', '').strip()
         benefits = request.form.get('benefits', '').strip()
         is_featured = bool(request.form.get('is_featured'))
+        is_published = int(request.form.get('is_published', 1))
 
         if not title or not category or not summary:
             flash('Harap lengkapi judul, kategori, dan ringkasan layanan.', 'danger')
@@ -679,7 +708,8 @@ def admin_service_add():
                 features=features,
                 tech_stack=tech_stack,
                 benefits=benefits,
-                is_featured=is_featured
+                is_featured=is_featured,
+                is_published=is_published
             )
             flash(f'Layanan "{title}" berhasil ditambahkan!', 'success')
             return redirect(url_for('admin_services'))
@@ -707,6 +737,7 @@ def admin_service_edit(service_id):
         tech_stack = request.form.get('tech_stack', '').strip()
         benefits = request.form.get('benefits', '').strip()
         is_featured = bool(request.form.get('is_featured'))
+        is_published = int(request.form.get('is_published', 1))
 
         if not title or not category or not summary:
             flash('Harap lengkapi judul, kategori, dan ringkasan layanan.', 'danger')
@@ -724,7 +755,8 @@ def admin_service_edit(service_id):
                 features=features,
                 tech_stack=tech_stack,
                 benefits=benefits,
-                is_featured=is_featured
+                is_featured=is_featured,
+                is_published=is_published
             )
             flash(f'Layanan "{title}" berhasil diperbarui!', 'success')
             return redirect(url_for('admin_services'))

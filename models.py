@@ -16,12 +16,22 @@ def slugify(text):
 
 class ServiceModel:
     @staticmethod
-    def get_all(category=None):
+    def get_all(category=None, only_published=False):
         conn = get_db_connection()
+        conditions = []
+        params = []
         if category and category != 'Semua':
-            rows = conn.execute('SELECT * FROM services WHERE category = ? ORDER BY id ASC', (category,)).fetchall()
-        else:
-            rows = conn.execute('SELECT * FROM services ORDER BY id ASC').fetchall()
+            conditions.append('category = ?')
+            params.append(category)
+        if only_published:
+            conditions.append('is_published = 1')
+        
+        query = 'SELECT * FROM services'
+        if conditions:
+            query += ' WHERE ' + ' AND '.join(conditions)
+        query += ' ORDER BY id ASC'
+        
+        rows = conn.execute(query, params).fetchall()
         conn.close()
         result = []
         for r in rows:
@@ -29,6 +39,8 @@ class ServiceModel:
             item['features_list'] = json.loads(item['features']) if item.get('features') else []
             item['tech_stack_list'] = json.loads(item['tech_stack']) if item.get('tech_stack') else []
             item['benefits_list'] = json.loads(item['benefits']) if item.get('benefits') else []
+            if 'is_published' not in item or item['is_published'] is None:
+                item['is_published'] = 1
             result.append(item)
         return result
 
@@ -43,12 +55,17 @@ class ServiceModel:
         res['features_list'] = json.loads(res['features']) if res.get('features') else []
         res['tech_stack_list'] = json.loads(res['tech_stack']) if res.get('tech_stack') else []
         res['benefits_list'] = json.loads(res['benefits']) if res.get('benefits') else []
+        if 'is_published' not in res or res['is_published'] is None:
+            res['is_published'] = 1
         return res
 
     @staticmethod
-    def get_by_slug(slug):
+    def get_by_slug(slug, only_published=False):
         conn = get_db_connection()
-        row = conn.execute('SELECT * FROM services WHERE slug = ?', (slug,)).fetchone()
+        if only_published:
+            row = conn.execute('SELECT * FROM services WHERE slug = ? AND is_published = 1', (slug,)).fetchone()
+        else:
+            row = conn.execute('SELECT * FROM services WHERE slug = ?', (slug,)).fetchone()
         conn.close()
         if not row:
             return None
@@ -56,11 +73,13 @@ class ServiceModel:
         res['features'] = json.loads(res['features']) if res.get('features') else []
         res['tech_stack'] = json.loads(res['tech_stack']) if res.get('tech_stack') else []
         res['benefits'] = json.loads(res['benefits']) if res.get('benefits') else []
+        if 'is_published' not in res or res['is_published'] is None:
+            res['is_published'] = 1
         return res
 
     @staticmethod
-    def get_grouped_by_category():
-        all_services = ServiceModel.get_all()
+    def get_grouped_by_category(only_published=True):
+        all_services = ServiceModel.get_all(only_published=only_published)
         grouped = {}
         for s in all_services:
             cat = s['category']
@@ -70,14 +89,14 @@ class ServiceModel:
         return grouped
 
     @staticmethod
-    def create(slug, category, title, subtitle, icon, summary, features, tech_stack, benefits, is_featured=1):
+    def create(slug, category, title, subtitle, icon, summary, features, tech_stack, benefits, is_featured=1, is_published=1):
         conn = get_db_connection()
         cursor = conn.cursor()
         if not slug:
             slug = slugify(title)
         cursor.execute('''
-        INSERT INTO services (slug, category, title, subtitle, icon, summary, features, tech_stack, benefits, is_featured)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        INSERT INTO services (slug, category, title, subtitle, icon, summary, features, tech_stack, benefits, is_featured, is_published)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', (
             slug,
             category,
@@ -88,7 +107,8 @@ class ServiceModel:
             json.dumps(features if isinstance(features, list) else [f.strip() for f in features.splitlines() if f.strip()]),
             json.dumps(tech_stack if isinstance(tech_stack, list) else [t.strip() for t in tech_stack.split(',') if t.strip()]),
             json.dumps(benefits if isinstance(benefits, list) else [b.strip() for b in benefits.splitlines() if b.strip()]),
-            1 if is_featured else 0
+            1 if is_featured else 0,
+            1 if is_published else 0
         ))
         service_id = cursor.lastrowid
         conn.commit()
@@ -96,14 +116,14 @@ class ServiceModel:
         return service_id
 
     @staticmethod
-    def update(service_id, slug, category, title, subtitle, icon, summary, features, tech_stack, benefits, is_featured=1):
+    def update(service_id, slug, category, title, subtitle, icon, summary, features, tech_stack, benefits, is_featured=1, is_published=1):
         conn = get_db_connection()
         cursor = conn.cursor()
         if not slug:
             slug = slugify(title)
         cursor.execute('''
         UPDATE services
-        SET slug = ?, category = ?, title = ?, subtitle = ?, icon = ?, summary = ?, features = ?, tech_stack = ?, benefits = ?, is_featured = ?
+        SET slug = ?, category = ?, title = ?, subtitle = ?, icon = ?, summary = ?, features = ?, tech_stack = ?, benefits = ?, is_featured = ?, is_published = ?
         WHERE id = ?
         ''', (
             slug,
@@ -116,11 +136,26 @@ class ServiceModel:
             json.dumps(tech_stack if isinstance(tech_stack, list) else [t.strip() for t in tech_stack.split(',') if t.strip()]),
             json.dumps(benefits if isinstance(benefits, list) else [b.strip() for b in benefits.splitlines() if b.strip()]),
             1 if is_featured else 0,
+            1 if is_published else 0,
             service_id
         ))
         conn.commit()
         conn.close()
         return True
+
+    @staticmethod
+    def toggle_published(service_id):
+        conn = get_db_connection()
+        cursor = conn.cursor()
+        cursor.execute('''
+        UPDATE services
+        SET is_published = CASE WHEN is_published = 1 THEN 0 ELSE 1 END
+        WHERE id = ?
+        ''', (service_id,))
+        conn.commit()
+        row = conn.execute('SELECT is_published, title FROM services WHERE id = ?', (service_id,)).fetchone()
+        conn.close()
+        return dict(row) if row else None
 
     @staticmethod
     def delete(service_id):

@@ -59,7 +59,8 @@ def init_db():
         features TEXT, -- JSON
         tech_stack TEXT, -- JSON
         benefits TEXT, -- JSON
-        is_featured INTEGER DEFAULT 1
+        is_featured INTEGER DEFAULT 1,
+        is_published INTEGER DEFAULT 1
     )
     ''')
 

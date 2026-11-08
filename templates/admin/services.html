@@ -1,103 +1,246 @@
 {% extends 'admin/base.html' %}
 {% set active_page = 'services' %}
 
-{% block title %}Kelola Layanan Solusi IT{% endblock %}
+{% block title %}Kelola Layanan Solusi IT - Katalog Layanan{% endblock %}
 
 {% block content %}
 <div class="space-y-6">
     <!-- Header -->
-    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
         <div>
-            <h1 class="text-2xl font-black text-white tracking-tight">Katalog Layanan IT & Solusi Digital</h1>
-            <p class="text-xs text-slate-400 mt-1">Kelola daftar layanan resmi ACD yang tampil pada navigasi, beranda, dan halaman detail layanan</p>
+            <div class="flex items-center space-x-2">
+                <span class="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">Katalog Solusi</span>
+                <span class="text-xs text-slate-500">•</span>
+                <span class="text-xs text-slate-400">Total {{ total_count }} Layanan IT Terdaftar</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-black text-white tracking-tight mt-1">Kelola Layanan Solusi IT</h1>
+            <p class="text-xs sm:text-sm text-slate-400 mt-1">Atur katalog solusi resmi ACD, fitur teknis, tech stack, dan kendalikan status tayang di website publik.</p>
         </div>
-        <a href="{{ url_for('admin_service_add') }}" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
-            <i data-lucide="plus" class="w-4 h-4"></i>
-            <span>Tambah Layanan Baru</span>
+        <div class="flex items-center space-x-3 shrink-0">
+            <a href="{{ url_for('admin_service_add') }}" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30">
+                <i data-lucide="plus-circle" class="w-4 h-4"></i>
+                <span>Tambah Layanan Baru</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- KPI Summary Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <!-- Card 1: Total Layanan -->
+        <div class="p-4 rounded-2xl bg-[#0a0f1d] border border-indigo-950/80 flex items-center justify-between">
+            <div>
+                <p class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Total Layanan</p>
+                <h3 class="text-2xl font-black text-white mt-1">{{ total_count }} <span class="text-xs font-medium text-slate-400">Solusi</span></h3>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-indigo-600/15 border border-indigo-500/20 text-indigo-400 flex items-center justify-center">
+                <i data-lucide="layers" class="w-6 h-6"></i>
+            </div>
+        </div>
+
+        <!-- Card 2: Status Tayang -->
+        <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None, status='tayang') }}" class="p-4 rounded-2xl bg-[#0a0f1d] border {% if current_status == 'tayang' %}border-emerald-500/60 ring-1 ring-emerald-500/40{% else %}border-indigo-950/80 hover:border-emerald-500/40{% endif %} flex items-center justify-between transition group">
+            <div>
+                <div class="flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <p class="text-[11px] font-bold text-emerald-400 uppercase tracking-wider">Status: Tayang di Web</p>
+                </div>
+                <h3 class="text-2xl font-black text-white mt-1">{{ published_count }} <span class="text-xs font-medium text-emerald-300">Aktif Tampil</span></h3>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-emerald-500/15 border border-emerald-500/20 text-emerald-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <i data-lucide="eye" class="w-6 h-6"></i>
+            </div>
+        </a>
+
+        <!-- Card 3: Status Tidak Tayang (Draft) -->
+        <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None, status='draft') }}" class="p-4 rounded-2xl bg-[#0a0f1d] border {% if current_status == 'draft' %}border-amber-500/60 ring-1 ring-amber-500/40{% else %}border-indigo-950/80 hover:border-amber-500/40{% endif %} flex items-center justify-between transition group">
+            <div>
+                <div class="flex items-center space-x-1.5">
+                    <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                    <p class="text-[11px] font-bold text-amber-400 uppercase tracking-wider">Status: Tidak Tayang</p>
+                </div>
+                <h3 class="text-2xl font-black text-white mt-1">{{ draft_count }} <span class="text-xs font-medium text-amber-300">Draft / Sembunyi</span></h3>
+            </div>
+            <div class="w-12 h-12 rounded-xl bg-amber-500/15 border border-amber-500/20 text-amber-400 flex items-center justify-center group-hover:scale-105 transition-transform">
+                <i data-lucide="eye-off" class="w-6 h-6"></i>
+            </div>
         </a>
     </div>
 
-    <!-- Category Filter Tabs -->
-    <div class="flex items-center space-x-2 overflow-x-auto pb-2">
-        <a href="{{ url_for('admin_services') }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
-            Semua Layanan ({{ services | length }})
-        </a>
-        {% for cat in categories %}
-        <a href="{{ url_for('admin_services', category=cat) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if current_category == cat %}bg-indigo-600 text-white{% else %}bg-slate-900 text-slate-400 hover:text-white{% endif %}">
-            {{ cat }}
-        </a>
-        {% endfor %}
+    <!-- Filter Bar (Kategori & Status Tayang) -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-4 space-y-3">
+        <!-- Status Filter Pills -->
+        <div class="flex flex-wrap items-center gap-2 pb-3 border-b border-indigo-950/60 text-xs">
+            <span class="text-slate-400 text-[11px] font-bold mr-1 uppercase tracking-wider">Filter Status:</span>
+            <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None) }}" class="px-3 py-1.5 rounded-lg font-semibold transition {% if current_status == 'semua' %}bg-indigo-600 text-white shadow-md{% else %}bg-slate-900/90 text-slate-300 hover:text-white border border-slate-800{% endif %}">
+                Semua Status ({{ total_count }})
+            </a>
+            <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None, status='tayang') }}" class="px-3 py-1.5 rounded-lg font-semibold transition inline-flex items-center space-x-1.5 {% if current_status == 'tayang' %}bg-emerald-600 text-white shadow-md{% else %}bg-slate-900/90 text-emerald-400 hover:text-white border border-slate-800{% endif %}">
+                <span class="w-2 h-2 rounded-full bg-emerald-300"></span>
+                <span>Tayang di Web ({{ published_count }})</span>
+            </a>
+            <a href="{{ url_for('admin_services', category=current_category if current_category != 'Semua' else None, status='draft') }}" class="px-3 py-1.5 rounded-lg font-semibold transition inline-flex items-center space-x-1.5 {% if current_status == 'draft' %}bg-amber-600 text-white shadow-md{% else %}bg-slate-900/90 text-amber-400 hover:text-white border border-slate-800{% endif %}">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span>Tidak Tayang / Draft ({{ draft_count }})</span>
+            </a>
+        </div>
+
+        <!-- Category Tabs -->
+        <div class="flex items-center space-x-2 overflow-x-auto custom-scrollbar pt-1">
+            <span class="text-slate-400 text-[11px] font-bold mr-1 uppercase tracking-wider shrink-0">Kategori:</span>
+            <a href="{{ url_for('admin_services', status=current_status if current_status != 'semua' else None) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}bg-indigo-600 text-white font-bold{% else %}bg-slate-900 text-slate-300 hover:text-white border border-slate-800{% endif %}">
+                Semua Kategori
+            </a>
+            {% for cat in categories %}
+            <a href="{{ url_for('admin_services', category=cat, status=current_status if current_status != 'semua' else None) }}" class="px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap transition {% if current_category == cat %}bg-indigo-600 text-white font-bold{% else %}bg-slate-900 text-slate-300 hover:text-white border border-slate-800{% endif %}">
+                {{ cat }}
+            </a>
+            {% endfor %}
+        </div>
     </div>
 
-    <!-- Services Table / Cards -->
-    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl overflow-hidden">
+    <!-- Services Table -->
+    <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl shadow-xl overflow-hidden">
         <div class="overflow-x-auto">
-            <table class="w-full text-left text-xs">
-                <thead class="bg-[#020617] border-b border-indigo-950/70 text-slate-400 font-semibold uppercase text-[10px] tracking-wider">
+            <table class="w-full text-left text-xs border-collapse">
+                <thead class="bg-[#020617] border-b border-indigo-950 text-slate-300 font-bold uppercase text-[11px] tracking-wider">
                     <tr>
-                        <th class="px-6 py-4">Layanan</th>
-                        <th class="px-6 py-4">Kategori</th>
-                        <th class="px-6 py-4">Fitur Utama</th>
-                        <th class="px-6 py-4">Tech Stack</th>
-                        <th class="px-6 py-4 text-center">Status</th>
-                        <th class="px-6 py-4 text-right">Aksi</th>
+                        <th class="px-5 py-4 w-72">Layanan & URL</th>
+                        <th class="px-5 py-4 w-48">Kategori Solusi</th>
+                        <th class="px-5 py-4">Spesifikasi & Ringkasan</th>
+                        <th class="px-5 py-4 w-52">Teknologi (Tech Stack)</th>
+                        <th class="px-5 py-4 w-44 text-center">Status Tayang (Frontend)</th>
+                        <th class="px-5 py-4 w-32 text-right">Aksi</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-indigo-950/50">
+                <tbody class="divide-y divide-indigo-950/60">
+                    {% if services | length == 0 %}
+                    <tr>
+                        <td colspan="6" class="px-6 py-12 text-center text-slate-400">
+                            <i data-lucide="layers" class="w-10 h-10 mx-auto text-slate-600 mb-2"></i>
+                            <p class="font-bold text-white text-sm">Tidak ada layanan yang sesuai filter</p>
+                            <p class="text-xs text-slate-500 mt-1">Coba reset filter kategori atau status tayang.</p>
+                            <a href="{{ url_for('admin_services') }}" class="mt-3 inline-block px-4 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-semibold">Tampilkan Semua Layanan</a>
+                        </td>
+                    </tr>
+                    {% endif %}
+
                     {% for s in services %}
-                    <tr class="hover:bg-slate-900/40 transition">
-                        <td class="px-6 py-4">
-                            <div class="flex items-center space-x-3">
-                                <div class="w-9 h-9 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center shrink-0">
-                                    <i data-lucide="{{ s.icon or 'layers' }}" class="w-4 h-4"></i>
+                    <tr class="hover:bg-slate-900/60 transition group">
+                        <!-- 1. Layanan & URL -->
+                        <td class="px-5 py-4 align-top">
+                            <div class="flex items-start space-x-3">
+                                <div class="w-10 h-10 rounded-xl bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 flex items-center justify-center shrink-0 mt-0.5 shadow-sm group-hover:scale-105 transition-transform">
+                                    <i data-lucide="{{ s.icon or 'layers' }}" class="w-5 h-5"></i>
                                 </div>
-                                <div>
-                                    <h4 class="font-bold text-white text-xs">{{ s.title }}</h4>
-                                    <span class="text-[10px] text-slate-500 font-mono">/layanan/{{ s.slug }}</span>
+                                <div class="min-w-0">
+                                    <h4 class="font-bold text-white text-sm leading-snug group-hover:text-indigo-300 transition-colors">{{ s.title }}</h4>
+                                    <div class="flex items-center space-x-1.5 mt-1 font-mono text-[11px] text-slate-400">
+                                        <i data-lucide="link" class="w-3 h-3 text-indigo-400 shrink-0"></i>
+                                        <span class="truncate text-indigo-300/80">/layanan/{{ s.slug }}</span>
+                                    </div>
+                                    {% if s.subtitle %}
+                                    <p class="text-[11px] text-slate-400 mt-1 line-clamp-1 italic">{{ s.subtitle }}</p>
+                                    {% endif %}
                                 </div>
                             </div>
                         </td>
-                        <td class="px-6 py-4">
-                            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/60 text-indigo-300 border border-indigo-900/60">
+
+                        <!-- 2. Kategori -->
+                        <td class="px-5 py-4 align-top">
+                            <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-[11px] font-bold bg-indigo-950/80 text-indigo-200 border border-indigo-800/80 shadow-sm">
+                                <i data-lucide="tag" class="w-3 h-3 mr-1 text-indigo-400"></i>
                                 {{ s.category }}
                             </span>
+                            {% if s.is_featured %}
+                            <div class="mt-2">
+                                <span class="inline-flex items-center px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30">
+                                    ★ Featured di Beranda
+                                </span>
+                            </div>
+                            {% endif %}
                         </td>
-                        <td class="px-6 py-4 text-slate-300 max-w-xs">
-                            <span class="text-[11px] line-clamp-1">{{ s.features_list | length }} Fitur Terdata</span>
-                            <span class="text-[10px] text-slate-500 line-clamp-1">{{ s.summary }}</span>
+
+                        <!-- 3. Fitur Utama & Ringkasan -->
+                        <td class="px-5 py-4 align-top">
+                            <div class="space-y-1.5 max-w-md">
+                                <div class="flex items-center space-x-2">
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-indigo-600/20 text-indigo-300 border border-indigo-600/30">
+                                        {{ s.features_list | length }} Fitur Utama
+                                    </span>
+                                    <span class="text-[11px] text-slate-400">Tercatat dalam modul</span>
+                                </div>
+                                <p class="text-xs text-slate-300 leading-relaxed line-clamp-2">
+                                    {{ s.summary }}
+                                </p>
+                            </div>
                         </td>
-                        <td class="px-6 py-4 text-slate-400">
-                            <div class="flex flex-wrap gap-1 max-w-[200px]">
-                                {% for tech in s.tech_stack_list[:3] %}
-                                <span class="px-1.5 py-0.5 rounded text-[9px] bg-slate-950 text-slate-400 border border-slate-800">{{ tech }}</span>
+
+                        <!-- 4. Tech Stack -->
+                        <td class="px-5 py-4 align-top">
+                            <div class="flex flex-wrap gap-1.5 max-w-[220px]">
+                                {% for tech in s.tech_stack_list[:4] %}
+                                <span class="px-2 py-0.5 rounded-md text-[10px] font-medium bg-[#020617] text-slate-200 border border-slate-700/80 shadow-sm">
+                                    {{ tech }}
+                                </span>
                                 {% endfor %}
-                                {% if s.tech_stack_list | length > 3 %}
-                                <span class="text-[9px] text-slate-500">+{{ (s.tech_stack_list | length) - 3 }}</span>
+                                {% if s.tech_stack_list | length > 4 %}
+                                <span class="px-1.5 py-0.5 rounded text-[10px] text-slate-400 font-bold bg-slate-800 border border-slate-700">
+                                    +{{ (s.tech_stack_list | length) - 4 }}
+                                </span>
                                 {% endif %}
                             </div>
                         </td>
-                        <td class="px-6 py-4 text-center">
-                            {% if s.is_featured %}
-                            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                                Featured
-                            </span>
-                            {% else %}
-                            <span class="px-2 py-0.5 rounded text-[10px] text-slate-500">
-                                Standar
-                            </span>
-                            {% endif %}
+
+                        <!-- 5. Status Tayang di Frontend -->
+                        <td class="px-5 py-4 align-top text-center">
+                            <div class="flex flex-col items-center space-y-2">
+                                {% if s.is_published == 1 %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 shadow-sm shadow-emerald-500/10">
+                                    <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span>
+                                    Tayang di Web
+                                </span>
+                                <span class="text-[10px] text-slate-400">Tampil di menu & web</span>
+                                
+                                <!-- Tombol Ganti Cepat ke Tidak Tayang -->
+                                <form method="POST" action="{{ url_for('admin_service_toggle_status', service_id=s.id) }}" class="inline">
+                                    <button type="submit" class="px-2.5 py-1 rounded-lg bg-slate-900 hover:bg-rose-500/20 text-slate-400 hover:text-rose-300 border border-slate-800 hover:border-rose-500/30 text-[10px] font-semibold transition flex items-center space-x-1" title="Sembunyikan dari website publik">
+                                        <i data-lucide="eye-off" class="w-3 h-3"></i>
+                                        <span>Sembunyikan</span>
+                                    </button>
+                                </form>
+
+                                {% else %}
+                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/15 text-amber-300 border border-amber-500/30 shadow-sm">
+                                    <span class="w-2 h-2 rounded-full bg-amber-400 mr-1.5"></span>
+                                    Tidak Tayang
+                                </span>
+                                <span class="text-[10px] text-amber-400/80 font-medium">Disembunyikan (Draft)</span>
+
+                                <!-- Tombol Ganti Cepat ke Tayang -->
+                                <form method="POST" action="{{ url_for('admin_service_toggle_status', service_id=s.id) }}" class="inline">
+                                    <button type="submit" class="px-2.5 py-1 rounded-lg bg-emerald-600/20 hover:bg-emerald-600 text-emerald-300 hover:text-white border border-emerald-600/40 text-[10px] font-bold transition flex items-center space-x-1" title="Aktifkan agar tampil di website publik">
+                                        <i data-lucide="eye" class="w-3 h-3"></i>
+                                        <span>Tayangkan Sekarang</span>
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
                         </td>
-                        <td class="px-6 py-4 text-right">
-                            <div class="flex items-center justify-end space-x-2">
-                                <a href="{{ url_for('service_detail', slug=s.slug) }}" target="_blank" class="p-1.5 rounded-lg bg-slate-900 text-slate-400 hover:text-white border border-slate-800 transition" title="Lihat Halaman Publik">
-                                    <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+
+                        <!-- 6. Aksi -->
+                        <td class="px-5 py-4 align-top text-right">
+                            <div class="flex items-center justify-end space-x-1.5">
+                                {% if s.is_published == 1 %}
+                                <a href="{{ url_for('service_detail', slug=s.slug) }}" target="_blank" class="p-2 rounded-xl bg-slate-900 text-slate-300 hover:text-white hover:bg-slate-800 border border-slate-800 transition" title="Lihat di Website Publik">
+                                    <i data-lucide="external-link" class="w-4 h-4"></i>
                                 </a>
-                                <a href="{{ url_for('admin_service_edit', service_id=s.id) }}" class="p-1.5 rounded-lg bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-600/30 transition" title="Edit Layanan">
-                                    <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+                                {% endif %}
+                                <a href="{{ url_for('admin_service_edit', service_id=s.id) }}" class="p-2 rounded-xl bg-indigo-600/20 text-indigo-300 hover:bg-indigo-600 hover:text-white border border-indigo-600/30 transition shadow-sm" title="Edit Detail Layanan">
+                                    <i data-lucide="edit-3" class="w-4 h-4"></i>
                                 </a>
-                                <form method="POST" action="{{ url_for('admin_service_delete', service_id=s.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus layanan \'{{ s.title }}\'?');" class="inline">
-                                    <button type="submit" class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Layanan">
-                                        <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+                                <form method="POST" action="{{ url_for('admin_service_delete', service_id=s.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus layanan \'{{ s.title }}\'? Layanan yang dihapus tidak dapat dipulihkan.');" class="inline">
+                                    <button type="submit" class="p-2 rounded-xl bg-rose-500/10 text-rose-400 hover:bg-rose-500 hover:text-white border border-rose-500/30 transition shadow-sm" title="Hapus Layanan">
+                                        <i data-lucide="trash-2" class="w-4 h-4"></i>
                                     </button>
                                 </form>
                             </div>
