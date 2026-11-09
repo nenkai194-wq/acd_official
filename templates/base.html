@@ -121,10 +121,10 @@
 
     <!-- 2. MAIN NAVIGATION (STICKY HEADER WITH SEAMLESS COSMIC DARK THEME) -->
     <header class="sticky top-0 z-40 bg-[#020617]/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(2,6,23,0.8)] border-b border-indigo-900/40 transition-all duration-300">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
-            <div class="flex items-center justify-between h-20 w-full gap-3 xl:gap-6">
-                <!-- 1. Left: Brand Logo (Geser ke kanan mendekati menu utama) -->
-                <div class="flex items-center shrink-0 min-w-0 pr-2 lg:pr-3 lg:pl-1 xl:pl-3">
+        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
+            <div class="flex items-center justify-between h-20 w-full">
+                <!-- 1. Left: Brand Logo (Unified & Responsive across all screens) -->
+                <div class="flex items-center shrink-0 min-w-0 pr-3 lg:pr-5">
                     <a href="{{ url_for('index') }}" class="flex items-center space-x-2.5 group py-1 min-w-0">
                         <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="AKSARA CIPTA DIGITAL" class="h-10 sm:h-11 xl:h-12 w-auto transition transform group-hover:scale-105 drop-shadow-md shrink-0">
                         <div class="flex flex-col justify-center min-w-0">
@@ -380,8 +380,8 @@
                         <a href="{{ url_for('career') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap {% if is_career %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/5{% endif %}">{{ t.nav_career }}</a>
                     </nav>
 
-                <!-- 3. Right: Action Controls (Tombol Hubungi Kami Geser Kiri Mendekati Menu Utama) -->
-                <div class="flex items-center space-x-2 sm:space-x-3 shrink-0 lg:pr-1 xl:pr-3">
+                <!-- 3. Right: Action Controls (Hubungi Kami + Language Switcher ID/EN + Mobile Hamburger) -->
+                <div class="flex items-center space-x-2.5 sm:space-x-3 shrink-0">
                     <!-- Tombol Hubungi Kami (Desktop) -->
                     <a href="{{ url_for('contact') }}" class="hidden lg:inline-flex items-center space-x-1.5 deptech-btn-primary px-3.5 xl:px-4 py-2 font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/20 whitespace-nowrap">
                         <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
