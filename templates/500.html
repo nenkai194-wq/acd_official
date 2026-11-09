@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}500 - Kendala Sistem | PT. Aksara Cipta Digital{% endblock %}
+{% block title %}500 - {% if current_lang == 'en' %}System Issue{% else %}Kendala Sistem{% endif %} | {{ t.brand_name }}{% endblock %}
 
 {% block content %}
 <div class="min-h-[70vh] flex items-center justify-center py-20 px-4 relative overflow-hidden bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030]">
@@ -10,19 +10,23 @@
         <div class="w-20 h-20 rounded-2xl bg-rose-950/80 border border-rose-800/60 text-rose-400 mx-auto flex items-center justify-center text-3xl font-black mb-6 shadow-lg shadow-rose-950/50">
             500
         </div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Terjadi Kendala Sistem</h1>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white">{% if current_lang == 'en' %}System Issue Encountered{% else %}Terjadi Kendala Sistem{% endif %}</h1>
         <p class="text-xs sm:text-sm text-slate-400 mt-3 leading-relaxed">
+            {% if current_lang == 'en' %}
+            Our servers encountered a temporary issue while processing your request. The technical team has been notified and is addressing it promptly.
+            {% else %}
             Sistem kami sedang mengalami kendala sementara saat memproses permintaan Anda. Tim teknisi ACD telah mencatat kejadian ini dan sedang melakukan penanganan.
+            {% endif %}
         </p>
 
         <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a href="{{ url_for('index') }}" class="w-full sm:w-auto px-6 py-3 deptech-btn-primary font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-indigo-600/20 inline-flex items-center justify-center space-x-2">
                 <i data-lucide="home" class="w-4 h-4"></i>
-                <span>Kembali ke Beranda</span>
+                <span>{% if current_lang == 'en' %}Back to Home{% else %}Kembali ke Beranda{% endif %}</span>
             </a>
             <a href="{{ url_for('contact') }}" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center justify-center space-x-2">
                 <i data-lucide="message-circle" class="w-4 h-4 text-emerald-400"></i>
-                <span>Chat WhatsApp Bantuan</span>
+                <span>{% if current_lang == 'en' %}WhatsApp Support{% else %}Chat WhatsApp Bantuan{% endif %}</span>
             </a>
         </div>
     </div>

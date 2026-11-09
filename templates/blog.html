@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Blog & Wawasan Teknologi - PT. Aksara Cipta Digital (ACD){% endblock %}
+{% block title %}{% if current_lang == 'en' %}Blog & Tech Insights{% else %}Blog & Wawasan Teknologi{% endif %} - {{ t.brand_name }}{% endblock %}
 
 {% block content %}
 <div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
@@ -10,15 +10,19 @@
     <div class="deptech-grid-pattern"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
         <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">ACD Insights</span>
-        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Wawasan, Panduan & Berita Teknologi</h1>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">{% if current_lang == 'en' %}Insights, Engineering Guides & Tech Trends{% else %}Wawasan, Panduan & Berita Teknologi{% endif %}</h1>
         <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2.5 animate-fade-in-up delay-300">
+            {% if current_lang == 'en' %}
+            Practical engineering insights on enterprise applications, ERP architecture, and smart digital governance.
+            {% else %}
             Artikel praktis seputar pengembangan aplikasi enterprise, sistem ERP, dan akselerasi SPBE e-Government.
+            {% endif %}
         </p>
 
         <!-- Search Bar -->
         <div class="max-w-md mx-auto mt-6 animate-fade-in-up delay-400">
             <form action="{{ url_for('blog') }}" method="GET" class="relative">
-                <input type="text" name="search" value="{{ search_query or '' }}" placeholder="Cari artikel, topik ERP, atau e-Gov..." class="w-full px-4 py-3 pl-11 text-xs rounded-full bg-[#0a0f1d] border border-indigo-950/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg">
+                <input type="text" name="search" value="{{ search_query or '' }}" placeholder="{% if current_lang == 'en' %}Search articles, ERP topics, or e-Gov...{% else %}Cari artikel, topik ERP, atau e-Gov...{% endif %}" class="w-full px-4 py-3 pl-11 text-xs rounded-full bg-[#0a0f1d] border border-indigo-950/80 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-lg">
                 <i data-lucide="search" class="w-4 h-4 text-indigo-400 absolute left-4 top-3.5"></i>
             </form>
         </div>
@@ -29,8 +33,8 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {% if search_query %}
         <div class="mb-6 flex items-center justify-between">
-            <p class="text-xs text-slate-300">Menampilkan hasil pencarian untuk: <strong class="text-white">"{{ search_query }}"</strong></p>
-            <a href="{{ url_for('blog') }}" class="text-xs text-indigo-400 font-semibold hover:underline">Hapus Filter Pencarian</a>
+            <p class="text-xs text-slate-300">{% if current_lang == 'en' %}Showing search results for:{% else %}Menampilkan hasil pencarian untuk:{% endif %} <strong class="text-white">"{{ search_query }}"</strong></p>
+            <a href="{{ url_for('blog') }}" class="text-xs text-indigo-400 font-semibold hover:underline">{% if current_lang == 'en' %}Clear Search Filter{% else %}Hapus Filter Pencarian{% endif %}</a>
         </div>
         {% endif %}
 
@@ -47,7 +51,7 @@
 
                     <div class="p-6">
                         <div class="flex items-center justify-between text-xs text-slate-400 mb-2">
-                            <span>Waktu Baca: {{ post.read_time }}</span>
+                            <span>{% if current_lang == 'en' %}Read Time: {{ post.read_time }}{% else %}Waktu Baca: {{ post.read_time }}{% endif %}</span>
                             <span>{{ post.published_date }}</span>
                         </div>
                         <h3 class="text-base font-bold text-white group-hover:text-indigo-400 transition mb-2">
@@ -60,16 +64,16 @@
                 </div>
 
                 <div class="px-6 pb-6 pt-2 border-t border-indigo-950/60 flex items-center justify-between">
-                    <span class="text-xs text-slate-400 font-medium">Oleh: {{ post.author }}</span>
+                    <span class="text-xs text-slate-400 font-medium">{% if current_lang == 'en' %}By:{% else %}Oleh:{% endif %} {{ post.author }}</span>
                     <a href="{{ url_for('blog_detail', slug=post.slug) }}" class="text-xs font-bold text-indigo-400 hover:text-indigo-300 inline-flex items-center space-x-1">
-                        <span>Baca Selengkapnya</span>
+                        <span>{% if current_lang == 'en' %}Read Article{% else %}Baca Selengkapnya{% endif %}</span>
                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>
                 </div>
             </article>
             {% else %}
             <div class="col-span-3 text-center py-12 text-slate-400 text-sm">
-                Tidak ada artikel yang cocok dengan pencarian Anda. Silakan coba kata kunci lain.
+                {% if current_lang == 'en' %}No articles found matching your query. Please try different keywords.{% else %}Tidak ada artikel yang cocok dengan pencarian Anda. Silakan coba kata kunci lain.{% endif %}
             </div>
             {% endfor %}
         </div>

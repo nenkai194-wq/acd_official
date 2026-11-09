@@ -191,7 +191,70 @@ def get_contact_data():
         'budget_raw': budget_raw
     }
 
-def get_footer_data():
+def get_contact_data(lang='id'):
+    all_s = SettingModel.get_all()
+    
+    def s_val(k, fallback):
+        v = all_s.get(k)
+        return v if (v is not None and str(v).strip() != '') else fallback
+
+    if lang == 'en':
+        hero_badge = s_val('contact_hero_badge_en', 'Contact Us')
+        hero_title = s_val('contact_hero_title_en', 'Free Software Architecture & Development Consultation')
+        hero_subtitle = s_val('contact_hero_subtitle_en', 'Discuss your enterprise software and application needs with our senior System Analysts. We provide architectural input and budget estimates at no charge.')
+        form_badge = s_val('contact_form_badge_en', 'REQUIREMENTS FORM')
+        form_title = s_val('contact_form_title_en', 'Send Your Project Requirements')
+        form_subtitle = s_val('contact_form_subtitle_en', 'We strictly respect your business confidentiality (Non-Disclosure Agreement ready to sign)')
+        submit_btn = s_val('contact_submit_btn_en', 'Submit Free Consultation Form')
+        hours = s_val('contact_hours_en', 'Monday - Friday: 08:30 - 17:00 WIB')
+        categories_default = "Enterprise ERP Software (HRIS, Payroll, Accounting, Inventory)\nE-Government Applications (Smart Governance / SPBE)\nMobile Apps (Native Android & iOS / Flutter)\nWeb-Based Apps & Operational Information Systems\nCorporate Websites & News Portals\nGIS & Spatial Geoportal\nSystem Integration & Enterprise APIs\nIT Consulting & Architecture Audit"
+        categories_raw = s_val('contact_categories_en', categories_default)
+        budget_default = "Under IDR 50 Million\nIDR 50 Million - IDR 150 Million\nIDR 150 Million - IDR 300 Million\n> IDR 300 Million (Enterprise Scale)"
+        budget_raw = s_val('contact_budget_ranges_en', budget_default)
+    else:
+        hero_badge = s_val('contact_hero_badge', 'Hubungi Kami')
+        hero_title = s_val('contact_hero_title', 'Konsultasi Gratis Rancang Bangun Software')
+        hero_subtitle = s_val('contact_hero_subtitle', 'Diskusikan kebutuhan aplikasi atau sistem perusahaan Anda dengan System Analyst senior kami. Kami siap memberikan masukan arsitektur dan estimasi anggaran tanpa biaya.')
+        form_badge = s_val('contact_form_badge', 'FORMULIR KEBUTUHAN')
+        form_title = s_val('contact_form_title', 'Kirimkan Deskripsi Kebutuhan Anda')
+        form_subtitle = s_val('contact_form_subtitle', 'Kami menghargai kerahasiaan data bisnis Anda (Non-Disclosure Agreement siap ditandatangani)')
+        submit_btn = s_val('contact_submit_btn', 'Kirim Formulir Konsultasi Gratis')
+        hours = s_val('contact_hours', 'Senin - Jumat: 08:30 - 17:00 WIB')
+        categories_raw = s_val('contact_categories', "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT")
+        budget_raw = s_val('contact_budget_ranges', "Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)")
+
+    wa_label = s_val('contact_wa_label', '+62 852-8789-8937 (Fast Response)')
+    wa_number = s_val('contact_wa_number', '6285287898937')
+    email = s_val('contact_email', 'info@acd.co.id')
+    phone = s_val('contact_phone', '+62 852-8789-8937')
+    address_main = s_val('contact_address_main', 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182')
+    address_branch = ''
+    
+    categories_list = [line.strip() for line in categories_raw.splitlines() if line.strip()]
+    budget_list = [line.strip() for line in budget_raw.splitlines() if line.strip()]
+
+    return {
+        'hero_badge': hero_badge,
+        'hero_title': hero_title,
+        'hero_subtitle': hero_subtitle,
+        'form_badge': form_badge,
+        'form_title': form_title,
+        'form_subtitle': form_subtitle,
+        'submit_btn': submit_btn,
+        'wa_label': wa_label,
+        'wa_number': wa_number,
+        'email': email,
+        'phone': phone,
+        'hours': hours,
+        'address_main': address_main,
+        'address_branch': address_branch,
+        'categories': categories_list,
+        'categories_raw': categories_raw,
+        'budget_ranges': budget_list,
+        'budget_raw': budget_raw
+    }
+
+def get_footer_data(lang='id'):
     all_s = SettingModel.get_all()
     
     def s_val(k, fallback):
@@ -200,38 +263,52 @@ def get_footer_data():
 
     brand_name = s_val('footer_brand_name', 'AKSARA CIPTA DIGITAL')
     brand_tagline = s_val('footer_brand_tagline', 'IT Consultant - AI, Software Developer')
-    about = s_val('footer_about', 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
     address_main = s_val('footer_address_main', 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182')
     address_branch = ''
-    phone = s_val('footer_phone', '+62 21 8299 8765')
+    phone = s_val('footer_phone', '+62 852-8789-8937')
     email = s_val('footer_email', 'info@acd.co.id')
-    whatsapp = s_val('footer_whatsapp', '6281288882510')
+    whatsapp = s_val('footer_whatsapp', '6285287898937')
 
-    col2_title = s_val('footer_col2_title', 'Aplikasi & Website')
-    col2_raw = s_val('footer_col2_links', "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nWebsite Korporat | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nIntegrasi Sistem & API | /layanan/integrasi-sistem\nSemua Aplikasi & Website \u2192 | /layanan/kategori/Aplikasi%20&%20Website")
+    if lang == 'en':
+        about = s_val('footer_about_en', 'PT. Aksara Cipta Digital is an experienced IT consulting and software house building enterprise-grade applications for private corporations, state-owned enterprises, and government institutions across Indonesia.')
+        col2_title = s_val('footer_col2_title_en', 'Applications & Websites')
+        col2_raw = s_val('footer_col2_links_en', "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nCorporate Websites | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nSystem Integration & API | /layanan/integrasi-sistem\nAll Apps & Websites \u2192 | /layanan/kategori/Aplikasi%20&%20Website")
+        col3_title = s_val('footer_col3_title_en', 'Business ERP Software')
+        col3_raw = s_val('footer_col3_links_en', "HRIS / Personnel System | /layanan/erp-hris-kepegawaian\nAttendance & Geofencing | /layanan/erp-presensi-absensi\nPayroll & Tax PPh21 | /layanan/erp-payroll-penggajian\nAccounting & Finance | /layanan/erp-accounting-keuangan\nAsset Management | /layanan/erp-asset-management\nWarehouse Management | /layanan/erp-warehouse-management\nDocument Management | /layanan/erp-document-management\nExecutive Dashboard | /layanan/erp-dashboard-eksekutif")
+        col4_title = s_val('footer_col4_title_en', 'E-Government Systems')
+        col4_raw = s_val('footer_col4_links_en', "Local Government Portals | /layanan/egov-portal-daerah\nSectoral Open Data SDI | /layanan/egov-data-sektoral\ne-Planning & Budgeting | /layanan/egov-e-planning-musrenbang\ne-Monev & e-SAKIP | /layanan/egov-e-monev-sakip\ne-Reporting & Citizen Helpdesk | /layanan/egov-e-lapor-pengaduan\ne-Licensing MPP Digital Signature | /layanan/egov-e-perizinan-mpp")
+        about_title = s_val('footer_about_title_en', 'About Us')
+        about_raw = s_val('footer_about_links_en', "ACD Company Profile | /tentang-kami\nCase Studies & Portfolio | /portofolio\nCareers at ACD | /karir\nFAQ | /faq")
+        security_label = s_val('footer_security_label_en', 'Security & Quality Standards:')
+        support_text = s_val('footer_support_text_en', 'Consultation & Inquiries:')
+        support_label = s_val('footer_support_label_en', 'WhatsApp 24/7 Support')
+        privacy_label = s_val('footer_privacy_label_en', 'Privacy Policy')
+        terms_label = s_val('footer_terms_label_en', 'Terms & Conditions')
+        consult_label = s_val('footer_consult_label_en', 'Contact Consultant')
+    else:
+        about = s_val('footer_about', 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
+        col2_title = s_val('footer_col2_title', 'Aplikasi & Website')
+        col2_raw = s_val('footer_col2_links', "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nWebsite Korporat | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nIntegrasi Sistem & API | /layanan/integrasi-sistem\nSemua Aplikasi & Website \u2192 | /layanan/kategori/Aplikasi%20&%20Website")
+        col3_title = s_val('footer_col3_title', 'Aplikasi Bisnis ERP')
+        col3_raw = s_val('footer_col3_links', "HRIS / Kepegawaian | /layanan/erp-hris-kepegawaian\nPresensi & Geofencing | /layanan/erp-presensi-absensi\nPayroll & Pajak PPh21 | /layanan/erp-payroll-penggajian\nAkuntansi & Keuangan | /layanan/erp-accounting-keuangan\nAsset Management | /layanan/erp-asset-management\nWarehouse Management | /layanan/erp-warehouse-management\nDocument Management | /layanan/erp-document-management\nDashboard Eksekutif | /layanan/erp-dashboard-eksekutif")
+        col4_title = s_val('footer_col4_title', 'Aplikasi E-Gov')
+        col4_raw = s_val('footer_col4_links', "Website Pemerintah Daerah | /layanan/egov-portal-daerah\ne-Data Sektoral SDI | /layanan/egov-data-sektoral\ne-Planning Internal & Pokir | /layanan/egov-e-planning-musrenbang\ne-Monev & e-SAKIP | /layanan/egov-e-monev-sakip\ne-Lapor & Pengaduan Warga | /layanan/egov-e-lapor-pengaduan\ne-Perizinan MPP TTE | /layanan/egov-e-perizinan-mpp")
+        about_title = s_val('footer_about_title', 'Tentang Kami')
+        about_raw = s_val('footer_about_links', "Profil Perusahaan ACD | /tentang-kami\nStudi Kasus & Portofolio | /portofolio\nKarir di ACD | /karir\nTanya Jawab (FAQ) | /faq")
+        security_label = s_val('footer_security_label', 'Standar Keamanan & Mutu:')
+        support_text = s_val('footer_support_text', 'Layanan Konsultasi & Aduan:')
+        support_label = s_val('footer_support_label', 'WhatsApp 24/7 Support')
+        privacy_label = s_val('footer_privacy_label', 'Kebijakan Privasi')
+        terms_label = s_val('footer_terms_label', 'Syarat & Ketentuan Layanan')
+        consult_label = s_val('footer_consult_label', 'Hubungi Konsultan')
 
-    col3_title = s_val('footer_col3_title', 'Aplikasi Bisnis ERP')
-    col3_raw = s_val('footer_col3_links', "HRIS / Kepegawaian | /layanan/erp-hris-kepegawaian\nPresensi & Geofencing | /layanan/erp-presensi-absensi\nPayroll & Pajak PPh21 | /layanan/erp-payroll-penggajian\nAkuntansi & Keuangan | /layanan/erp-accounting-keuangan\nAsset Management | /layanan/erp-asset-management\nWarehouse Management | /layanan/erp-warehouse-management\nDocument Management | /layanan/erp-document-management\nDashboard Eksekutif | /layanan/erp-dashboard-eksekutif")
-
-    col4_title = s_val('footer_col4_title', 'Aplikasi E-Gov')
-    col4_raw = s_val('footer_col4_links', "Website Pemerintah Daerah | /layanan/egov-portal-daerah\ne-Data Sektoral SDI | /layanan/egov-data-sektoral\ne-Planning Internal & Pokir | /layanan/egov-e-planning-musrenbang\ne-Monev & e-SAKIP | /layanan/egov-e-monev-sakip\ne-Lapor & Pengaduan Warga | /layanan/egov-e-lapor-pengaduan\ne-Perizinan MPP TTE | /layanan/egov-e-perizinan-mpp")
-
-    about_title = s_val('footer_about_title', 'Tentang Kami')
-    about_raw = s_val('footer_about_links', "Profil Perusahaan ACD | /tentang-kami\nStudi Kasus & Portofolio | /portofolio\nKarir di ACD | /karir\nTanya Jawab (FAQ) | /faq")
-
-    security_label = s_val('footer_security_label', 'Standar Keamanan & Mutu:')
     badge1 = s_val('footer_badge1', 'ISO 27001 Certified')
     badge2 = s_val('footer_badge2', 'OWASP Top 10 Compliant')
     badge3 = s_val('footer_badge3', 'SLA 99.9% Uptime Support')
-    support_text = s_val('footer_support_text', 'Layanan Konsultasi & Aduan:')
-    support_label = s_val('footer_support_label', 'WhatsApp 24/7 Support')
 
     copyright_text = s_val('footer_copyright', '\u00a9 2025 PT. Aksara Cipta Digital (acd.co.id). All rights reserved.')
-    privacy_label = s_val('footer_privacy_label', 'Kebijakan Privasi')
     privacy_url = s_val('footer_privacy_url', '/tentang-kami')
-    terms_label = s_val('footer_terms_label', 'Syarat & Ketentuan Layanan')
     terms_url = s_val('footer_terms_url', '/tentang-kami')
-    consult_label = s_val('footer_consult_label', 'Hubungi Konsultan')
     consult_url = s_val('footer_consult_url', '/kontak')
 
     return {
@@ -298,8 +375,8 @@ def inject_global_data():
         'set_lang_url': set_lang_url,
         'badge_new_inquiries': badge_new,
         'admin_inactivity_timeout': ADMIN_INACTIVITY_TIMEOUT,
-        'footer': get_footer_data(),
-        'contact_cfg': get_contact_data(),
+        'footer': get_footer_data(current_lang),
+        'contact_cfg': get_contact_data(current_lang),
         'seo': get_seo_data()
     }
 

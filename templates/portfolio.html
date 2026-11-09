@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Portofolio & Studi Kasus Proyek - PT. Aksara Cipta Digital (ACD){% endblock %}
+{% block title %}{{ t.portfolio_hero_title }} - {{ t.brand_name }}{% endblock %}
 
 {% block content %}
 <div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
@@ -9,10 +9,10 @@
 
     <div class="deptech-grid-pattern"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">Rekam Jejak Implementasi</span>
-        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Portofolio & Studi Kasus Solusi Software</h1>
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">{{ t.portfolio_hero_badge }}</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">{{ t.portfolio_hero_title }}</h1>
         <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2.5 animate-fade-in-up delay-300">
-            Membantu berbagai industri mengurai hambatan operasional menjadi sistem digital yang handal dan meningkatkan produktivitas.
+            {{ t.portfolio_hero_desc }}
         </p>
     </div>
 </div>
@@ -22,22 +22,22 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex overflow-x-auto space-x-2 sm:space-x-4 py-3 text-xs sm:text-sm font-bold no-scrollbar">
             <a href="{{ url_for('portfolio') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md shadow-indigo-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Semua Proyek
+                {{ t.portfolio_tab_all }}
             </a>
             <a href="{{ url_for('portfolio', category='E-Government') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'E-Government' %}text-white bg-gradient-to-r from-cyan-600 to-emerald-600 shadow-md shadow-cyan-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
                 E-Government
             </a>
             <a href="{{ url_for('portfolio', category='Aplikasi Mobile') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi Mobile' %}text-white bg-gradient-to-r from-amber-600 to-orange-600 shadow-md shadow-amber-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Aplikasi Mobile
+                {{ t.portfolio_tab_mobile }}
             </a>
             <a href="{{ url_for('portfolio', category='ERP & HRIS') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'ERP & HRIS' %}text-white bg-gradient-to-r from-purple-600 to-violet-600 shadow-md shadow-purple-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                ERP & HRIS
+                {{ t.portfolio_tab_erp }}
             </a>
             <a href="{{ url_for('portfolio', category='Website Korporat') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Website Korporat' %}text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Website Profil
+                {{ t.portfolio_tab_website }}
             </a>
             <a href="{{ url_for('portfolio', category='Sistem Informasi') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Sistem Informasi' %}text-white bg-gradient-to-r from-indigo-600 to-sky-600 shadow-md shadow-indigo-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Sistem Informasi & E-Commerce
+                {{ t.portfolio_tab_is }}
             </a>
         </div>
     </div>
@@ -56,10 +56,10 @@
                     <!-- Top Row: Category + Year -->
                     <div class="flex items-center justify-between mb-3">
                         <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-900/60">
-                            {{ item.category }}
+                            {{ t.categories.get(item.category, item.category) }}
                         </span>
                         <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 text-slate-400 border border-slate-800">
-                            Tahun {{ item.year }}
+                            {% if current_lang == 'en' %}Year {{ item.year }}{% else %}Tahun {{ item.year }}{% endif %}
                         </span>
                     </div>
 
@@ -91,7 +91,7 @@
 
                 <div class="px-6 pb-6 pt-2">
                     <a href="{{ url_for('portfolio_detail', slug=item.slug) }}" class="inline-flex items-center text-xs font-bold text-indigo-400 hover:text-white transition">
-                        <span>Lihat Ulasan Studi Kasus</span>
+                        <span>{{ t.portfolio_view_case }}</span>
                         <i data-lucide="chevron-right" class="w-4 h-4 ml-1"></i>
                     </a>
                 </div>

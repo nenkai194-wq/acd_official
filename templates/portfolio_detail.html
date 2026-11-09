@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ portfolio.title }} - Portofolio ACD Digital Consulting{% endblock %}
+{% block title %}{{ portfolio.title }} - {{ t.brand_name }}{% endblock %}
 {% block meta_desc %}{{ portfolio.summary }}{% endblock %}
 
 {% block content %}
@@ -12,19 +12,19 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <a href="{{ url_for('portfolio') }}" class="inline-flex items-center space-x-1.5 text-xs text-indigo-300 hover:text-white transition mb-4 animate-fade-in-up delay-100">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
-            <span>Kembali ke Semua Portofolio</span>
+            <span>{% if current_lang == 'en' %}Back to All Projects{% else %}Kembali ke Semua Portofolio{% endif %}</span>
         </a>
         <div class="flex items-center space-x-3 mb-2 animate-fade-in-up delay-200">
             <span class="text-xs font-bold text-indigo-300 deptech-badge px-3 py-1 rounded-full uppercase tracking-wider">
-                {{ portfolio.category }}
+                {{ t.categories.get(portfolio.category, portfolio.category) }}
             </span>
-            <span class="text-xs text-slate-400">Tahun Implementasi: {{ portfolio.year }}</span>
+            <span class="text-xs text-slate-400">{% if current_lang == 'en' %}Implementation Year: {{ portfolio.year }}{% else %}Tahun Implementasi: {{ portfolio.year }}{% endif %}</span>
         </div>
         <h1 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight mb-3 animate-fade-in-up delay-300">
             {{ portfolio.title }}
         </h1>
         <p class="text-sm font-semibold text-indigo-300 animate-fade-in-up delay-400">
-            Klien: {{ portfolio.client_name }} ({{ portfolio.client_type }})
+            {% if current_lang == 'en' %}Client: {{ portfolio.client_name }} ({{ portfolio.client_type }}){% else %}Klien: {{ portfolio.client_name }} ({{ portfolio.client_type }}){% endif %}
         </p>
     </div>
 </div>
@@ -54,7 +54,7 @@
             <div class="p-6 rounded-2xl bg-[#1a1208]/80 border border-amber-950/70">
                 <h3 class="text-lg font-bold text-amber-400 mb-2 flex items-center space-x-2">
                     <i data-lucide="alert-circle" class="w-5 h-5 text-amber-400"></i>
-                    <span>Tantangan & Kendala Awal (Before)</span>
+                    <span>{% if current_lang == 'en' %}Initial Challenge & Friction (Before){% else %}Tantangan & Kendala Awal (Before){% endif %}</span>
                 </h3>
                 <p class="text-sm text-slate-300 leading-relaxed">
                     {{ portfolio.challenge }}
@@ -65,7 +65,7 @@
             <div class="p-6 rounded-2xl bg-[#071328]/80 border border-indigo-950/70">
                 <h3 class="text-lg font-bold text-indigo-400 mb-2 flex items-center space-x-2">
                     <i data-lucide="cpu" class="w-5 h-5 text-indigo-400"></i>
-                    <span>Solusi yang Dikembangkan ACD (Action)</span>
+                    <span>{% if current_lang == 'en' %}ACD Engineering Solution (Action){% else %}Solusi yang Dikembangkan ACD (Action){% endif %}</span>
                 </h3>
                 <p class="text-sm text-slate-300 leading-relaxed">
                     {{ portfolio.solution }}
@@ -76,7 +76,7 @@
             <div class="p-6 rounded-2xl bg-[#061817]/80 border border-emerald-950/70">
                 <h3 class="text-lg font-bold text-emerald-400 mb-2 flex items-center space-x-2">
                     <i data-lucide="trending-up" class="w-5 h-5 text-emerald-400"></i>
-                    <span>Hasil & Dampak Terukur (After / Impact)</span>
+                    <span>{% if current_lang == 'en' %}Measurable Results & Impact (After / Impact){% else %}Hasil & Dampak Terukur (After / Impact){% endif %}</span>
                 </h3>
                 <p class="text-sm text-slate-300 leading-relaxed">
                     {{ portfolio.impact }}
@@ -86,7 +86,7 @@
 
         <!-- Tech Stack Used -->
         <div>
-            <h3 class="text-base font-bold text-white mb-3">Teknologi yang Digunakan dalam Proyek Ini</h3>
+            <h3 class="text-base font-bold text-white mb-3">{% if current_lang == 'en' %}Technologies Employed in This Project{% else %}Teknologi yang Digunakan dalam Proyek Ini{% endif %}</h3>
             <div class="flex flex-wrap gap-2">
                 {% for t in portfolio.tech_stack %}
                 <span class="px-3.5 py-1.5 bg-[#080d24] text-indigo-300 text-xs font-semibold rounded-lg border border-indigo-900/60">
@@ -100,13 +100,13 @@
         <div class="deptech-closing-banner p-10 rounded-3xl text-white text-center space-y-4">
             <div class="deptech-closing-grid"></div>
             <div class="relative z-10 space-y-4">
-                <h3 class="text-xl font-bold">Menghadapi Kendala Serupa di Perusahaan Anda?</h3>
+                <h3 class="text-xl font-bold">{% if current_lang == 'en' %}Facing Similar Bottlenecks in Your Organization?{% else %}Menghadapi Kendala Serupa di Perusahaan Anda?{% endif %}</h3>
                 <p class="text-xs text-slate-300 max-w-lg mx-auto">
-                    Diskusikan bersama konsultan sistem ACD. Kami bantu memetakan alur kerja dan merancang sistem yang menyelesaikan masalah hingga ke akar.
+                    {% if current_lang == 'en' %}Discuss your workflow with ACD system architects. We help diagnose issues and build software that solves operational friction at its root.{% else %}Diskusikan bersama konsultan sistem ACD. Kami bantu memetakan alur kerja dan merancang sistem yang menyelesaikan masalah hingga ke akar.{% endif %}
                 </p>
                 <div class="pt-2">
                     <a href="{{ url_for('contact', service=portfolio.title) }}" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-8 py-3.5 shadow-lg shadow-indigo-500/25 inline-block text-center">
-                        Jadwalkan Konsultasi Teknis Gratis
+                        {% if current_lang == 'en' %}Schedule Free Technical Consultation{% else %}Jadwalkan Konsultasi Teknis Gratis{% endif %}
                     </a>
                 </div>
             </div>

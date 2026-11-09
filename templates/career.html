@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Karir & Peluang Bergabung - PT. Aksara Cipta Digital (ACD){% endblock %}
+{% block title %}{{ t.career_hero_title }} - {{ t.brand_name }}{% endblock %}
 
 {% block content %}
 <div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
@@ -9,10 +9,10 @@
 
     <div class="deptech-grid-pattern"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">Bergabung dengan ACD</span>
-        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Bangun Karir & Dampak Positif di Dunia Teknologi</h1>
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">{{ t.career_hero_badge }}</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">{{ t.career_hero_title }}</h1>
         <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2.5 animate-fade-in-up delay-300">
-            Kami mencari talenta digital berdedikasi tinggi yang haus akan tantangan arsitektur sistem skala besar dan ingin berkontribusi nyata bagi nusantara.
+            {{ t.career_hero_desc }}
         </p>
     </div>
 </div>
@@ -25,22 +25,22 @@
                 <div class="w-10 h-10 rounded-xl bg-blue-950/80 text-blue-400 border border-blue-800/60 mx-auto flex items-center justify-center mb-3">
                     <i data-lucide="award" class="w-5 h-5"></i>
                 </div>
-                <h4 class="font-bold text-white text-sm mb-1">Growth & Sertifikasi</h4>
-                <p class="text-xs text-slate-400">Dukungan budget sertifikasi internasional cloud & arsitektur untuk setiap talenta.</p>
+                <h4 class="font-bold text-white text-sm mb-1">{{ t.career_benefit1_title }}</h4>
+                <p class="text-xs text-slate-400">{{ t.career_benefit1_desc }}</p>
             </div>
             <div class="p-6 deptech-card-dark rounded-2xl text-center">
                 <div class="w-10 h-10 rounded-xl bg-cyan-950/80 text-cyan-400 border border-cyan-800/60 mx-auto flex items-center justify-center mb-3">
                     <i data-lucide="coffee" class="w-5 h-5"></i>
                 </div>
-                <h4 class="font-bold text-white text-sm mb-1">Flexible Hybrid Work</h4>
-                <p class="text-xs text-slate-400">Skema kerja fleksibel (kantor operasional & remote terencana) berbasis output.</p>
+                <h4 class="font-bold text-white text-sm mb-1">{{ t.career_benefit2_title }}</h4>
+                <p class="text-xs text-slate-400">{{ t.career_benefit2_desc }}</p>
             </div>
             <div class="p-6 deptech-card-dark rounded-2xl text-center">
                 <div class="w-10 h-10 rounded-xl bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 mx-auto flex items-center justify-center mb-3">
                     <i data-lucide="heart" class="w-5 h-5"></i>
                 </div>
-                <h4 class="font-bold text-white text-sm mb-1">Kompensasi Kompetitif</h4>
-                <p class="text-xs text-slate-400">Gaji menarik, BPJS Lengkap, asuransi kesehatan swasta, dan bonus kinerja proyek.</p>
+                <h4 class="font-bold text-white text-sm mb-1">{{ t.career_benefit3_title }}</h4>
+                <p class="text-xs text-slate-400">{{ t.career_benefit3_desc }}</p>
             </div>
         </div>
 
@@ -48,12 +48,12 @@
         <div>
             <div class="flex items-center justify-between mb-6">
                 <div>
-                    <h2 class="text-2xl font-extrabold text-white">Lowongan Terbuka Saat Ini</h2>
-                    <p class="text-xs text-slate-400 mt-1">Pilih formasi jabatan yang sesuai dengan keahlian dan minat karir Anda</p>
+                    <h2 class="text-2xl font-extrabold text-white">{{ t.career_open_title }}</h2>
+                    <p class="text-xs text-slate-400 mt-1">{{ t.career_open_subtitle }}</p>
                 </div>
                 {% if careers and careers | length > 0 %}
                 <span class="text-xs font-semibold px-3 py-1 rounded-full bg-indigo-950/80 text-indigo-300 border border-indigo-800/60">
-                    {{ careers | length }} Posisi Tersedia
+                    {{ careers | length }} {{ t.career_available_positions }}
                 </span>
                 {% endif %}
             </div>
@@ -76,7 +76,7 @@
                     </div>
                     <div class="shrink-0">
                         <a href="{{ url_for('career_detail', slug=job.slug) }}" class="inline-flex items-center space-x-1.5 deptech-btn-primary px-5 py-2.5 text-xs font-bold rounded-xl">
-                            <span>Lihat Kualifikasi & Lamar</span>
+                            <span>{{ t.career_apply_btn }}</span>
                             <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                         </a>
                     </div>
@@ -90,9 +90,9 @@
                     <i data-lucide="briefcase" class="w-8 h-8"></i>
                 </div>
                 <div>
-                    <h3 class="text-xl sm:text-2xl font-black text-white">Belum Ada Lowongan Kerja</h3>
+                    <h3 class="text-xl sm:text-2xl font-black text-white">{{ t.career_no_positions }}</h3>
                     <p class="text-slate-400 text-xs sm:text-sm max-w-lg mx-auto mt-2 leading-relaxed">
-                        Saat ini seluruh formasi tim kami sedang terisi penuh atau belum ada posisi baru yang dibuka. Pantau terus halaman ini atau media sosial kami untuk pembaruan karir berikutnya.
+                        {{ t.career_no_positions_sub }}
                     </p>
                 </div>
                 <div class="pt-2">
@@ -101,8 +101,8 @@
                             <i data-lucide="send" class="w-4 h-4"></i>
                         </div>
                         <div class="text-left">
-                            <p class="font-bold text-white">Ingin mengirimkan lamaran spontan?</p>
-                            <p class="text-slate-400 text-[11px] mt-0.5">Kirimkan CV, resume, dan portofolio terbaik Anda ke: <a href="mailto:info@acd.co.id" class="text-indigo-400 hover:underline font-semibold">info@acd.co.id</a></p>
+                            <p class="font-bold text-white">{{ t.career_send_cv }}</p>
+                            <p class="text-slate-400 text-[11px] mt-0.5"><a href="mailto:info@acd.co.id" class="text-indigo-400 hover:underline font-semibold">info@acd.co.id</a></p>
                         </div>
                     </div>
                 </div>

@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Katalog Layanan & Solusi Software - PT. Aksara Cipta Digital (ACD){% endblock %}
+{% block title %}{{ t.services_hero_title }} - {{ t.brand_name }}{% endblock %}
 
 {% block content %}
 <!-- Header Banner -->
@@ -10,10 +10,10 @@
 
     <div class="deptech-grid-pattern"></div>
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
-        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">Solusi Terpadu</span>
-        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">Layanan Pengembangan Software Enterprise</h1>
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider animate-fade-in-up delay-100">{{ t.services_hero_badge }}</span>
+        <h1 class="text-3xl sm:text-5xl font-extrabold text-white mt-3 animate-fade-in-up delay-200">{{ t.services_hero_title }}</h1>
         <p class="text-slate-300 text-sm sm:text-base max-w-2xl mx-auto mt-2.5 animate-fade-in-up delay-300">
-            Dari aplikasi mobile, otomasi proses bisnis ERP, hingga ekosistem smart governance e-Government yang bergaransi dan berstandar internasional.
+            {{ t.services_hero_subtitle }}
         </p>
     </div>
 </div>
@@ -23,16 +23,16 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex overflow-x-auto space-x-2 sm:space-x-4 py-3 text-xs sm:text-sm font-bold no-scrollbar">
             <a href="{{ url_for('services') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if not current_category or current_category == 'Semua' %}text-white bg-gradient-to-r from-indigo-600 to-purple-600 shadow-md shadow-indigo-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Semua Layanan
+                {{ t.services_tab_all }}
             </a>
             <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi & Website' %}text-white bg-gradient-to-r from-blue-600 to-indigo-600 shadow-md shadow-blue-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Aplikasi & Website
+                {{ t.categories.get('Aplikasi & Website', 'Aplikasi & Website') }}
             </a>
             <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi Bisnis ERP' %}text-white bg-gradient-to-r from-purple-600 to-violet-600 shadow-md shadow-purple-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Aplikasi Bisnis ERP
+                {{ t.categories.get('Aplikasi Bisnis ERP', 'Aplikasi Bisnis ERP') }}
             </a>
             <a href="{{ url_for('services_category', category='Aplikasi E-Government') }}" class="px-3.5 py-2 rounded-xl whitespace-nowrap transition {% if current_category == 'Aplikasi E-Government' %}text-white bg-gradient-to-r from-cyan-600 to-emerald-600 shadow-md shadow-cyan-500/25{% else %}text-slate-400 hover:text-white hover:bg-white/5{% endif %}">
-                Aplikasi E-Government
+                {{ t.categories.get('Aplikasi E-Government', 'Aplikasi E-Government') }}
             </a>
         </div>
     </div>
@@ -62,7 +62,7 @@
                 <div>
                     <div class="flex items-center justify-between mb-4">
                         <span class="text-[11px] font-bold text-indigo-300 deptech-badge px-3 py-1 rounded-full uppercase tracking-wider">
-                            {{ s.category }}
+                            {{ t.categories.get(s.category, s.category) }}
                         </span>
                         <div class="w-10 h-10 rounded-xl bg-indigo-950/70 border border-indigo-800/60 text-indigo-400 group-hover:bg-gradient-to-r group-hover:from-indigo-600 group-hover:to-purple-600 group-hover:text-white flex items-center justify-center transition shadow-inner">
                             <i data-lucide="{{ s.icon }}" class="w-5 h-5"></i>
@@ -84,10 +84,10 @@
 
                 <div class="pt-4 border-t border-indigo-950/80 flex items-center justify-between">
                     <a href="{{ url_for('service_detail', slug=s.slug) }}" class="text-xs font-bold text-indigo-400 group-hover:text-indigo-300 inline-flex items-center space-x-1 transition">
-                        <span>Lihat Fitur & Spesifikasi</span>
+                        <span>{% if current_lang == 'en' %}View Features & Specs{% else %}Lihat Fitur & Spesifikasi{% endif %}</span>
                         <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
                     </a>
-                    <a href="{{ url_for('contact', service=s.title) }}" class="text-xs text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-indigo-950/60 transition" title="Konsultasi Gratis">
+                    <a href="{{ url_for('contact', service=s.title) }}" class="text-xs text-slate-400 hover:text-white p-1.5 rounded-lg hover:bg-indigo-950/60 transition" title="{% if current_lang == 'en' %}Free Consultation{% else %}Konsultasi Gratis{% endif %}">
                         <i data-lucide="message-square" class="w-4 h-4"></i>
                     </a>
                 </div>

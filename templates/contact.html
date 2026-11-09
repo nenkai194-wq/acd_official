@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}Kontak & Konsultasi Teknis - PT. Aksara Cipta Digital (ACD){% endblock %}
+{% block title %}{{ contact_cfg.hero_title }} - {{ t.brand_name }}{% endblock %}
 
 {% block content %}
 <div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
@@ -23,14 +23,14 @@
             <!-- Left: Contact Details & Info -->
             <div class="lg:col-span-5 space-y-6">
                 <div class="deptech-card-dark rounded-2xl p-6 space-y-4">
-                    <h3 class="text-lg font-bold text-white pb-2 border-b border-indigo-950/60">Informasi Kontak Langsung</h3>
+                    <h3 class="text-lg font-bold text-white pb-2 border-b border-indigo-950/60">{{ t.contact_info_title }}</h3>
                     
                     <div class="flex items-start space-x-3.5">
                         <div class="w-9 h-9 rounded-lg bg-emerald-950/80 text-emerald-400 border border-emerald-800/60 flex items-center justify-center shrink-0">
                             <i data-lucide="message-circle" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-slate-400 uppercase">WhatsApp Hotline</span>
+                            <span class="block text-xs font-bold text-slate-400 uppercase">{{ t.contact_wa_hotline }}</span>
                             <a href="https://wa.me/{{ contact_cfg.wa_number }}" target="_blank" class="text-sm font-bold text-white hover:text-emerald-400 transition">
                                 {{ contact_cfg.wa_label }}
                             </a>
@@ -42,7 +42,7 @@
                             <i data-lucide="mail" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-slate-400 uppercase">Email Konsultasi Resmi</span>
+                            <span class="block text-xs font-bold text-slate-400 uppercase">{{ t.contact_official_email }}</span>
                             <a href="mailto:{{ contact_cfg.email }}" class="text-sm font-bold text-white hover:text-blue-400 transition">
                                 {{ contact_cfg.email }}
                             </a>
@@ -54,7 +54,7 @@
                             <i data-lucide="phone" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-slate-400 uppercase">Telepon Kantor</span>
+                            <span class="block text-xs font-bold text-slate-400 uppercase">{{ t.contact_office_phone }}</span>
                             <span class="text-sm font-bold text-white">{{ contact_cfg.phone }}</span>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                             <i data-lucide="clock" class="w-5 h-5"></i>
                         </div>
                         <div>
-                            <span class="block text-xs font-bold text-slate-400 uppercase">Jam Operasional</span>
+                            <span class="block text-xs font-bold text-slate-400 uppercase">{{ t.contact_operating_hours }}</span>
                             <span class="text-xs text-slate-300">{{ contact_cfg.hours }}</span>
                         </div>
                     </div>
@@ -72,7 +72,7 @@
 
                 <!-- Office addresses card -->
                 <div class="deptech-card-dark rounded-2xl p-6 space-y-4">
-                    <h3 class="text-lg font-bold text-white pb-2 border-b border-indigo-950/60">Lokasi Kantor</h3>
+                    <h3 class="text-lg font-bold text-white pb-2 border-b border-indigo-950/60">{{ t.contact_office_location }}</h3>
 
                     <div>
                         <p class="text-xs text-slate-300 leading-relaxed">{{ contact_cfg.address_main }}</p>
@@ -92,31 +92,31 @@
                     <form class="ajax-consultation-form space-y-4" method="POST" action="/kontak">
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nama Lengkap *</label>
-                                <input type="text" name="name" required placeholder="Budi Santoso" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">{{ t.contact_label_name }}</label>
+                                <input type="text" name="name" required placeholder="{{ t.contact_placeholder_name }}" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nama Instansi / Perusahaan</label>
-                                <input type="text" name="company" placeholder="PT. Sukses Mandiri" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Email Perusahaan / Resmi *</label>
-                                <input type="email" name="email" required placeholder="budi@suksesmandiri.co.id" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
-                                <span class="text-[10px] text-slate-400 mt-1 block">Maksimal 2x pengiriman / 24 jam.</span>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Nomor WhatsApp Aktif *</label>
-                                <input type="tel" name="phone" required placeholder="081298765432" inputmode="numeric" autocomplete="tel" maxlength="15" class="input-wa-national w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
-                                <span class="text-[10px] text-indigo-300/80 mt-1 block">Standar nasional (diawali 08/628, tanpa huruf). Maks. 2x kirim / 24 jam.</span>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">{{ t.contact_label_company }}</label>
+                                <input type="text" name="company" placeholder="{{ t.contact_placeholder_company }}" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
                             </div>
                         </div>
 
                         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             <div>
-                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Kategori Solusi Software *</label>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">{{ t.contact_label_email }}</label>
+                                <input type="email" name="email" required placeholder="name@company.com" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
+                                <span class="text-[10px] text-slate-400 mt-1 block">{{ t.contact_email_rate_limit }}</span>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">{{ t.contact_label_wa }}</label>
+                                <input type="tel" name="phone" required placeholder="{{ t.contact_placeholder_wa }}" inputmode="numeric" autocomplete="tel" maxlength="15" class="input-wa-national w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">
+                                <span class="text-[10px] text-indigo-300/80 mt-1 block">{{ t.contact_wa_hint }}</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">{{ t.contact_label_category }}</label>
                                 <select name="service_type" required class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white">
                                     {% for cat in contact_cfg.categories %}
                                     <option value="{{ cat }}" class="bg-[#05091d] text-white">{{ cat }}</option>
@@ -124,18 +124,18 @@
                                 </select>
                             </div>
                             <div>
-                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Perkiraan Range Budget (Opsional)</label>
+                                <label class="block text-xs font-bold text-slate-300 uppercase mb-1">{{ t.contact_label_budget }}</label>
                                 <select name="budget_range" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white">
                                     {% for b in contact_cfg.budget_ranges %}
-                                    <option value="{{ b }}" {% if '50 - 150' in b or '50 Juta - Rp 150' in b %}selected{% endif %} class="bg-[#05091d] text-white">{{ b }}</option>
+                                    <option value="{{ b }}" {% if '50 - 150' in b or '50 Juta - Rp 150' in b or '50 Million - IDR 150' in b %}selected{% endif %} class="bg-[#05091d] text-white">{{ b }}</option>
                                     {% endfor %}
                                 </select>
                             </div>
                         </div>
 
                         <div>
-                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">Uraian Kebutuhan & Masalah Operasional yang Ingin Diselesaikan *</label>
-                            <textarea name="message" required rows="4" placeholder="Jelaskan secara singkat fitur utama yang Anda butuhkan, jumlah calon pengguna, serta target jadwal peluncuran sistem..." class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">{% if request.args.get('service') %}Halo Tim Konsultan ACD, saya tertarik untuk mendiskusikan kebutuhan sistem/proyek: {{ request.args.get('service') }}. Mohon informasi jadwal diskusi dan estimasi penawaran teknis.{% endif %}</textarea>
+                            <label class="block text-xs font-bold text-slate-300 uppercase mb-1">{{ t.contact_label_message }}</label>
+                            <textarea name="message" required rows="4" placeholder="{{ t.contact_placeholder_message }}" class="w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-2xl focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500">{% if request.args.get('service') %}{% if current_lang == 'en' %}Hello ACD Consultant Team, I am interested in discussing software/system requirements for: {{ request.args.get('service') }}. Please provide consultation scheduling and preliminary estimates.{% else %}Halo Tim Konsultan ACD, saya tertarik untuk mendiskusikan kebutuhan sistem/proyek: {{ request.args.get('service') }}. Mohon informasi jadwal diskusi dan estimasi penawaran teknis.{% endif %}{% endif %}</textarea>
                         </div>
 
                         <button type="submit" class="w-full py-4 deptech-btn-primary font-extrabold text-xs uppercase tracking-wider shadow-xl rounded-xl flex items-center justify-center space-x-2.5">
@@ -144,7 +144,7 @@
                         </button>
                         <div class="mt-3 flex items-center justify-center space-x-2 text-xs text-slate-400 text-center">
                             <i data-lucide="shield-check" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-                            <span>Formulir otomatis tersimpan & diteruskan langsung ke WhatsApp: <strong class="text-white font-mono">+62 852-8789-8937</strong></span>
+                            <span>{{ t.contact_direct_wa_notice }} <strong class="text-white font-mono">+62 852-8789-8937</strong></span>
                         </div>
                     </form>
                 </div>

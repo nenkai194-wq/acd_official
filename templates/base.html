@@ -146,8 +146,8 @@
                             </a>
                             <div class="nav-dropdown absolute -left-10 mt-1 w-[580px] max-w-[calc(100vw-2.5rem)] bg-[#0a0f1d] rounded-2xl shadow-2xl border border-indigo-950 p-4 z-50">
                                 <div class="flex justify-between items-center pb-2.5 mb-2.5 border-b border-indigo-900/40">
-                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Katalog Solusi Digital</span>
-                                    <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="text-xs font-semibold text-indigo-400 hover:underline">Lihat Semua Solusi →</a>
+                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">{{ t.nav_catalog_digital }}</span>
+                                    <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="text-xs font-semibold text-indigo-400 hover:underline">{{ t.nav_view_all_modules }}</a>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
                                     <a href="{{ url_for('service_detail', slug='mobile-apps') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -216,8 +216,8 @@
                             </a>
                             <div class="nav-dropdown absolute -left-20 mt-1 w-[580px] max-w-[calc(100vw-2.5rem)] bg-[#0a0f1d] rounded-2xl shadow-2xl border border-indigo-950 p-4 z-50">
                                 <div class="flex justify-between items-center pb-2.5 mb-2.5 border-b border-indigo-900/40">
-                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Modul ERP Terintegrasi Custom</span>
-                                    <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="text-xs font-semibold text-indigo-400 hover:underline">Lihat Semua Modul →</a>
+                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">{{ t.nav_catalog_erp }}</span>
+                                    <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="text-xs font-semibold text-indigo-400 hover:underline">{{ t.nav_view_all_modules }}</a>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
                                     <a href="{{ url_for('service_detail', slug='erp-hris-kepegawaian') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -304,7 +304,7 @@
                             </a>
                             <div class="nav-dropdown absolute -left-20 mt-1 w-[580px] max-w-[calc(100vw-2.5rem)] bg-[#0a0f1d] rounded-2xl shadow-2xl border border-indigo-950 p-4 z-50">
                                 <div class="flex justify-between items-center pb-2.5 mb-2.5 border-b border-indigo-900/40">
-                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">Ekosistem Smart City & SPBE</span>
+                                    <span class="text-xs font-bold text-indigo-400 uppercase tracking-wider">{{ t.nav_catalog_egov }}</span>
                                     <a href="{{ url_for('services_category', category='Aplikasi E-Government') }}" class="text-xs font-semibold text-indigo-400 hover:underline">{{ t.nav_view_all_modules }}</a>
                                 </div>
                                 <div class="grid grid-cols-2 gap-2">
@@ -641,28 +641,28 @@
             
             <form class="ajax-consultation-form space-y-3.5">
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Nama Lengkap *</label>
-                    <input type="text" name="name" required placeholder="Contoh: Budi Santoso" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.contact_label_name }}</label>
+                    <input type="text" name="name" required placeholder="{{ t.contact_placeholder_name }}" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Email Perusahaan / Pribadi *</label>
-                        <input type="email" name="email" required placeholder="budi@perusahaan.co.id" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
-                        <span class="text-[10px] text-slate-400 mt-1 block">Maks. 2x pengiriman / 24 jam.</span>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.contact_label_email }}</label>
+                        <input type="email" name="email" required placeholder="name@company.com" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
+                        <span class="text-[10px] text-slate-400 mt-1 block">{{ t.contact_email_rate_limit }}</span>
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Nomor WhatsApp *</label>
-                        <input type="tel" name="phone" required placeholder="08123456789" inputmode="numeric" autocomplete="tel" maxlength="15" class="input-wa-national w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
-                        <span class="text-[10px] text-indigo-300/80 mt-1 block">Standar nasional (08/628, tanpa huruf). Maks. 2x kirim / 24 jam.</span>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.contact_label_wa }}</label>
+                        <input type="tel" name="phone" required placeholder="{{ t.contact_placeholder_wa }}" inputmode="numeric" autocomplete="tel" maxlength="15" class="input-wa-national w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
+                        <span class="text-[10px] text-indigo-300/80 mt-1 block">{{ t.contact_wa_hint }}</span>
                     </div>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Instansi / Perusahaan</label>
-                        <input type="text" name="company" placeholder="PT / Instansi Anda" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.contact_label_company }}</label>
+                        <input type="text" name="company" placeholder="{{ t.contact_placeholder_company }}" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500">
                     </div>
                     <div>
-                        <label class="block text-xs font-semibold text-slate-300 mb-1">Kategori Kebutuhan *</label>
+                        <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.contact_label_category }}</label>
                         <select id="modal-service-type" name="service_type" required class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white">
                             {% for cat in contact_cfg.categories %}
                             <option value="{{ cat }}" class="bg-[#030718] text-white">{{ cat }}</option>
@@ -671,8 +671,8 @@
                     </div>
                 </div>
                 <div>
-                    <label class="block text-xs font-semibold text-slate-300 mb-1">Ceritakan Kebutuhan Proyek atau Kendala Sistem Anda *</label>
-                    <textarea name="message" required rows="3" placeholder="Contoh: Kami ingin membangun sistem ERP penggajian dan presensi mobile geofencing untuk 300 staf cabang..." class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500"></textarea>
+                    <label class="block text-xs font-semibold text-slate-300 mb-1">{{ t.contact_label_message }}</label>
+                    <textarea name="message" required rows="3" placeholder="{{ t.contact_placeholder_message }}" class="w-full px-3.5 py-2 text-sm border border-indigo-950/80 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:outline-none bg-[#030718] text-white placeholder-slate-500"></textarea>
                 </div>
                 <button type="submit" class="w-full deptech-btn-primary py-3 font-bold text-xs uppercase tracking-wider shadow-lg flex items-center justify-center space-x-2">
                     <i data-lucide="message-circle" class="w-4 h-4 text-emerald-400"></i>
@@ -680,7 +680,7 @@
                 </button>
                 <p class="text-[10px] text-center text-slate-400 mt-2 flex items-center justify-center space-x-1.5">
                     <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
-                    <span>Tersimpan di sistem & langsung terhubung ke WhatsApp: <strong class="text-white font-mono">+62 852-8789-8937</strong></span>
+                    <span>{{ t.contact_direct_wa_notice }} <strong class="text-white font-mono">+62 852-8789-8937</strong></span>
                 </p>
             </form>
         </div>

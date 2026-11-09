@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}{{ career.title }} - Karir ACD Digital Consulting{% endblock %}
+{% block title %}{{ career.title }} - {{ t.brand_name }}{% endblock %}
 
 {% block content %}
 <div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
@@ -11,7 +11,7 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <a href="{{ url_for('career') }}" class="inline-flex items-center space-x-1.5 text-xs text-indigo-300 hover:text-white transition mb-4 animate-fade-in-up delay-100">
             <i data-lucide="arrow-left" class="w-4 h-4"></i>
-            <span>Kembali ke Lowongan Karir</span>
+            <span>{% if current_lang == 'en' %}Back to Open Careers{% else %}Kembali ke Lowongan Karir{% endif %}</span>
         </a>
         <div class="flex items-center space-x-3 mb-2 animate-fade-in-up delay-200">
             <span class="text-xs font-bold text-indigo-300 deptech-badge px-3 py-1 rounded-full uppercase tracking-wider">
@@ -23,7 +23,9 @@
         <h1 class="text-2xl sm:text-4xl font-extrabold text-white leading-tight mb-3 animate-fade-in-up delay-300">
             {{ career.title }}
         </h1>
-        <p class="text-xs text-slate-300 animate-fade-in-up delay-400">Pengalaman yang dibutuhkan: <strong>{{ career.experience }}</strong></p>
+        <p class="text-xs text-slate-300 animate-fade-in-up delay-400">
+            {% if current_lang == 'en' %}Required Experience: <strong>{{ career.experience }}</strong>{% else %}Pengalaman yang dibutuhkan: <strong>{{ career.experience }}</strong>{% endif %}
+        </p>
     </div>
 </div>
 
@@ -31,7 +33,7 @@
     <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
         <!-- Overview -->
         <div class="p-6 deptech-card-dark rounded-2xl">
-            <h3 class="text-base font-bold text-white mb-2">Gambaran Pekerjaan</h3>
+            <h3 class="text-base font-bold text-white mb-2">{% if current_lang == 'en' %}Role Overview{% else %}Gambaran Pekerjaan{% endif %}</h3>
             <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">{{ career.description }}</p>
         </div>
 
@@ -39,7 +41,7 @@
         <div class="p-6 deptech-card-dark rounded-2xl">
             <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
                 <i data-lucide="briefcase" class="w-5 h-5 text-indigo-400"></i>
-                <span>Tanggung Jawab Utama</span>
+                <span>{% if current_lang == 'en' %}Key Responsibilities{% else %}Tanggung Jawab Utama{% endif %}</span>
             </h3>
             <ul class="space-y-2.5">
                 {% for r in career.responsibilities %}
@@ -55,7 +57,7 @@
         <div class="p-6 deptech-card-dark rounded-2xl">
             <h3 class="text-lg font-bold text-white mb-4 flex items-center space-x-2">
                 <i data-lucide="user-check" class="w-5 h-5 text-indigo-400"></i>
-                <span>Kualifikasi yang Dicari</span>
+                <span>{% if current_lang == 'en' %}Qualifications & Requirements{% else %}Kualifikasi yang Dicari{% endif %}</span>
             </h3>
             <ul class="space-y-2.5">
                 {% for req in career.requirements %}
@@ -69,14 +71,18 @@
 
         <!-- How to apply box -->
         <div class="p-8 rounded-2xl bg-[#070c24] border border-indigo-900/60 text-white space-y-4 shadow-xl">
-            <h3 class="text-lg font-bold text-white">Cara Mengirimkan Lamaran</h3>
+            <h3 class="text-lg font-bold text-white">{% if current_lang == 'en' %}How to Apply{% else %}Cara Mengirimkan Lamaran{% endif %}</h3>
             <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                {% if current_lang == 'en' %}
+                Send your updated CV and portfolio/GitHub link to <a href="mailto:karir@acd.co.id" class="text-accent-cyan font-bold hover:underline">karir@acd.co.id</a> with subject line <code class="px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/60">[APPLICATION] {{ career.title }} - [Your Name]</code>.
+                {% else %}
                 Kirimkan CV terbaru dan tautan portofolio / GitHub Anda ke email <a href="mailto:karir@acd.co.id" class="text-accent-cyan font-bold hover:underline">karir@acd.co.id</a> dengan subjek email <code class="px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/60">[LAMARAN] {{ career.title }} - [Nama Anda]</code>.
+                {% endif %}
             </p>
             <div class="pt-2">
-                <a href="mailto:karir@acd.co.id?subject=[LAMARAN]%20{{ career.title | urlencode }}" class="inline-flex items-center space-x-2 deptech-btn-primary text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl transition">
+                <a href="mailto:karir@acd.co.id?subject={% if current_lang == 'en' %}[APPLICATION]{% else %}[LAMARAN]{% endif %}%20{{ career.title | urlencode }}" class="inline-flex items-center space-x-2 deptech-btn-primary text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl transition">
                     <i data-lucide="send" class="w-4 h-4"></i>
-                    <span>Kirim Email Lamaran Sekarang</span>
+                    <span>{% if current_lang == 'en' %}Send Application Email Now{% else %}Kirim Email Lamaran Sekarang{% endif %}</span>
                 </a>
             </div>
         </div>

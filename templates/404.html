@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 
-{% block title %}404 - Halaman Tidak Ditemukan | PT. Aksara Cipta Digital{% endblock %}
+{% block title %}404 - {% if current_lang == 'en' %}Page Not Found{% else %}Halaman Tidak Ditemukan{% endif %} | {{ t.brand_name }}{% endblock %}
 
 {% block content %}
 <div class="min-h-[70vh] flex items-center justify-center py-20 px-4 relative overflow-hidden bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030]">
@@ -11,19 +11,23 @@
         <div class="w-20 h-20 rounded-2xl bg-indigo-950/80 border border-indigo-800/60 text-indigo-400 mx-auto flex items-center justify-center text-3xl font-black mb-6 shadow-lg shadow-indigo-950/50">
             404
         </div>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-white">Halaman Tidak Ditemukan</h1>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-white">{% if current_lang == 'en' %}Page Not Found{% else %}Halaman Tidak Ditemukan{% endif %}</h1>
         <p class="text-xs sm:text-sm text-slate-400 mt-3 leading-relaxed">
+            {% if current_lang == 'en' %}
+            We apologize, the page or URL you are looking for might have been moved, renamed, or is temporarily unavailable.
+            {% else %}
             Mohon maaf, halaman atau tautan yang Anda tuju mungkin telah dipindahkan, diubah alamatnya, atau tidak lagi tersedia.
+            {% endif %}
         </p>
 
         <div class="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
             <a href="{{ url_for('index') }}" class="w-full sm:w-auto px-6 py-3 deptech-btn-primary font-bold text-xs uppercase tracking-wider rounded-xl shadow-lg shadow-indigo-600/20 inline-flex items-center justify-center space-x-2">
                 <i data-lucide="home" class="w-4 h-4"></i>
-                <span>Kembali ke Beranda</span>
+                <span>{% if current_lang == 'en' %}Back to Home{% else %}Kembali ke Beranda{% endif %}</span>
             </a>
             <a href="{{ url_for('contact') }}" class="w-full sm:w-auto px-5 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center justify-center space-x-2">
                 <i data-lucide="phone" class="w-4 h-4 text-indigo-400"></i>
-                <span>Hubungi Kami</span>
+                <span>{{ t.nav_consultation_btn }}</span>
             </a>
         </div>
     </div>
