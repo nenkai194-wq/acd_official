@@ -256,7 +256,7 @@
 
         <!-- Portfolio Cards Grid -->
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {% for item in featured_portfolios %}
+            {% for item in featured_portfolios[:3] %}
             <div class="deptech-card-dark overflow-hidden flex flex-col justify-between group hover:border-indigo-500/60 transition">
                 <div class="p-6">
                     <!-- Top Row: Category + Year -->
@@ -304,7 +304,7 @@
 
 <!-- 5. INTERACTIVE PROJECT COST ESTIMATOR CALCULATOR -->
 <section class="py-24 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#020617] text-white border-t border-indigo-950/40 relative overflow-hidden">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="bg-[#0a0f26] rounded-3xl p-8 sm:p-12 shadow-2xl border border-indigo-900/60">
             <div class="text-center max-w-2xl mx-auto mb-10">
                 <span class="text-xs font-bold text-indigo-400 deptech-badge px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">Kalkulator Estimasi Proyek</span>

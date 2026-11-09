@@ -320,3 +320,35 @@ h1, h2, h3, .font-heading {
 ::-webkit-scrollbar-thumb:hover {
   background: #6366f1;
 }
+
+
+/* Active Navigation Indicator (Clean White Line Under Active Menu) */
+.nav-link-active {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+  position: relative;
+}
+.nav-link-active::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 8px;
+  right: 8px;
+  height: 2.5px;
+  background-color: #ffffff;
+  border-radius: 9999px;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.95), 0 0 4px rgba(255, 255, 255, 0.7);
+  pointer-events: none;
+  animation: navLineSlide 0.25s ease-out;
+}
+
+@keyframes navLineSlide {
+  from {
+    transform: scaleX(0);
+    opacity: 0;
+  }
+  to {
+    transform: scaleX(1);
+    opacity: 1;
+  }
+}

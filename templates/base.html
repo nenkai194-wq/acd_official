@@ -121,10 +121,10 @@
 
     <!-- 2. MAIN NAVIGATION (STICKY HEADER WITH SEAMLESS COSMIC DARK THEME) -->
     <header class="sticky top-0 z-40 bg-[#020617]/95 backdrop-blur-xl shadow-[0_4px_30px_rgba(2,6,23,0.8)] border-b border-indigo-900/40 transition-all duration-300">
-        <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-10">
-            <div class="flex items-center justify-between h-20 w-full">
-                <!-- 1. Left: Brand Logo (Unified & Responsive across all screens) -->
-                <div class="flex items-center shrink-0 min-w-0 pr-3 lg:pr-5">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+            <div class="flex items-center justify-between h-20 w-full gap-3 xl:gap-6">
+                <!-- 1. Left: Brand Logo (Geser ke kanan mendekati menu utama) -->
+                <div class="flex items-center shrink-0 min-w-0 pr-2 lg:pr-3 lg:pl-1 xl:pl-3">
                     <a href="{{ url_for('index') }}" class="flex items-center space-x-2.5 group py-1 min-w-0">
                         <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="AKSARA CIPTA DIGITAL" class="h-10 sm:h-11 xl:h-12 w-auto transition transform group-hover:scale-105 drop-shadow-md shrink-0">
                         <div class="flex flex-col justify-center min-w-0">
@@ -134,13 +134,22 @@
                     </a>
                 </div>
 
+                {% set curr_p = request.path %}
+                {% set is_home = (curr_p == '/' or request.endpoint == 'index') %}
+                {% set is_apps_web = ('Aplikasi & Website' in (current_category or '') or 'Aplikasi%20&%20Website' in curr_p or (service is defined and service and service.category == 'Aplikasi & Website') or curr_p in ['/layanan/mobile-apps', '/layanan/sistem-informasi', '/layanan/website-korporat', '/layanan/gis-geoportal', '/layanan/integrasi-sistem']) %}
+                {% set is_erp = ('Aplikasi Bisnis ERP' in (current_category or '') or 'Aplikasi%20Bisnis%20ERP' in curr_p or (service is defined and service and service.category == 'Aplikasi Bisnis ERP') or '/layanan/erp-' in curr_p) %}
+                {% set is_egov = ('Aplikasi E-Government' in (current_category or '') or 'Aplikasi%20E-Government' in curr_p or (service is defined and service and service.category == 'Aplikasi E-Government') or '/layanan/egov-' in curr_p) %}
+                {% set is_portfolio = (request.endpoint in ['portfolio', 'portfolio_detail'] or curr_p.startswith('/portofolio')) %}
+                {% set is_about = (request.endpoint == 'about' or curr_p in ['/tentang-kami', '/company-profile']) %}
+                {% set is_career = (request.endpoint in ['career', 'career_detail'] or curr_p.startswith('/karir')) %}
+
                 <!-- 2. Center: Desktop Menu Utama Navigasi -->
-                <nav class="hidden lg:flex items-center gap-0.5 xl:gap-1.5 2xl:gap-2">
-                    <a href="{{ url_for('index') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 whitespace-nowrap">{{ t.nav_home }}</a>
+                <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
+                    <a href="{{ url_for('index') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap {% if is_home %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/5{% endif %}">{{ t.nav_home }}</a>
 
                         <!-- Dropdown 1: Aplikasi & Website -->
                         <div class="relative nav-item">
-                            <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap">
+                            <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap {% if is_apps_web %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white{% endif %}">
                                 <span>{{ t.nav_apps_web }}</span>
                                 <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200"></i>
                             </a>
@@ -210,7 +219,7 @@
 
                         <!-- Dropdown 2: Aplikasi Bisnis ERP -->
                         <div class="relative nav-item">
-                            <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap">
+                            <a href="{{ url_for('services_category', category='Aplikasi Bisnis ERP') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap {% if is_erp %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white{% endif %}">
                                 <span>{{ t.nav_erp }}</span>
                                 <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200"></i>
                             </a>
@@ -298,7 +307,7 @@
 
                         <!-- Dropdown 3: Aplikasi E-Government -->
                         <div class="relative nav-item">
-                            <a href="{{ url_for('services_category', category='Aplikasi E-Government') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap">
+                            <a href="{{ url_for('services_category', category='Aplikasi E-Government') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl hover:bg-white/5 inline-flex items-center gap-1 whitespace-nowrap {% if is_egov %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white{% endif %}">
                                 <span>{{ t.nav_egov }}</span>
                                 <i data-lucide="chevron-down" class="w-3.5 h-3.5 text-slate-400 transition-transform duration-200"></i>
                             </a>
@@ -366,13 +375,13 @@
                             </div>
                         </div>
 
-                        <a href="{{ url_for('portfolio') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 whitespace-nowrap">{{ t.nav_portfolio }}</a>
-                        <a href="{{ url_for('about') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 whitespace-nowrap">{{ t.nav_about }}</a>
-                        <a href="{{ url_for('career') }}" class="px-2 xl:px-2.5 py-1.5 text-xs xl:text-sm font-semibold text-slate-300 hover:text-white transition rounded-xl hover:bg-white/5 whitespace-nowrap">{{ t.nav_career }}</a>
+                        <a href="{{ url_for('portfolio') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap {% if is_portfolio %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/5{% endif %}">{{ t.nav_portfolio }}</a>
+                        <a href="{{ url_for('about') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap {% if is_about %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/5{% endif %}">{{ t.nav_about }}</a>
+                        <a href="{{ url_for('career') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap {% if is_career %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/5{% endif %}">{{ t.nav_career }}</a>
                     </nav>
 
-                <!-- 3. Right: Action Controls (Hubungi Kami + Language Switcher ID/EN + Mobile Hamburger) -->
-                <div class="flex items-center space-x-2.5 sm:space-x-3 shrink-0">
+                <!-- 3. Right: Action Controls (Tombol Hubungi Kami Geser Kiri Mendekati Menu Utama) -->
+                <div class="flex items-center space-x-2 sm:space-x-3 shrink-0 lg:pr-1 xl:pr-3">
                     <!-- Tombol Hubungi Kami (Desktop) -->
                     <a href="{{ url_for('contact') }}" class="hidden lg:inline-flex items-center space-x-1.5 deptech-btn-primary px-3.5 xl:px-4 py-2 font-bold text-xs uppercase tracking-wider shadow-lg shadow-indigo-500/20 whitespace-nowrap">
                         <i data-lucide="phone-call" class="w-3.5 h-3.5"></i>
@@ -426,7 +435,7 @@
             </div>
         </div>
         <div class="overflow-y-auto p-4 flex-1 space-y-2">
-            <a href="{{ url_for('index') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_home }}</a>
+            <a href="{{ url_for('index') }}" class="block px-3 py-2 rounded-lg font-semibold transition {% if is_home %}text-white bg-indigo-950/70 border-l-2 border-white pl-3.5 font-bold{% else %}text-slate-300 hover:bg-indigo-950/50 hover:text-white{% endif %}">{{ t.nav_home }}</a>
             
             <div>
                 <button class="mobile-dropdown-toggle w-full flex items-center justify-between px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition" data-target="m-sub-aplikasi">
@@ -474,9 +483,9 @@
                 </div>
             </div>
 
-            <a href="{{ url_for('portfolio') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_portfolio }}</a>
-            <a href="{{ url_for('about') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_about }}</a>
-            <a href="{{ url_for('career') }}" class="block px-3 py-2 rounded-lg text-slate-300 font-semibold hover:bg-indigo-950/50 hover:text-white transition">{{ t.nav_career }}</a>
+            <a href="{{ url_for('portfolio') }}" class="block px-3 py-2 rounded-lg font-semibold transition {% if is_portfolio %}text-white bg-indigo-950/70 border-l-2 border-white pl-3.5 font-bold{% else %}text-slate-300 hover:bg-indigo-950/50 hover:text-white{% endif %}">{{ t.nav_portfolio }}</a>
+            <a href="{{ url_for('about') }}" class="block px-3 py-2 rounded-lg font-semibold transition {% if is_about %}text-white bg-indigo-950/70 border-l-2 border-white pl-3.5 font-bold{% else %}text-slate-300 hover:bg-indigo-950/50 hover:text-white{% endif %}">{{ t.nav_about }}</a>
+            <a href="{{ url_for('career') }}" class="block px-3 py-2 rounded-lg font-semibold transition {% if is_career %}text-white bg-indigo-950/70 border-l-2 border-white pl-3.5 font-bold{% else %}text-slate-300 hover:bg-indigo-950/50 hover:text-white{% endif %}">{{ t.nav_career }}</a>
         </div>
         <div class="p-4 border-t border-indigo-950/60 bg-[#070c24]">
             <a href="{{ url_for('contact') }}" class="w-full deptech-btn-primary font-semibold py-2.5 rounded-xl text-center shadow-lg block">

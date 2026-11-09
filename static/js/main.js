@@ -317,4 +317,13 @@ document.addEventListener('DOMContentLoaded', () => {
         });
         calculateEstimate();
     }
+
+    // 7. Active Navigation Link Indicator (Immediate White Line on Click)
+    const mainNavLinks = document.querySelectorAll('.main-nav-link');
+    mainNavLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            mainNavLinks.forEach(l => l.classList.remove('nav-link-active'));
+            this.classList.add('nav-link-active');
+        });
+    });
 });

@@ -442,7 +442,7 @@ Sitemap: {base_url}/sitemap.xml
 
 @app.route('/')
 def index():
-    featured_portfolios = PortfolioModel.get_all(limit=6)
+    featured_portfolios = PortfolioModel.get_all(limit=3)
     recent_blogs = BlogModel.get_all(limit=3)
     testimonials = TestimonialModel.get_all()
     faqs = FAQModel.get_all()
