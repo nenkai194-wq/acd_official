@@ -44,3 +44,7 @@ venv.bak/
 
 # Logs
 *.log
+
+# SQLite WAL temporary runtime files
+*.sqlite-wal
+*.sqlite-shm

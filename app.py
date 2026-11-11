@@ -2193,6 +2193,7 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    # Running on local port 5000 (debug defaults to False for production safety; set FLASK_DEBUG=True locally if needed)
+    # Running on configurable PORT (defaults to 5000 locally; debug defaults to False for production safety)
     debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ['true', '1']
-    app.run(host='0.0.0.0', port=5000, debug=debug_mode)
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port, debug=debug_mode)
