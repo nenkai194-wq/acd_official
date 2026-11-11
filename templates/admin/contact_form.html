@@ -21,6 +21,7 @@
                 <span>Permintaan Masuk ({{ total_inquiries }})</span>
             </a>
             <form method="POST" action="{{ url_for('admin_contact_form_reset_defaults') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan seluruh teks dan opsi form kontak ke standar bawaan PT. Aksara Cipta Digital?');" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
                     <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
                     <span>Reset Standar</span>
@@ -105,6 +106,7 @@
 
     <!-- Main Form -->
     <form method="POST" action="{{ url_for('admin_contact_form') }}" class="space-y-8">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <!-- 1. Header & Hero Kontak -->
         <div class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
             <div class="flex items-center space-x-2.5 pb-3 border-b border-indigo-950/70">

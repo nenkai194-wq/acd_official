@@ -116,6 +116,7 @@
                         <!-- 4. Status Tayang Frontend (Bisa Langsung Di-Klik) -->
                         <td class="px-5 py-3.5 align-top text-center">
                             <form method="POST" action="{{ url_for('admin_service_toggle_status', service_id=s.id) }}" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 {% if s.is_published == 1 %}
                                 <button type="submit" class="px-3 py-1 rounded-full text-[11px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 hover:bg-rose-500/20 hover:text-rose-300 hover:border-rose-500/30 transition inline-flex items-center space-x-1.5 group/btn" title="Klik untuk Ubah Menjadi Tidak Tayang">
                                     <span class="w-2 h-2 rounded-full bg-emerald-400 group-hover/btn:bg-rose-400 transition-colors"></span>
@@ -140,6 +141,7 @@
                                     <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                 </a>
                                 <form method="POST" action="{{ url_for('admin_service_delete', service_id=s.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus layanan \'{{ s.title }}\'?');" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <button type="submit" class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Layanan">
                                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                     </button>

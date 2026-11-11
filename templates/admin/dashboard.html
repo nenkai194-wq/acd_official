@@ -206,6 +206,7 @@
 
                         <!-- Quick Status Form -->
                         <form method="POST" action="{{ url_for('admin_update_inquiry_status', inquiry_id=inq.id) }}" class="flex items-center space-x-1.5">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                             <input type="hidden" name="redirect_to" value="admin_dashboard">
                             <select name="status" onchange="this.form.submit()" class="text-[11px] px-2 py-1 bg-[#0a0f1d] border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500">
                                 <option value="Baru" {% if inq.status == 'Baru' %}selected{% endif %}>Baru</option>

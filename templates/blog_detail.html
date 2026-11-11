@@ -37,9 +37,9 @@
             <img src="{{ post.image_url }}" alt="{{ post.title }}" class="w-full h-auto">
         </div>
 
-        <!-- Post Content (Formatted paragraphs) -->
+        <!-- Post Content (Formatted paragraphs, escaped safely against XSS) -->
         <div class="p-8 deptech-card-dark rounded-2xl text-slate-200 leading-relaxed space-y-4 text-sm sm:text-base">
-            {{ post.content | replace('\n\n', '</p><p class="mt-4">') | replace('\n', '<br>') | safe }}
+            <p>{{ post.content | e | replace('\n\n', '</p><p class="mt-4">') | replace('\n', '<br>') | safe }}</p>
         </div>
 
         <!-- Tags -->

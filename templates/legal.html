@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}
+    {% if page_type == 'privacy' %}
+        {% if current_lang == 'en' %}Privacy Policy{% else %}Kebijakan Privasi{% endif %}
+    {% else %}
+        {% if current_lang == 'en' %}Terms & Conditions{% else %}Syarat & Ketentuan Layanan{% endif %}
+    {% endif %} | {{ t.brand_name }}
+{% endblock %}
+
+{% block meta_desc %}
+    {% if page_type == 'privacy' %}
+        {% if current_lang == 'en' %}Official Privacy Policy and Data Confidentiality Statement of PT. Aksara Cipta Digital (ACD Digital Consulting).{% else %}Kebijakan Privasi dan Perlindungan Data Resmi PT. Aksara Cipta Digital (ACD Digital Consulting).{% endif %}
+    {% else %}
+        {% if current_lang == 'en' %}Official Terms & Conditions of Service for Software Development and IT Consulting at PT. Aksara Cipta Digital.{% else %}Syarat & Ketentuan Resmi Layanan Pengembangan Software & Konsultasi IT PT. Aksara Cipta Digital.{% endif %}
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+<div class="deptech-hero-bg text-white py-16 lg:py-20 relative overflow-hidden">
+    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+    <div class="deptech-grid-pattern"></div>
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+        <span class="text-xs font-bold text-indigo-300 deptech-badge px-3.5 py-1 rounded-full uppercase tracking-wider">
+            {% if current_lang == 'en' %}Legal & Compliance{% else %}Legalitas & Kepatuhan{% endif %}
+        </span>
+        <h1 class="text-3xl sm:text-4xl font-extrabold text-white mt-3">
+            {% if page_type == 'privacy' %}
+                {% if current_lang == 'en' %}Privacy Policy{% else %}Kebijakan Privasi{% endif %}
+            {% else %}
+                {% if current_lang == 'en' %}Terms & Conditions of Service{% else %}Syarat & Ketentuan Layanan{% endif %}
+            {% endif %}
+        </h1>
+        <p class="text-slate-400 text-xs sm:text-sm mt-2">
+            {% if current_lang == 'en' %}Effective Date: January 1, 2026 &bull; PT. Aksara Cipta Digital (acd.co.id){% else %}Berlaku Efektif: 1 Januari 2026 &bull; PT. Aksara Cipta Digital (acd.co.id){% endif %}
+        </p>
+    </div>
+</div>
+
+<div class="py-16 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-200">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        {% if page_type == 'privacy' %}
+        <div class="deptech-card-dark p-7 sm:p-9 rounded-2xl space-y-6 text-sm leading-relaxed">
+            <section class="space-y-2">
+                <h2 class="text-lg font-bold text-white">1. {% if current_lang == 'en' %}Information We Collect{% else %}Informasi yang Kami Kumpulkan{% endif %}</h2>
+                <p class="text-slate-300">
+                    {% if current_lang == 'en' %}
+                    PT. Aksara Cipta Digital ("ACD") collects contact and project requirement information voluntarily submitted through our consultation forms and WhatsApp channels, including your full name, corporate/agency name, official email address, active WhatsApp number, and project scope description.
+                    {% else %}
+                    PT. Aksara Cipta Digital ("ACD") mengumpulkan data kontak dan deskripsi kebutuhan proyek yang Anda kirimkan secara sukarela melalui formulir konsultasi maupun saluran WhatsApp resmi kami, mencakup nama lengkap, nama instansi/perusahaan, email resmi, nomor WhatsApp aktif, dan rincian kebutuhan sistem.
+                    {% endif %}
+                </p>
+            </section>
+            <section class="space-y-2">
+                <h2 class="text-lg font-bold text-white">2. {% if current_lang == 'en' %}Use & Protection of Data (NDA){% else %}Penggunaan & Perlindungan Kerahasiaan Data (NDA){% endif %}</h2>
+                <p class="text-slate-300">
+                    {% if current_lang == 'en' %}
+                    All business workflows, documents, and technical requirements shared with ACD are kept strictly confidential and used solely for consultation, architectural analysis, and technical proposal preparation. We are ready to execute a formal Non-Disclosure Agreement (NDA) upon request. We never sell or rent your data to third parties.
+                    {% else %}
+                    Seluruh alur proses bisnis, dokumen teknis, dan informasi proyek yang Anda bagikan kepada ACD dijamin kerahasiaannya dan hanya digunakan untuk keperluan konsultasi, perancangan arsitektur, dan penyusunan penawaran teknis (RAB). Kami siap menandatangani Perjanjian Kerahasiaan (Non-Disclosure Agreement / NDA) resmi dan tidak pernah memperjualbelikan data Anda kepada pihak ketiga mana pun.
+                    {% endif %}
+                </p>
+            </section>
+            <section class="space-y-2">
+                <h2 class="text-lg font-bold text-white">3. {% if current_lang == 'en' %}Cybersecurity & Data Retention{% else %}Keamanan Siber & Retensi Data{% endif %}</h2>
+                <p class="text-slate-300">
+                    {% if current_lang == 'en' %}
+                    Our platform implements OWASP Top 10 hardening, encrypted sessions, rate limiting, and audit logs. You may request deletion or update of your inquiry records at any time via {{ contact_cfg.email }} or WhatsApp {{ contact_cfg.phone }}.
+                    {% else %}
+                    Website ini menerapkan standar keamanan OWASP Top 10, enkripsi sesi, proteksi anti-spam, serta pencatatan audit log keamanan. Anda berhak meminta pembaruan atau penghapusan data konsultasi Anda kapan saja melalui {{ contact_cfg.email }} atau WhatsApp {{ contact_cfg.phone }}.
+                    {% endif %}
+                </p>
+            </section>
+        </div>
+        {% else %}
+        <div class="deptech-card-dark p-7 sm:p-9 rounded-2xl space-y-6 text-sm leading-relaxed">
+            <section class="space-y-2">
+                <h2 class="text-lg font-bold text-white">1. {% if current_lang == 'en' %}Scope of Consulting & Development Services{% else %}Ruang Lingkup Layanan Konsultasi & Pengembangan{% endif %}</h2>
+                <p class="text-slate-300">
+                    {% if current_lang == 'en' %}
+                    PT. Aksara Cipta Digital provides custom software engineering, Enterprise ERP systems, e-Government solutions (SPBE), mobile applications, and IT consulting based on a mutually agreed Software Requirement Specification (SRS) and Cooperation Agreement (SPK/Kontrak).
+                    {% else %}
+                    PT. Aksara Cipta Digital menyediakan jasa rekayasa perangkat lunak custom, sistem Enterprise ERP, solusi e-Government (SPBE), aplikasi mobile, dan konsultasi IT berdasarkan dokumen Software Requirement Specification (SRS) serta Perjanjian Kerja Sama (SPK/Kontrak) yang disepakati bersama.
+                    {% endif %}
+                </p>
+            </section>
+            <section class="space-y-2">
+                <h2 class="text-lg font-bold text-white">2. {% if current_lang == 'en' %}Budget Simulation Disclaimer{% else %}Ketentuan Simulasi Estimasi Anggaran{% endif %}</h2>
+                <p class="text-slate-300">
+                    {% if current_lang == 'en' %}
+                    The investment ranges and timelines displayed on the website cost estimator are preliminary benchmarks. Final project pricing and delivery schedules are determined after formal technical discovery and SRS approval.
+                    {% else %}
+                    Nilai perkiraan anggaran dan waktu pengerjaan pada kalkulator simulasi di website merupakan estimasi awal. Nilai investasi dan jadwal pengerjaan final ditetapkan setelah tahap technical discovery dan persetujuan dokumen SRS.
+                    {% endif %}
+                </p>
+            </section>
+            <section class="space-y-2">
+                <h2 class="text-lg font-bold text-white">3. {% if current_lang == 'en' %}Intellectual Property & SLA Warranty{% else %}Hak Cipta Source Code & Garansi SLA{% endif %}</h2>
+                <p class="text-slate-300">
+                    {% if current_lang == 'en' %}
+                    Upon full project completion and handover as specified in the contract, clients receive full ownership of the custom source code and database with zero recurring per-user license fees, backed by our official bug-fix SLA warranty.
+                    {% else %}
+                    Setelah serah terima proyek sesuai ketentuan kontrak, klien mendapatkan hak kepemilikan penuh (100% Full Source Code) dan basis data tanpa biaya lisensi bulanan per pengguna, disertai jaminan garansi perbaikan bug dan dukungan SLA resmi dari ACD.
+                    {% endif %}
+                </p>
+            </section>
+        </div>
+        {% endif %}
+
+        <div class="text-center pt-4">
+            <a href="{{ url_for('contact') }}" class="deptech-btn-primary inline-flex items-center space-x-2 px-7 py-3 text-xs font-bold uppercase tracking-wider">
+                <i data-lucide="message-circle" class="w-4 h-4"></i>
+                <span>{% if current_lang == 'en' %}Contact Legal & Consultant Team{% else %}Hubungi Tim Konsultan ACD{% endif %}</span>
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

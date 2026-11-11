@@ -13,6 +13,7 @@
         </div>
         <div class="flex items-center space-x-3">
             <form method="POST" action="{{ url_for('admin_wa_logs_clear') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log proteksi WhatsApp?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                     <span>Reset Seluruh Log</span>
@@ -78,6 +79,7 @@
                         </td>
                         <td class="px-6 py-4 text-right">
                             <form method="POST" action="{{ url_for('admin_wa_logs_delete', log_id=l.id) }}" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                 <button type="submit" class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Baris Log">
                                     <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                 </button>

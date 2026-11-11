@@ -19,6 +19,7 @@
 
     <!-- Form Container -->
     <form method="POST" class="bg-[#0a0f1d] border border-indigo-950/80 rounded-2xl p-6 sm:p-8 space-y-6">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
             <!-- Title -->
             <div class="sm:col-span-2">

@@ -93,13 +93,17 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+    // Helper: Detect active language (id / en) and dynamic WA number
+    const isEn = (document.documentElement.lang || 'id').toLowerCase() === 'en';
+    const targetWaNumber = (document.body.getAttribute('data-wa-number') || '6285287898937').replace(/[^0-9]/g, '') || '6285287898937';
+
     // 5b. AJAX Consultation Form Submission (with 2x/24h Anti-Spam & National Standard WA)
     const consultationForms = document.querySelectorAll('.ajax-consultation-form');
     consultationForms.forEach(form => {
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const submitBtn = form.querySelector('button[type="submit"]');
-            const originalText = submitBtn ? submitBtn.innerHTML : 'Kirim';
+            const originalText = submitBtn ? submitBtn.innerHTML : (isEn ? 'Send' : 'Kirim');
 
             const formData = new FormData(form);
             const name = (formData.get('name') || '').trim();
@@ -112,26 +116,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Client-Side Validation
             if (!name || !email || !phone || !message) {
-                alert('Mohon lengkapi semua kolom wajib bertanda bintang (*).');
+                alert(isEn ? 'Please complete all required fields marked with (*).' : 'Mohon lengkapi semua kolom wajib bertanda bintang (*).');
                 return;
             }
 
             // WhatsApp National Standard Check
             if (/[a-zA-Z]/.test(phone)) {
-                alert('Nomor WhatsApp tidak boleh mengandung huruf. Harap masukkan nomor telepon yang valid.');
+                alert(isEn ? 'WhatsApp number must not contain letters. Please enter a valid phone number.' : 'Nomor WhatsApp tidak boleh mengandung huruf. Harap masukkan nomor telepon yang valid.');
                 return;
             }
 
             const cleanPhone = phone.replace(/[^0-9+]/g, '');
             const waRegex = /^(\+62|62|0)8[0-9]{8,12}$/;
             if (!waRegex.test(cleanPhone)) {
-                alert('Format nomor WhatsApp tidak sesuai standar nasional Indonesia.\n\nContoh yang benar: 08123456789 atau 628123456789 (10-14 digit angka diawali 08/628).');
+                alert(isEn
+                    ? 'Invalid Indonesian WhatsApp number format.\n\nValid examples: 08123456789 or 628123456789 (10-14 digits starting with 08/628).'
+                    : 'Format nomor WhatsApp tidak sesuai standar nasional Indonesia.\n\nContoh yang benar: 08123456789 atau 628123456789 (10-14 digit angka diawali 08/628).');
                 return;
             }
 
             if (submitBtn) {
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="inline-block animate-spin mr-2">⟳</span> Mengirim Data...';
+                submitBtn.innerHTML = `<span class="inline-block animate-spin mr-2">⟳</span> ${isEn ? 'Sending & Opening WhatsApp...' : 'Mengirim Data & Membuka WhatsApp...'}`;
             }
 
             const payload = {
@@ -156,24 +162,22 @@ document.addEventListener('DOMContentLoaded', () => {
                     if (window.closeConsultationModal) window.closeConsultationModal();
 
                     if (submitBtn) {
-                        submitBtn.innerHTML = '<span class="inline-block animate-spin mr-2">✓</span> Membuka WhatsApp (+62 852-8789-8937)...';
+                        submitBtn.innerHTML = `<span class="inline-block mr-2">✓</span> ${isEn ? 'Opening WhatsApp...' : 'Membuka WhatsApp (+62 852-8789-8937)...'}`;
                     }
 
                     // Arahkan langsung ke WhatsApp resmi konsultan ACD (+62 852-8789-8937)
                     if (data.whatsapp_url) {
-                        setTimeout(() => {
-                            window.location.href = data.whatsapp_url;
-                        }, 250);
+                        window.location.href = data.whatsapp_url;
                     } else {
-                        alert('Terima kasih ' + name + '!\n\nPermintaan konsultasi Anda telah berhasil dikirim ke tim ACD.');
+                        alert(isEn ? `Thank you ${name}! Your consultation request has been sent to the ACD team.` : `Terima kasih ${name}!\n\nPermintaan konsultasi Anda telah berhasil dikirim ke tim ACD.`);
                     }
                 } else if (res.status === 429) {
-                    alert('⚠️ KUOTA PENGIRIMAN MAKSIMAL TERCAPAI\n\n' + data.message);
+                    alert((isEn ? '⚠️ SUBMISSION LIMIT REACHED\n\n' : '⚠️ KUOTA PENGIRIMAN MAKSIMAL TERCAPAI\n\n') + data.message);
                 } else {
-                    alert(data.message || 'Terjadi kendala saat mengirim data. Silakan periksa kembali formulir Anda.');
+                    alert(data.message || (isEn ? 'An error occurred while sending data. Please check your form.' : 'Terjadi kendala saat mengirim data. Silakan periksa kembali formulir Anda.'));
                 }
             } catch (err) {
-                alert('Gagal terhubung ke server. Silakan periksa koneksi internet Anda atau hubungi kami langsung.');
+                alert(isEn ? 'Unable to connect to the server. Please check your internet connection or contact us directly.' : 'Gagal terhubung ke server. Silakan periksa koneksi internet Anda atau hubungi kami langsung.');
             } finally {
                 if (submitBtn) {
                     submitBtn.disabled = false;
@@ -205,34 +209,54 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const waLinks = document.querySelectorAll('a[href*="wa.me"], .track-wa-btn, .floating-wa-btn');
     waLinks.forEach(link => {
-        link.addEventListener('click', async (e) => {
+        link.addEventListener('click', (e) => {
             const recentClicks = getLocalWAClicks();
             if (recentClicks.length >= 2) {
                 e.preventDefault();
-                alert('⚠️ BATAS PENGIRIMAN PESAN WHATSAPP TERCAPAI\n\nAnda telah mencapai batas maksimal 2x pengiriman pesan WhatsApp dalam waktu 1 x 24 jam untuk kenyamanan bersama dan mencegah spam.\n\nSilakan hubungi kami via email resmi info@acd.co.id atau coba kembali besok.');
+                alert(isEn
+                    ? '⚠️ WHATSAPP MESSAGE LIMIT REACHED\n\nYou have reached the maximum limit of 2 WhatsApp messages within 24 hours to prevent spam.\n\nPlease contact us via official email info@acd.co.id or try again tomorrow.'
+                    : '⚠️ BATAS PENGIRIMAN PESAN WHATSAPP TERCAPAI\n\nAnda telah mencapai batas maksimal 2x pengiriman pesan WhatsApp dalam waktu 1 x 24 jam untuk kenyamanan bersama dan mencegah spam.\n\nSilakan hubungi kami via email resmi info@acd.co.id atau coba kembali besok.');
                 return false;
             }
 
-            // Sync with server rate limiter
-            try {
-                const res = await fetch('/api/v1/track-wa-click?source=user_click', { method: 'POST' });
-                const data = await res.json();
-                if (!data.allowed) {
-                    e.preventDefault();
-                    alert('⚠️ ' + (data.message || 'Batas maksimal 2x pengiriman pesan WhatsApp dalam 24 jam telah tercapai.'));
-                    return false;
+            // Record synchronously & send non-blocking telemetry with keepalive so wa.me opens immediately without popup blocking
+            recordLocalWAClick();
+            const source = link.getAttribute('data-wa-source') || link.id || 'user_click';
+            fetch(`/api/v1/track-wa-click?source=${encodeURIComponent(source)}`, {
+                method: 'POST',
+                keepalive: true
+            }).then(res => res.json()).then(data => {
+                if (data && data.allowed === false) {
+                    // Ensure local storage reflects reached cap
+                    try {
+                        const now = Date.now();
+                        localStorage.setItem('acd_wa_click_timestamps', JSON.stringify([now, now]));
+                    } catch (err) {}
                 }
-                recordLocalWAClick();
-            } catch (err) {
-                // Fallback to local tracker
-                recordLocalWAClick();
-            }
+            }).catch(() => {});
         });
     });
 
-    // 6. Interactive Project Cost Estimator Calculator
+    // 6. Interactive Project Cost Estimator Calculator (Bilingual + Direct WhatsApp Export)
     const estimatorForm = document.getElementById('project-estimator-form');
     if (estimatorForm) {
+        const typeLabels = {
+            website: isEn ? 'Website & Portal (Corporate / Landing)' : 'Website & Portal (Korporat / Landing)',
+            web: isEn ? 'Information System (Custom Web App)' : 'Sistem Informasi (Web Base Custom)',
+            mobile: isEn ? 'Mobile Apps (Android & iOS)' : 'Mobile Apps (Android & iOS)',
+            erp: isEn ? 'Enterprise ERP Software' : 'Aplikasi ERP Bisnis & Operasional',
+            egov: isEn ? 'E-Government (Smart City & SPBE)' : 'E-Government (Smart City & SPBE)'
+        };
+        const scaleLabels = {
+            standard: isEn ? 'Standard / Single Team (<= 50 users)' : 'Standar / Tim Tunggal (<= 50 pengguna)',
+            medium: isEn ? 'Medium / Multi-Division (50 - 500 users)' : 'Menengah / Multi-Divisi (50 - 500 pengguna)',
+            enterprise: isEn ? 'Enterprise / Public Scale (> 1,000 users)' : 'Enterprise / Skala Publik (> 1.000 pengguna)'
+        };
+        const timelineLabels = {
+            standard: isEn ? 'Regular / Agile Sprint' : 'Reguler / Agile Sprint',
+            express: isEn ? 'Fast-Track / Dedicated Priority' : 'Fast-Track / Dedicated Priority'
+        };
+
         const calculateEstimate = () => {
             const projectType = document.querySelector('input[name="est_type"]:checked')?.value || 'web';
             const scale = document.querySelector('input[name="est_scale"]:checked')?.value || 'medium';
@@ -275,39 +299,59 @@ document.addEventListener('DOMContentLoaded', () => {
             const finalMin = Math.round(baseMin * multiplier);
             const finalMax = Math.round(baseMax * multiplier);
 
+            const priceStr = isEn
+                ? `IDR ${finalMin}M - ${finalMax}M*`
+                : `Rp ${finalMin} Juta - Rp ${finalMax} Juta*`;
+
             const resultDisplay = document.getElementById('est-result-price');
             const resultTimeline = document.getElementById('est-result-timeline');
 
             if (resultDisplay) {
-                resultDisplay.innerText = `Rp ${finalMin} Juta - Rp ${finalMax} Juta*`;
+                resultDisplay.innerText = priceStr;
             }
 
             // Timeline Dinamis Proporsional
-            if (resultTimeline) {
-                let estWeeks = '6 - 10 Minggu';
-                
-                if (projectType === 'website') {
-                    if (scale === 'standard') estWeeks = '2 - 4 Minggu';
-                    else if (scale === 'medium') estWeeks = '4 - 6 Minggu';
-                    else estWeeks = '6 - 10 Minggu';
-                } else if (projectType === 'web') {
-                    if (scale === 'standard') estWeeks = '4 - 8 Minggu';
-                    else if (scale === 'medium') estWeeks = '8 - 12 Minggu';
-                    else estWeeks = '14 - 20 Minggu';
-                } else if (projectType === 'mobile') {
-                    if (scale === 'standard') estWeeks = '6 - 10 Minggu';
-                    else if (scale === 'medium') estWeeks = '10 - 14 Minggu';
-                    else estWeeks = '16 - 22 Minggu';
-                } else if (projectType === 'erp' || projectType === 'egov') {
-                    if (scale === 'standard') estWeeks = '8 - 12 Minggu';
-                    else if (scale === 'medium') estWeeks = '12 - 18 Minggu';
-                    else estWeeks = '18 - 26 Minggu';
-                }
+            let estWeeks = isEn ? '8 - 12 Weeks' : '8 - 12 Minggu';
+            const wkUnit = isEn ? 'Weeks' : 'Minggu';
+            
+            if (projectType === 'website') {
+                if (scale === 'standard') estWeeks = `2 - 4 ${wkUnit}`;
+                else if (scale === 'medium') estWeeks = `4 - 6 ${wkUnit}`;
+                else estWeeks = `6 - 10 ${wkUnit}`;
+            } else if (projectType === 'web') {
+                if (scale === 'standard') estWeeks = `4 - 8 ${wkUnit}`;
+                else if (scale === 'medium') estWeeks = `8 - 12 ${wkUnit}`;
+                else estWeeks = `14 - 20 ${wkUnit}`;
+            } else if (projectType === 'mobile') {
+                if (scale === 'standard') estWeeks = `6 - 10 ${wkUnit}`;
+                else if (scale === 'medium') estWeeks = `10 - 14 ${wkUnit}`;
+                else estWeeks = `16 - 22 ${wkUnit}`;
+            } else if (projectType === 'erp' || projectType === 'egov') {
+                if (scale === 'standard') estWeeks = `8 - 12 ${wkUnit}`;
+                else if (scale === 'medium') estWeeks = `12 - 18 ${wkUnit}`;
+                else estWeeks = `18 - 26 ${wkUnit}`;
+            }
 
-                if (timeline === 'express') {
-                    estWeeks += ' (Fast-Track Prioritas)';
-                }
+            if (timeline === 'express') {
+                estWeeks += isEn ? ' (Fast-Track Priority)' : ' (Fast-Track Prioritas)';
+            }
+
+            if (resultTimeline) {
                 resultTimeline.innerText = estWeeks;
+            }
+
+            // Update direct WhatsApp & Contact Form links with live estimator payload
+            const summaryNote = isEn
+                ? `Hello PT. Aksara Cipta Digital (ACD) Team,\n\nI ran a project budget simulation on the website:\n• Solution Category: ${typeLabels[projectType] || projectType}\n• User Scale: ${scaleLabels[scale] || scale}\n• Priority Mode: ${timelineLabels[timeline] || timeline}\n• Estimated Investment: ${priceStr.replace('*', '')}\n• Estimated Delivery: ${estWeeks}\n\nPlease share a detailed technical proposal and consultation schedule.`
+                : `Halo Tim Konsultan PT. Aksara Cipta Digital (ACD),\n\nSaya telah melakukan simulasi anggaran proyek di website:\n• Kategori Solusi: ${typeLabels[projectType] || projectType}\n• Skala Pengguna: ${scaleLabels[scale] || scale}\n• Prioritas Rilis: ${timelineLabels[timeline] || timeline}\n• Perkiraan Investasi: ${priceStr.replace('*', '')}\n• Estimasi Pengerjaan: ${estWeeks}\n\nMohon diskusi lebih lanjut mengenai rincian RAB dan jadwal konsultasinya.`;
+
+            const estWaBtn = document.getElementById('est-wa-btn');
+            if (estWaBtn) {
+                estWaBtn.href = `https://wa.me/${targetWaNumber}?text=${encodeURIComponent(summaryNote)}`;
+            }
+            const estContactBtn = document.getElementById('est-contact-btn');
+            if (estContactBtn) {
+                estContactBtn.href = `/kontak?note=${encodeURIComponent(summaryNote)}`;
             }
         };
 

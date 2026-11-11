@@ -13,6 +13,7 @@
         </div>
         <div class="flex items-center space-x-2 shrink-0">
             <form method="POST" action="{{ url_for('admin_security_clear_logs') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengosongkan seluruh riwayat log audit keamanan?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="px-4 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-bold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
                     <i data-lucide="trash-2" class="w-4 h-4"></i>
                     <span>Bersihkan Riwayat Log</span>
@@ -36,6 +37,7 @@
                     <span class="text-[10px] text-slate-400 block mt-0.5">Gagal {{ l.failed_count }}x • Terkunci s/d: {{ l.locked_until }}</span>
                 </div>
                 <form method="POST" action="{{ url_for('admin_security_unlock_ip') }}">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                     <input type="hidden" name="ip_address" value="{{ l.ip_address }}">
                     <button type="submit" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-[11px] font-bold transition">
                         Buka Blokir

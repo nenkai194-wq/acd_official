@@ -144,6 +144,7 @@
                 <!-- Update Status Form & Delete -->
                 <div class="flex flex-wrap items-center gap-2 w-full xl:w-auto justify-between xl:justify-end">
                     <form method="POST" action="{{ url_for('admin_update_inquiry_status', inquiry_id=inq.id) }}" class="flex flex-wrap items-center gap-2 flex-1 sm:flex-initial">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <input type="text" name="notes" value="{{ inq.notes or '' }}" placeholder="Tambah catatan..." class="px-3 py-1.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-white placeholder-slate-600 focus:outline-none focus:ring-1 focus:ring-indigo-500 flex-1 sm:w-44">
                         <select name="status" class="px-2.5 py-1.5 text-xs bg-[#020617] border border-indigo-950 rounded-xl text-slate-200 focus:outline-none focus:ring-1 focus:ring-indigo-500 font-semibold">
                             <option value="Baru" {% if inq.status == 'Baru' %}selected{% endif %}>Baru</option>
@@ -159,6 +160,7 @@
 
                     <!-- Delete Inquiry -->
                     <form method="POST" action="{{ url_for('admin_delete_inquiry', inquiry_id=inq.id) }}" onsubmit="return confirm('Hapus data konsultasi dari {{ inq.name }}?');" class="shrink-0">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="p-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 transition" title="Hapus Data">
                             <i data-lucide="trash-2" class="w-4 h-4"></i>
                         </button>

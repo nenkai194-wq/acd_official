@@ -4,8 +4,10 @@ from datetime import datetime
 from config import Config
 
 def get_db_connection():
-    conn = sqlite3.connect(Config.DATABASE_PATH)
+    conn = sqlite3.connect(Config.DATABASE_PATH, timeout=30.0)
     conn.row_factory = sqlite3.Row
+    conn.execute('PRAGMA journal_mode=WAL;')
+    conn.execute('PRAGMA synchronous=NORMAL;')
     return conn
 
 def init_db():
@@ -213,11 +215,11 @@ def init_db():
         ('footer_badge3', 'SLA 99.9% Uptime Support'),
         ('footer_support_text', 'Layanan Konsultasi & Aduan:'),
         ('footer_support_label', 'WhatsApp 24/7 Support'),
-        ('footer_copyright', '\u00a9 2025 PT. Aksara Cipta Digital (acd.co.id). All rights reserved.'),
+        ('footer_copyright', '\u00a9 2026 PT. Aksara Cipta Digital. All rights reserved.'),
         ('footer_privacy_label', 'Kebijakan Privasi'),
-        ('footer_privacy_url', '/tentang-kami'),
+        ('footer_privacy_url', '/kebijakan-privasi'),
         ('footer_terms_label', 'Syarat & Ketentuan Layanan'),
-        ('footer_terms_url', '/tentang-kami'),
+        ('footer_terms_url', '/syarat-ketentuan'),
         ('footer_consult_label', 'Hubungi Konsultan'),
         ('footer_consult_url', '/kontak'),
         ('contact_hero_badge', 'Hubungi Kami'),
@@ -227,11 +229,11 @@ def init_db():
         ('contact_form_title', 'Kirimkan Deskripsi Kebutuhan Anda'),
         ('contact_form_subtitle', 'Kami menghargai kerahasiaan data bisnis Anda (Non-Disclosure Agreement siap ditandatangani)'),
         ('contact_submit_btn', 'Kirim Formulir Konsultasi Gratis'),
-        ('contact_wa_label', '+62 812-8888-2510 (Fast Response)'),
-        ('contact_wa_number', '6281288882510'),
+        ('contact_wa_label', '+62 852-8789-8937 (Fast Response)'),
+        ('contact_wa_number', '6285287898937'),
         ('contact_email', 'info@acd.co.id'),
-        ('contact_phone', '+62 21 8299 8765'),
-        ('contact_hours', 'Senin - Jumat: 08:30 - 17:00 WIB'),
+        ('contact_phone', '+62 852-8789-8937'),
+        ('contact_hours', 'Senin - Jumat: 08:30 - 16:00 WIB'),
         ('contact_address_main', 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182'),
         ('contact_address_branch', ''),
         ('contact_categories', 'Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT'),
@@ -252,9 +254,9 @@ def init_db():
         ('seo_google_analytics_id', ''),
         ('seo_gtm_id', ''),
         ('seo_organization_type', 'Corporation'),
-        ('seo_geo_region', 'ID-JK'),
+        ('seo_geo_region', 'ID-JB'),
         ('seo_geo_placename', 'Tasikmalaya, Jawa Barat, Indonesia'),
-        ('seo_geo_position', '-6.2241;106.8315'),
+        ('seo_geo_position', '-7.3506;108.2172'),
     ]
     for k, v in default_settings:
         cursor.execute('INSERT OR IGNORE INTO settings (key, value) VALUES (?, ?)', (k, v))

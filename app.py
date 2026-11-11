@@ -4,10 +4,13 @@ import re
 import io
 import time
 import random
+import secrets
+from xml.sax.saxutils import escape as xml_escape
 from PIL import Image, ImageDraw, ImageFont
 from functools import wraps
 from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify, abort, flash, Response
+from werkzeug.middleware.proxy_fix import ProxyFix
 from config import Config
 from database import init_db, seed_db
 from models import (
@@ -25,6 +28,7 @@ from models import (
 
 app = Flask(__name__)
 app.config.from_object(Config)
+app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 from translations import TRANSLATIONS
 
@@ -39,6 +43,13 @@ def get_client_ip():
         ip_address = ip_address.split(',')[0].strip()
     return ip_address or '127.0.0.1'
 
+def get_csrf_token():
+    token = session.get('_csrf_token')
+    if not token:
+        token = secrets.token_hex(32)
+        session['_csrf_token'] = token
+    return token
+
 # Security Headers (OWASP Top 10 Hardening)
 @app.after_request
 def add_security_headers(response):
@@ -47,6 +58,8 @@ def add_security_headers(response):
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+    if request.path.startswith('/admin'):
+        response.headers['X-Robots-Tag'] = 'noindex, nofollow'
     return response
 
 ADMIN_INACTIVITY_TIMEOUT = 15 * 60  # 15 menit (900 detik) batas waktu otomatis logout saat tidak aktif
@@ -78,10 +91,20 @@ def admin_required(f):
     return decorated_function
 
 @app.before_request
-def handle_language_preference():
+def handle_before_request():
     lang = request.args.get('lang')
     if lang in ['id', 'en']:
         session['lang'] = lang
+
+    # CSRF validation for Admin POST endpoints and public /kontak POST
+    if request.method == 'POST' and (request.path.startswith('/admin') or request.path in ['/kontak', '/hubungi-kami']):
+        expected_token = session.get('_csrf_token')
+        provided_token = request.form.get('csrf_token') or request.headers.get('X-CSRFToken')
+        if not expected_token or not provided_token or not secrets.compare_digest(str(expected_token), str(provided_token)):
+            if request.is_json or request.path == '/admin/ping-session':
+                return jsonify({'status': 'error', 'message': 'Invalid or missing CSRF security token.'}), 403
+            flash('Sesi keamanan formulir telah kedaluwarsa. Silakan muat ulang halaman dan coba lagi.', 'error')
+            return redirect(request.url)
 
 
 def parse_footer_links(raw_text):
@@ -122,6 +145,9 @@ def get_seo_data():
     ga_id = s_val('seo_google_analytics_id', '')
     gtm_id = s_val('seo_gtm_id', '')
     org_type = s_val('seo_organization_type', 'Corporation')
+    geo_region = s_val('seo_geo_region', 'ID-JB')
+    geo_placename = s_val('seo_geo_placename', 'Tasikmalaya, Jawa Barat, Indonesia')
+    geo_position = s_val('seo_geo_position', '-7.3506;108.2172')
 
     return {
         'meta_title': meta_title,
@@ -139,56 +165,10 @@ def get_seo_data():
         'bing_verification': bing_ver,
         'google_analytics_id': ga_id,
         'gtm_id': gtm_id,
-        'organization_type': org_type
-    }
-
-def get_contact_data():
-    all_s = SettingModel.get_all()
-    
-    def s_val(k, fallback):
-        v = all_s.get(k)
-        return v if (v is not None and str(v).strip() != '') else fallback
-
-    hero_badge = s_val('contact_hero_badge', 'Hubungi Kami')
-    hero_title = s_val('contact_hero_title', 'Konsultasi Gratis Rancang Bangun Software')
-    hero_subtitle = s_val('contact_hero_subtitle', 'Diskusikan kebutuhan aplikasi atau sistem perusahaan Anda dengan System Analyst senior kami. Kami siap memberikan masukan arsitektur dan estimasi anggaran tanpa biaya.')
-    form_badge = s_val('contact_form_badge', 'FORMULIR KEBUTUHAN')
-    form_title = s_val('contact_form_title', 'Kirimkan Deskripsi Kebutuhan Anda')
-    form_subtitle = s_val('contact_form_subtitle', 'Kami menghargai kerahasiaan data bisnis Anda (Non-Disclosure Agreement siap ditandatangani)')
-    submit_btn = s_val('contact_submit_btn', 'Kirim Formulir Konsultasi Gratis')
-    wa_label = s_val('contact_wa_label', '+62 812-8888-2510 (Fast Response)')
-    wa_number = s_val('contact_wa_number', '6281288882510')
-    email = s_val('contact_email', 'info@acd.co.id')
-    phone = s_val('contact_phone', '+62 21 8299 8765')
-    hours = s_val('contact_hours', 'Senin - Jumat: 08:30 - 17:00 WIB')
-    address_main = s_val('contact_address_main', 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182')
-    address_branch = ''
-    
-    categories_raw = s_val('contact_categories', "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT")
-    categories_list = [line.strip() for line in categories_raw.splitlines() if line.strip()]
-
-    budget_raw = s_val('contact_budget_ranges', "Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)")
-    budget_list = [line.strip() for line in budget_raw.splitlines() if line.strip()]
-
-    return {
-        'hero_badge': hero_badge,
-        'hero_title': hero_title,
-        'hero_subtitle': hero_subtitle,
-        'form_badge': form_badge,
-        'form_title': form_title,
-        'form_subtitle': form_subtitle,
-        'submit_btn': submit_btn,
-        'wa_label': wa_label,
-        'wa_number': wa_number,
-        'email': email,
-        'phone': phone,
-        'hours': hours,
-        'address_main': address_main,
-        'address_branch': address_branch,
-        'categories': categories_list,
-        'categories_raw': categories_raw,
-        'budget_ranges': budget_list,
-        'budget_raw': budget_raw
+        'organization_type': org_type,
+        'geo_region': geo_region,
+        'geo_placename': geo_placename,
+        'geo_position': geo_position
     }
 
 def get_contact_data(lang='id'):
@@ -306,9 +286,9 @@ def get_footer_data(lang='id'):
     badge2 = s_val('footer_badge2', 'OWASP Top 10 Compliant')
     badge3 = s_val('footer_badge3', 'SLA 99.9% Uptime Support')
 
-    copyright_text = s_val('footer_copyright', '\u00a9 2025 PT. Aksara Cipta Digital (acd.co.id). All rights reserved.')
-    privacy_url = s_val('footer_privacy_url', '/tentang-kami')
-    terms_url = s_val('footer_terms_url', '/tentang-kami')
+    copyright_text = s_val('footer_copyright', '\u00a9 2026 PT. Aksara Cipta Digital. All rights reserved.')
+    privacy_url = s_val('footer_privacy_url', '/kebijakan-privasi')
+    terms_url = s_val('footer_terms_url', '/syarat-ketentuan')
     consult_url = s_val('footer_consult_url', '/kontak')
 
     return {
@@ -373,6 +353,7 @@ def inject_global_data():
         'current_lang': current_lang,
         't': t,
         'set_lang_url': set_lang_url,
+        'csrf_token': get_csrf_token,
         'badge_new_inquiries': badge_new,
         'admin_inactivity_timeout': ADMIN_INACTIVITY_TIMEOUT,
         'footer': get_footer_data(current_lang),
@@ -382,35 +363,55 @@ def inject_global_data():
 
 @app.route('/set-language/<lang>')
 def set_language(lang):
+    from urllib.parse import urlparse
     if lang in ['id', 'en']:
         session['lang'] = lang
     referrer = request.referrer
-    if referrer and ('127.0.0.1' in referrer or 'localhost' in referrer or '192.168.' in referrer or 'acd.' in referrer):
-        return redirect(referrer)
+    if referrer:
+        parsed_ref = urlparse(referrer)
+        if not parsed_ref.netloc or parsed_ref.netloc == request.host:
+            return redirect(referrer)
     return redirect(url_for('index'))
 
 
-# --- SEO ENDPOINTS: SITEMAP & ROBOTS ---
+# --- SEO ENDPOINTS: SITEMAP, ROBOTS & HEALTH ---
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    from database import get_db_connection
+    try:
+        conn = get_db_connection()
+        conn.execute('SELECT 1').fetchone()
+        conn.close()
+        return jsonify({'status': 'ok', 'database': 'connected', 'service': 'acd-official'}), 200
+    except Exception as e:
+        return jsonify({'status': 'error', 'database': str(e)}), 500
 
 @app.route('/sitemap.xml', methods=['GET'])
 def sitemap_xml():
     base_url = SettingModel.get('seo_canonical_url', 'https://acd.co.id').rstrip('/')
     services = ServiceModel.get_all(only_published=True)
     portfolios = PortfolioModel.get_all()
+    blogs = BlogModel.get_all()
     careers = CareerModel.get_all(only_published=True)
     
     pages = [
         {'loc': f"{base_url}/", 'changefreq': 'daily', 'priority': '1.0'},
         {'loc': f"{base_url}/layanan", 'changefreq': 'weekly', 'priority': '0.9'},
         {'loc': f"{base_url}/portofolio", 'changefreq': 'weekly', 'priority': '0.9'},
+        {'loc': f"{base_url}/blog", 'changefreq': 'weekly', 'priority': '0.8'},
         {'loc': f"{base_url}/tentang-kami", 'changefreq': 'monthly', 'priority': '0.8'},
         {'loc': f"{base_url}/karir", 'changefreq': 'weekly', 'priority': '0.8'},
         {'loc': f"{base_url}/kontak", 'changefreq': 'monthly', 'priority': '0.8'},
+        {'loc': f"{base_url}/kebijakan-privasi", 'changefreq': 'yearly', 'priority': '0.4'},
+        {'loc': f"{base_url}/syarat-ketentuan", 'changefreq': 'yearly', 'priority': '0.4'},
     ]
     for s in services:
         pages.append({'loc': f"{base_url}/layanan/{s['slug']}", 'changefreq': 'weekly', 'priority': '0.8'})
     for p in portfolios:
         pages.append({'loc': f"{base_url}/portofolio/{p['slug']}", 'changefreq': 'monthly', 'priority': '0.7'})
+    for b in blogs:
+        pages.append({'loc': f"{base_url}/blog/{b['slug']}", 'changefreq': 'monthly', 'priority': '0.7'})
     for c in careers:
         pages.append({'loc': f"{base_url}/karir/{c['slug']}", 'changefreq': 'weekly', 'priority': '0.6'})
 
@@ -418,7 +419,7 @@ def sitemap_xml():
     xml_lines.append('<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">')
     for page in pages:
         xml_lines.append('  <url>')
-        xml_lines.append(f"    <loc>{page['loc']}</loc>")
+        xml_lines.append(f"    <loc>{xml_escape(page['loc'])}</loc>")
         xml_lines.append(f"    <changefreq>{page['changefreq']}</changefreq>")
         xml_lines.append(f"    <priority>{page['priority']}</priority>")
         xml_lines.append('  </url>')
@@ -523,7 +524,15 @@ def career_detail(slug):
 def faq():
     return redirect('/#faq')
 
-def generate_consultation_whatsapp_url(name, company, email, phone, service_type, budget_range, message):
+@app.route('/kebijakan-privasi')
+def privacy_policy():
+    return render_template('legal.html', page_type='privacy')
+
+@app.route('/syarat-ketentuan')
+def terms_conditions():
+    return render_template('legal.html', page_type='terms')
+
+def generate_consultation_whatsapp_url(name, company, email, phone, service_type, budget_range, message, lang='id'):
     import urllib.parse
     target_wa = SettingModel.get('contact_wa_number') or SettingModel.get('company_whatsapp') or '6285287898937'
     target_wa = re.sub(r'[^0-9]', '', str(target_wa))
@@ -535,34 +544,49 @@ def generate_consultation_whatsapp_url(name, company, email, phone, service_type
     company_display = company if company else '-'
     budget_display = budget_range if budget_range else '-'
 
-    wa_text = (
-        "Halo Tim Konsultan PT. Aksara Cipta Digital (ACD),\n\n"
-        "Saya ingin mengirimkan *Formulir Kebutuhan / Konsultasi Gratis* melalui website:\n\n"
-        f"👤 *Nama Lengkap*: {name}\n"
-        f"🏢 *Instansi / Perusahaan*: {company_display}\n"
-        f"📧 *Email*: {email}\n"
-        f"📱 *Nomor WhatsApp*: {phone}\n"
-        f"💼 *Kategori Solusi*: {service_type}\n"
-        f"💰 *Estimasi Budget*: {budget_display}\n\n"
-        f"📝 *Deskripsi Kebutuhan Proyek*:\n{message}\n\n"
-        "Mohon informasi ketersediaan jadwal diskusi teknis dan penawaran solusinya. Terima kasih."
-    )
+    if lang == 'en':
+        wa_text = (
+            "Hello PT. Aksara Cipta Digital (ACD) Consultant Team,\n\n"
+            "I would like to submit a *Free Software Consultation Request* via the website:\n\n"
+            f"👤 *Full Name*: {name}\n"
+            f"🏢 *Company / Organization*: {company_display}\n"
+            f"📧 *Email*: {email}\n"
+            f"📱 *WhatsApp Number*: {phone}\n"
+            f"💼 *Solution Category*: {service_type}\n"
+            f"💰 *Estimated Budget*: {budget_display}\n\n"
+            f"📝 *Project Requirements & Description*:\n{message}\n\n"
+            "Please share available schedule slots for a technical discussion and solution proposal. Thank you."
+        )
+    else:
+        wa_text = (
+            "Halo Tim Konsultan PT. Aksara Cipta Digital (ACD),\n\n"
+            "Saya ingin mengirimkan *Formulir Kebutuhan / Konsultasi Gratis* melalui website:\n\n"
+            f"👤 *Nama Lengkap*: {name}\n"
+            f"🏢 *Instansi / Perusahaan*: {company_display}\n"
+            f"📧 *Email*: {email}\n"
+            f"📱 *Nomor WhatsApp*: {phone}\n"
+            f"💼 *Kategori Solusi*: {service_type}\n"
+            f"💰 *Estimasi Budget*: {budget_display}\n\n"
+            f"📝 *Deskripsi Kebutuhan Proyek*:\n{message}\n\n"
+            "Mohon informasi ketersediaan jadwal diskusi teknis dan penawaran solusinya. Terima kasih."
+        )
     return f"https://wa.me/{target_wa}?text={urllib.parse.quote(wa_text)}"
 
 @app.route('/hubungi-kami', methods=['GET', 'POST'])
 @app.route('/kontak', methods=['GET', 'POST'])
 def contact():
+    lang = session.get('lang', 'id')
     if request.method == 'POST':
-        name = request.form.get('name', '').strip()
-        email = request.form.get('email', '').strip()
-        phone = request.form.get('phone', '').strip()
-        company = request.form.get('company', '').strip()
-        service_type = request.form.get('service_type', 'Aplikasi & Website').strip()
-        budget_range = request.form.get('budget_range', '').strip()
-        message = request.form.get('message', '').strip()
+        name = request.form.get('name', '').strip()[:120]
+        email = request.form.get('email', '').strip()[:150]
+        phone = request.form.get('phone', '').strip()[:25]
+        company = request.form.get('company', '').strip()[:150]
+        service_type = request.form.get('service_type', 'Aplikasi & Website').strip()[:150]
+        budget_range = request.form.get('budget_range', '').strip()[:120]
+        message = request.form.get('message', '').strip()[:3000]
 
         if not name or not email or not phone or not message:
-            flash('Mohon lengkapi semua kolom wajib yang bertanda bintang (*).', 'error')
+            flash('Please fill in all required fields marked with (*).' if lang == 'en' else 'Mohon lengkapi semua kolom wajib yang bertanda bintang (*).', 'error')
             return render_template('contact.html')
 
         is_phone_valid, normalized_phone, phone_err = InquiryModel.validate_and_normalize_phone(phone)
@@ -571,7 +595,7 @@ def contact():
             return render_template('contact.html')
 
         if InquiryModel.count_recent_by_email(email, hours=24) >= 2 or InquiryModel.count_recent_by_phone(normalized_phone, hours=24) >= 2:
-            flash('Batas maksimal pengiriman (2x dalam 24 jam) telah tercapai untuk nomor WhatsApp atau Email ini.', 'error')
+            flash('Maximum submission limit (2x within 24 hours) reached for this WhatsApp number or Email.' if lang == 'en' else 'Batas maksimal pengiriman (2x dalam 24 jam) telah tercapai untuk nomor WhatsApp atau Email ini.', 'error')
             return render_template('contact.html')
 
         InquiryModel.create(
@@ -584,8 +608,8 @@ def contact():
             message=message,
             ip_address=get_client_ip()
         )
-        wa_url = generate_consultation_whatsapp_url(name, company, email, normalized_phone, service_type, budget_range, message)
-        flash('Terima kasih! Formulir Kebutuhan Anda telah berhasil dikirim. Mengarahkan ke WhatsApp resmi ACD (+62 852-8789-8937)...', 'success')
+        wa_url = generate_consultation_whatsapp_url(name, company, email, normalized_phone, service_type, budget_range, message, lang=lang)
+        flash('Thank you! Redirecting directly to official ACD WhatsApp...' if lang == 'en' else 'Terima kasih! Formulir Kebutuhan Anda telah berhasil dikirim. Mengarahkan ke WhatsApp resmi ACD...', 'success')
         return redirect(wa_url)
 
     return render_template('contact.html')
@@ -594,19 +618,20 @@ def contact():
 
 @app.route('/api/v1/consultation', methods=['POST'])
 def api_consultation():
+    lang = session.get('lang', 'id')
     data = request.get_json(silent=True) or request.form
-    name = (data.get('name') or '').strip()
-    email = (data.get('email') or '').strip()
-    phone = (data.get('phone') or '').strip()
-    company = (data.get('company') or '').strip()
-    service_type = (data.get('service_type') or 'Aplikasi & Website').strip()
-    budget_range = (data.get('budget_range') or '').strip()
-    message = (data.get('message') or '').strip()
+    name = (data.get('name') or '').strip()[:120]
+    email = (data.get('email') or '').strip()[:150]
+    phone = (data.get('phone') or '').strip()[:25]
+    company = (data.get('company') or '').strip()[:150]
+    service_type = (data.get('service_type') or 'Aplikasi & Website').strip()[:150]
+    budget_range = (data.get('budget_range') or '').strip()[:120]
+    message = (data.get('message') or '').strip()[:3000]
 
     if not name or not email or not phone or not message:
         return jsonify({
             'status': 'error',
-            'message': 'Mohon lengkapi nama, email, nomor WhatsApp, dan deskripsi kebutuhan.'
+            'message': 'Please complete name, email, WhatsApp number, and project requirements.' if lang == 'en' else 'Mohon lengkapi nama, email, nomor WhatsApp, dan deskripsi kebutuhan.'
         }), 400
 
     # 1. Validasi Standar Nasional Nomor WhatsApp (tidak boleh ada huruf)
@@ -621,7 +646,7 @@ def api_consultation():
     if not re.match(r'^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$', email):
         return jsonify({
             'status': 'error',
-            'message': 'Format email tidak valid. Harap masukkan alamat email yang benar (contoh: nama@perusahaan.co.id).'
+            'message': 'Invalid email format. Please enter a valid corporate/personal email.' if lang == 'en' else 'Format email tidak valid. Harap masukkan alamat email yang benar (contoh: nama@perusahaan.co.id).'
         }), 400
 
     # 3. Pembatasan Anti-Spam: Maksimal 2x kirim dalam 1x24 jam per Nomor WA dan Email
@@ -629,14 +654,14 @@ def api_consultation():
     if email_count >= 2:
         return jsonify({
             'status': 'error',
-            'message': f'Email "{email}" telah mencapai batas maksimal 2x pengiriman dalam 1 x 24 jam untuk pencegahan spam. Silakan coba kembali besok atau hubungi hotline kami langsung.'
+            'message': (f'Email "{email}" has reached the 2x submission limit per 24 hours. Please try again tomorrow or contact our WhatsApp directly.' if lang == 'en' else f'Email "{email}" telah mencapai batas maksimal 2x pengiriman dalam 1 x 24 jam untuk pencegahan spam. Silakan coba kembali besok atau hubungi hotline kami langsung.')
         }), 429
 
     phone_count = InquiryModel.count_recent_by_phone(normalized_phone, hours=24)
     if phone_count >= 2:
         return jsonify({
             'status': 'error',
-            'message': f'Nomor WhatsApp "{normalized_phone}" telah mencapai batas maksimal 2x pengiriman dalam 1 x 24 jam untuk pencegahan spam. Silakan coba kembali besok atau hubungi hotline kami langsung.'
+            'message': (f'WhatsApp number "{normalized_phone}" has reached the 2x submission limit per 24 hours. Please try again tomorrow or contact our hotline.' if lang == 'en' else f'Nomor WhatsApp "{normalized_phone}" telah mencapai batas maksimal 2x pengiriman dalam 1 x 24 jam untuk pencegahan spam. Silakan coba kembali besok atau hubungi hotline kami langsung.')
         }), 429
 
     ip_address = get_client_ip()
@@ -653,11 +678,11 @@ def api_consultation():
     )
 
     remaining = max(0, 2 - (max(email_count, phone_count) + 1))
-    wa_url = generate_consultation_whatsapp_url(name, company, email, normalized_phone, service_type, budget_range, message)
+    wa_url = generate_consultation_whatsapp_url(name, company, email, normalized_phone, service_type, budget_range, message, lang=lang)
 
     return jsonify({
         'status': 'success',
-        'message': 'Permintaan konsultasi berhasil dikirim! Menghubungkan Anda langsung ke WhatsApp tim konsultan ACD...',
+        'message': 'Consultation request submitted! Redirecting directly to ACD WhatsApp Consultant...' if lang == 'en' else 'Permintaan konsultasi berhasil dikirim! Menghubungkan Anda langsung ke WhatsApp tim konsultan ACD...',
         'inquiry_id': inquiry_id,
         'remaining_submissions': remaining,
         'whatsapp_url': wa_url
@@ -1728,11 +1753,11 @@ def admin_contact_form_reset_defaults():
         'contact_form_title': 'Kirimkan Deskripsi Kebutuhan Anda',
         'contact_form_subtitle': 'Kami menghargai kerahasiaan data bisnis Anda (Non-Disclosure Agreement siap ditandatangani)',
         'contact_submit_btn': 'Kirim Formulir Konsultasi Gratis',
-        'contact_wa_label': '+62 812-8888-2510 (Fast Response)',
-        'contact_wa_number': '6281288882510',
+        'contact_wa_label': '+62 852-8789-8937 (Fast Response)',
+        'contact_wa_number': '6285287898937',
         'contact_email': 'info@acd.co.id',
-        'contact_phone': '+62 21 8299 8765',
-        'contact_hours': 'Senin - Jumat: 08:30 - 17:00 WIB',
+        'contact_phone': '+62 852-8789-8937',
+        'contact_hours': 'Senin - Jumat: 08:30 - 16:00 WIB',
         'contact_address_main': 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182',
         'contact_address_branch': '',
         'contact_categories': "Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT",
@@ -1795,9 +1820,9 @@ def admin_footer_reset_defaults():
         'footer_about': 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
         'footer_address_main': 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182',
         'footer_address_branch': '',
-        'footer_phone': '+62 21 8299 8765',
+        'footer_phone': '+62 852-8789-8937',
         'footer_email': 'info@acd.co.id',
-        'footer_whatsapp': '6281288882510',
+        'footer_whatsapp': '6285287898937',
         'footer_col2_title': 'Aplikasi & Website',
         'footer_col2_links': "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nWebsite Korporat | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nIntegrasi Sistem & API | /layanan/integrasi-sistem\nSemua Aplikasi & Website \u2192 | /layanan/kategori/Aplikasi%20&%20Website",
         'footer_col3_title': 'Aplikasi Bisnis ERP',
@@ -1812,11 +1837,11 @@ def admin_footer_reset_defaults():
         'footer_badge3': 'SLA 99.9% Uptime Support',
         'footer_support_text': 'Layanan Konsultasi & Aduan:',
         'footer_support_label': 'WhatsApp 24/7 Support',
-        'footer_copyright': '\u00a9 2025 PT. Aksara Cipta Digital (acd.co.id). All rights reserved.',
+        'footer_copyright': '\u00a9 2026 PT. Aksara Cipta Digital. All rights reserved.',
         'footer_privacy_label': 'Kebijakan Privasi',
-        'footer_privacy_url': '/tentang-kami',
+        'footer_privacy_url': '/kebijakan-privasi',
         'footer_terms_label': 'Syarat & Ketentuan Layanan',
-        'footer_terms_url': '/tentang-kami',
+        'footer_terms_url': '/syarat-ketentuan',
         'footer_consult_label': 'Hubungi Konsultan',
         'footer_consult_url': '/kontak',
     }
@@ -2168,6 +2193,6 @@ def internal_error(error):
     return render_template('500.html'), 500
 
 if __name__ == '__main__':
-    # Running on local port 5000 (debug configurable via env FLASK_DEBUG)
-    debug_mode = os.environ.get('FLASK_DEBUG', 'True').lower() in ['true', '1']
+    # Running on local port 5000 (debug defaults to False for production safety; set FLASK_DEBUG=True locally if needed)
+    debug_mode = os.environ.get('FLASK_DEBUG', 'False').lower() in ['true', '1']
     app.run(host='0.0.0.0', port=5000, debug=debug_mode)

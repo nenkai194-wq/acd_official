@@ -96,6 +96,7 @@
 
         <!-- Form Login -->
         <form method="POST" action="{{ url_for('admin_login') }}" autocomplete="off" class="space-y-3 sm:space-y-3.5">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <!-- Invisible Honeypot Trap -->
             <div style="display:none !important;" aria-hidden="true">
                 <input type="text" name="admin_sec_trap" tabindex="-1" autocomplete="off">

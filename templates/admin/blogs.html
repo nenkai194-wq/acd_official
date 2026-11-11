@@ -81,6 +81,7 @@
                                     <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
                                 </a>
                                 <form method="POST" action="{{ url_for('admin_blog_delete', blog_id=b.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus artikel \'{{ b.title }}\'?');" class="inline">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                                     <button type="submit" class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus Artikel">
                                         <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                                     </button>

@@ -545,7 +545,10 @@
             function extendSession() {
                 fetch('{{ url_for("admin_ping_session") }}', {
                     method: 'POST',
-                    headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    }
                 })
                 .then(res => res.json())
                 .then(data => {
@@ -582,7 +585,10 @@
                         lastPingTime = now;
                         fetch('{{ url_for("admin_ping_session") }}', {
                             method: 'POST',
-                            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRFToken': '{{ csrf_token() }}'
+                            }
                         }).catch(() => {});
                     }
                 }

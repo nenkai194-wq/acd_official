@@ -34,7 +34,7 @@
             <a href="{{ url_for('contact', service=service.title) }}" class="deptech-btn-primary font-bold text-xs uppercase tracking-wider px-7 py-3.5 inline-block text-center">
                 {% if current_lang == 'en' %}Consult This Solution for Free{% else %}Konsultasikan Solusi Ini Gratis{% endif %}
             </a>
-            <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}?text=Halo%20ACD%2C%20saya%20tertarik%20dengan%20layanan%20{{ service.title | urlencode }}" target="_blank" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-full transition inline-flex items-center space-x-2">
+            <a href="https://wa.me/{{ contact_cfg.wa_number }}?text=Halo%20ACD%2C%20saya%20tertarik%20dengan%20layanan%20{{ service.title | urlencode }}" target="_blank" rel="noopener noreferrer" class="bg-emerald-600 hover:bg-emerald-700 text-white font-semibold text-xs uppercase tracking-wider px-6 py-3.5 rounded-full transition inline-flex items-center space-x-2">
                 <i data-lucide="message-circle" class="w-4 h-4"></i>
                 <span>{% if current_lang == 'en' %}Inquire via WhatsApp{% else %}Tanya via WhatsApp{% endif %}</span>
             </a>

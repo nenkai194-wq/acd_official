@@ -31,6 +31,7 @@
                 </div>
                 <div class="flex items-center space-x-2 shrink-0">
                     <form method="POST" action="{{ url_for('admin_faq_delete', faq_id=f.id) }}" onsubmit="return confirm('Apakah Anda yakin ingin menghapus pertanyaan ini?');">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                         <button type="submit" class="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:bg-rose-500/20 border border-rose-500/30 transition" title="Hapus FAQ">
                             <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
                         </button>
@@ -63,6 +64,7 @@
         </div>
 
         <form method="POST" action="{{ url_for('admin_faqs') }}" class="space-y-4 text-xs">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="block font-bold text-slate-300 mb-1">Kategori FAQ</label>

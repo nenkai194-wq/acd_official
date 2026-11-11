@@ -79,7 +79,11 @@
                 Kirimkan CV terbaru dan tautan portofolio / GitHub Anda ke email <a href="mailto:karir@acd.co.id" class="text-accent-cyan font-bold hover:underline">karir@acd.co.id</a> dengan subjek email <code class="px-2 py-0.5 rounded bg-indigo-950/80 text-indigo-300 border border-indigo-800/60">[LAMARAN] {{ career.title }} - [Nama Anda]</code>.
                 {% endif %}
             </p>
-            <div class="pt-2">
+            <div class="pt-2 flex flex-wrap gap-3">
+                <a href="https://wa.me/{{ contact_cfg.wa_number }}?text={{ ('Halo Tim HRD PT. Aksara Cipta Digital (ACD), saya tertarik melamar posisi ' ~ career.title ~ ' (' ~ career.department ~ '). Mohon arahan pengiriman CV & portofolio.') | urlencode }}" target="_blank" rel="noopener noreferrer" class="inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl transition shadow-lg">
+                    <i data-lucide="message-circle" class="w-4 h-4"></i>
+                    <span>{% if current_lang == 'en' %}Apply via WhatsApp{% else %}Kirim Lamaran via WhatsApp{% endif %}</span>
+                </a>
                 <a href="mailto:karir@acd.co.id?subject={% if current_lang == 'en' %}[APPLICATION]{% else %}[LAMARAN]{% endif %}%20{{ career.title | urlencode }}" class="inline-flex items-center space-x-2 deptech-btn-primary text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-xl transition">
                     <i data-lucide="send" class="w-4 h-4"></i>
                     <span>{% if current_lang == 'en' %}Send Application Email Now{% else %}Kirim Email Lamaran Sekarang{% endif %}</span>

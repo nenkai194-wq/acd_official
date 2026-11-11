@@ -25,7 +25,9 @@ class Config:
     ADMIN_PIN = os.environ.get('ADMIN_PIN') or '555556'
     
     # Session & Cookie Security
+    SESSION_COOKIE_NAME = 'acd_session'
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_SAMESITE = 'Lax'
+    SESSION_COOKIE_SECURE = os.environ.get('SESSION_COOKIE_SECURE', 'False').lower() in ['true', '1']
     PERMANENT_SESSION_LIFETIME = 2700  # 45 menit auto-logout jika idle
 

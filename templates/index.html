@@ -307,32 +307,36 @@
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="bg-[#0a0f26] rounded-3xl p-8 sm:p-12 shadow-2xl border border-indigo-900/60">
             <div class="text-center max-w-2xl mx-auto mb-10">
-                <span class="text-xs font-bold text-indigo-400 deptech-badge px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">Kalkulator Estimasi Proyek</span>
-                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-3">Hitung Simulasi Anggaran & Waktu Pengerjaan</h2>
+                <span class="text-xs font-bold text-indigo-400 deptech-badge px-3.5 py-1.5 rounded-full uppercase tracking-wider inline-block">{% if current_lang == 'en' %}Project Estimation Calculator{% else %}Kalkulator Estimasi Proyek{% endif %}</span>
+                <h2 class="text-2xl sm:text-3xl font-extrabold text-white mt-3">{% if current_lang == 'en' %}Calculate Your Software Budget & Timeline{% else %}Hitung Simulasi Anggaran & Waktu Pengerjaan{% endif %}</h2>
                 <p class="text-slate-300 text-xs sm:text-sm mt-2">
+                    {% if current_lang == 'en' %}
+                    Select a solution category and user scale to instantly preview your estimated investment range and development schedule.
+                    {% else %}
                     Pilih kategori solusi dan skala kebutuhan sistem untuk melihat estimasi kasar investasi dan jadwal pengerjaan secara instan.
+                    {% endif %}
                 </p>
             </div>
 
             <form id="project-estimator-form" class="space-y-8">
                 <!-- Step 1: Type -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">1. Kategori Solusi yang Ingin Dibangun</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">{% if current_lang == 'en' %}1. Select Solution Category to Build{% else %}1. Kategori Solusi yang Ingin Dibangun{% endif %}</label>
                     <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
                         <label class="cursor-pointer">
                             <input type="radio" name="est_type" value="website" class="peer sr-only">
                             <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition h-full flex flex-col justify-center items-center">
                                 <i data-lucide="layout" class="w-5 h-5 mb-1.5 text-blue-400"></i>
-                                <span class="text-xs font-bold block text-slate-200">Website & Portal</span>
-                                <span class="text-[10px] text-slate-400 block mt-0.5">Korporat / Landing</span>
+                                <span class="text-xs font-bold block text-slate-200">{% if current_lang == 'en' %}Website & Portal{% else %}Website & Portal{% endif %}</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">{% if current_lang == 'en' %}Corporate / Landing{% else %}Korporat / Landing{% endif %}</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="est_type" value="web" checked class="peer sr-only">
                             <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition h-full flex flex-col justify-center items-center">
                                 <i data-lucide="globe" class="w-5 h-5 mb-1.5 text-cyan-400"></i>
-                                <span class="text-xs font-bold block text-slate-200">Sistem Informasi</span>
-                                <span class="text-[10px] text-slate-400 block mt-0.5">Web Base Custom</span>
+                                <span class="text-xs font-bold block text-slate-200">{% if current_lang == 'en' %}Information System{% else %}Sistem Informasi{% endif %}</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">{% if current_lang == 'en' %}Custom Web App{% else %}Web Base Custom{% endif %}</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
@@ -347,8 +351,8 @@
                             <input type="radio" name="est_type" value="erp" class="peer sr-only">
                             <div class="p-3.5 text-center rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition h-full flex flex-col justify-center items-center">
                                 <i data-lucide="layers" class="w-5 h-5 mb-1.5 text-purple-400"></i>
-                                <span class="text-xs font-bold block text-slate-200">Aplikasi ERP</span>
-                                <span class="text-[10px] text-slate-400 block mt-0.5">Bisnis & Operasional</span>
+                                <span class="text-xs font-bold block text-slate-200">{% if current_lang == 'en' %}Enterprise ERP{% else %}Aplikasi ERP{% endif %}</span>
+                                <span class="text-[10px] text-slate-400 block mt-0.5">{% if current_lang == 'en' %}Business Operations{% else %}Bisnis & Operasional{% endif %}</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
@@ -364,27 +368,27 @@
 
                 <!-- Step 2: Scale -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">2. Skala Pengguna & Kompleksitas Alur</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">{% if current_lang == 'en' %}2. User Scale & Workflow Complexity{% else %}2. Skala Pengguna & Kompleksitas Alur{% endif %}</label>
                     <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
                         <label class="cursor-pointer">
                             <input type="radio" name="est_scale" value="standard" class="peer sr-only">
                             <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
-                                <span class="text-xs font-bold block text-slate-200">Standar / Tim Tunggal</span>
-                                <span class="text-[11px] text-slate-400 block mt-0.5">Hingga 50 pengguna aktif harian</span>
+                                <span class="text-xs font-bold block text-slate-200">{% if current_lang == 'en' %}Standard / Single Team{% else %}Standar / Tim Tunggal{% endif %}</span>
+                                <span class="text-[11px] text-slate-400 block mt-0.5">{% if current_lang == 'en' %}Up to 50 daily active users{% else %}Hingga 50 pengguna aktif harian{% endif %}</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="est_scale" value="medium" checked class="peer sr-only">
                             <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
-                                <span class="text-xs font-bold block text-slate-200">Menengah / Multi-Divisi</span>
-                                <span class="text-[11px] text-slate-400 block mt-0.5">50 - 500 pengguna & multi-cabang</span>
+                                <span class="text-xs font-bold block text-slate-200">{% if current_lang == 'en' %}Medium / Multi-Division{% else %}Menengah / Multi-Divisi{% endif %}</span>
+                                <span class="text-[11px] text-slate-400 block mt-0.5">{% if current_lang == 'en' %}50 - 500 users & multi-branch{% else %}50 - 500 pengguna & multi-cabang{% endif %}</span>
                             </div>
                         </label>
                         <label class="cursor-pointer">
                             <input type="radio" name="est_scale" value="enterprise" class="peer sr-only">
                             <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition">
-                                <span class="text-xs font-bold block text-slate-200">Enterprise / Skala Publik</span>
-                                <span class="text-[11px] text-slate-400 block mt-0.5">> 1.000 pengguna & integrasi API masif</span>
+                                <span class="text-xs font-bold block text-slate-200">{% if current_lang == 'en' %}Enterprise / Public Scale{% else %}Enterprise / Skala Publik{% endif %}</span>
+                                <span class="text-[11px] text-slate-400 block mt-0.5">{% if current_lang == 'en' %}> 1,000 users & massive API integrations{% else %}> 1.000 pengguna & integrasi API masif{% endif %}</span>
                             </div>
                         </label>
                     </div>
@@ -392,15 +396,15 @@
 
                 <!-- Step 3: Priority Timeline -->
                 <div>
-                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">3. Prioritas & Kecepatan Target Rilis</label>
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-400 mb-3">{% if current_lang == 'en' %}3. Priority & Target Release Speed{% else %}3. Prioritas & Kecepatan Target Rilis{% endif %}</label>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                         <label class="cursor-pointer">
                             <input type="radio" name="est_timeline" value="standard" checked class="peer sr-only">
                             <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition flex items-start gap-3">
                                 <i data-lucide="clock" class="w-5 h-5 text-indigo-400 shrink-0 mt-0.5"></i>
                                 <div>
-                                    <span class="text-xs font-bold block text-slate-200">Reguler / Agile Sprint</span>
-                                    <span class="text-[11px] text-slate-400 block mt-0.5">Jadwal pengerjaan standar berurutan sesuai roadmap discovery</span>
+                                    <span class="text-xs font-bold block text-slate-200">{% if current_lang == 'en' %}Regular / Agile Sprint{% else %}Reguler / Agile Sprint{% endif %}</span>
+                                    <span class="text-[11px] text-slate-400 block mt-0.5">{% if current_lang == 'en' %}Standard sequential sprints following discovery roadmap{% else %}Jadwal pengerjaan standar berurutan sesuai roadmap discovery{% endif %}</span>
                                 </div>
                             </div>
                         </label>
@@ -409,8 +413,8 @@
                             <div class="p-3.5 rounded-2xl border border-indigo-950/80 bg-[#06091d] peer-checked:border-indigo-500 peer-checked:bg-indigo-950/60 peer-checked:text-white transition flex items-start gap-3">
                                 <i data-lucide="zap" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
                                 <div>
-                                    <span class="text-xs font-bold block text-slate-200">Fast-Track / Dedicated Priority</span>
-                                    <span class="text-[11px] text-slate-400 block mt-0.5">Alokasi tim dedikasi penuh untuk percepatan rilis & go-live</span>
+                                    <span class="text-xs font-bold block text-slate-200">{% if current_lang == 'en' %}Fast-Track / Dedicated Priority{% else %}Fast-Track / Dedicated Priority{% endif %}</span>
+                                    <span class="text-[11px] text-slate-400 block mt-0.5">{% if current_lang == 'en' %}Full dedicated squad allocation for accelerated go-live{% else %}Alokasi tim dedikasi penuh untuk percepatan rilis & go-live{% endif %}</span>
                                 </div>
                             </div>
                         </label>
@@ -418,22 +422,26 @@
                 </div>
 
                 <!-- Result Box (Deptech Dark Gradient) -->
-                <div class="p-6 bg-gradient-to-r from-[#020617] via-[#0f172a] to-[#1e1b4b] text-white rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-6 border border-indigo-950">
-                    <div class="text-center sm:text-left">
-                        <span class="text-xs font-semibold text-slate-400">Perkiraan Nilai Investasi & Timeline:</span>
+                <div class="p-6 bg-gradient-to-r from-[#020617] via-[#0f172a] to-[#1e1b4b] text-white rounded-2xl flex flex-col lg:flex-row items-center justify-between gap-6 border border-indigo-950">
+                    <div class="text-center lg:text-left">
+                        <span class="text-xs font-semibold text-slate-400">{% if current_lang == 'en' %}Estimated Investment Value & Timeline:{% else %}Perkiraan Nilai Investasi & Timeline:{% endif %}</span>
                         <div id="est-result-price" class="text-2xl sm:text-3xl font-extrabold text-deptech-gradient mt-1">
-                            Rp 35 Juta - Rp 65 Juta*
+                            {% if current_lang == 'en' %}IDR 32M - 72M*{% else %}Rp 32 Juta - Rp 72 Juta*{% endif %}
                         </div>
-                        <p class="text-xs text-slate-400 mt-1">Estimasi Jadwal Pengerjaan: <strong id="est-result-timeline" class="text-white">6 - 10 Minggu</strong></p>
+                        <p class="text-xs text-slate-400 mt-1">{% if current_lang == 'en' %}Estimated Delivery Schedule:{% else %}Estimasi Jadwal Pengerjaan:{% endif %} <strong id="est-result-timeline" class="text-white">{% if current_lang == 'en' %}8 - 12 Weeks{% else %}8 - 12 Minggu{% endif %}</strong></p>
                     </div>
-                    <div class="shrink-0 w-full sm:w-auto">
-                        <a href="{{ url_for('contact') }}" class="w-full sm:w-auto inline-flex items-center justify-center deptech-btn-primary px-7 py-3 text-xs font-bold uppercase tracking-wider">
-                            Konsultasikan RAB Rinci Gratis →
+                    <div class="shrink-0 w-full lg:w-auto flex flex-col sm:flex-row items-center gap-3">
+                        <a id="est-wa-btn" href="https://wa.me/{{ contact_cfg.wa_number }}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg transition">
+                            <i data-lucide="message-circle" class="w-4 h-4"></i>
+                            <span>{% if current_lang == 'en' %}Send Estimate via WhatsApp{% else %}Kirim Simulasi ke WhatsApp{% endif %}</span>
+                        </a>
+                        <a id="est-contact-btn" href="{{ url_for('contact') }}" class="w-full sm:w-auto inline-flex items-center justify-center deptech-btn-primary px-6 py-3 text-xs font-bold uppercase tracking-wider">
+                            {% if current_lang == 'en' %}Request Detailed Proposal →{% else %}Konsultasikan RAB Rinci →{% endif %}
                         </a>
                     </div>
                 </div>
             </form>
-            <p class="text-[11px] text-slate-400 text-center mt-3">*Biaya di atas merupakan simulasi perkiraan. Biaya final disesuaikan dengan Software Requirement Specification (SRS) hasil discovery.</p>
+            <p class="text-[11px] text-slate-400 text-center mt-3">{% if current_lang == 'en' %}*The figures above are preliminary simulation benchmarks. Final investment is determined by the signed Software Requirement Specification (SRS).{% else %}*Biaya di atas merupakan simulasi perkiraan. Biaya final disesuaikan dengan Software Requirement Specification (SRS) hasil discovery.{% endif %}</p>
         </div>
     </div>
 </section>
@@ -484,7 +492,7 @@
                 <i data-lucide="calendar" class="w-5 h-5 inline-block mr-1"></i>
                 <span>{{ t.cta_banner_btn }}</span>
             </a>
-            <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}" target="_blank" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-8 py-4 rounded-full shadow-lg transition">
+            <a href="https://wa.me/{{ contact_cfg.wa_number }}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-emerald-500 hover:bg-emerald-600 text-white font-bold px-8 py-4 rounded-full shadow-lg transition">
                 <i data-lucide="message-circle" class="w-5 h-5"></i>
                 <span>{% if current_lang == 'en' %}Direct WhatsApp Chat{% else %}Chat Langsung via WhatsApp{% endif %}</span>
             </a>

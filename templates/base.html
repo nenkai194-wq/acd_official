@@ -1,8 +1,9 @@
 <!DOCTYPE html>
-<html lang="id" class="scroll-smooth">
+<html lang="{{ current_lang }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#020617">
     <title>{% block title %}{{ seo.meta_title }}{% endblock %}</title>
     <meta name="description" content="{% block meta_desc %}{{ seo.meta_description }}{% endblock %}">
     <meta name="keywords" content="{{ seo.meta_keywords }}">
@@ -10,8 +11,18 @@
     <meta name="robots" content="{{ seo.robots }}">
     <link rel="canonical" href="{{ seo.canonical_url }}{{ request.path }}">
 
+    {% if seo.geo_region %}
+    <!-- Local & Geo SEO Tags -->
+    <meta name="geo.region" content="{{ seo.geo_region }}">
+    <meta name="geo.placename" content="{{ seo.geo_placename }}">
+    <meta name="geo.position" content="{{ seo.geo_position }}">
+    <meta name="ICBM" content="{{ seo.geo_position | replace(';', ', ') }}">
+    {% endif %}
+
     <!-- Open Graph / Facebook / LinkedIn / WhatsApp -->
     <meta property="og:type" content="{{ seo.og_type }}">
+    <meta property="og:site_name" content="PT. Aksara Cipta Digital">
+    <meta property="og:locale" content="{% if current_lang == 'en' %}en_US{% else %}id_ID{% endif %}">
     <meta property="og:url" content="{{ seo.canonical_url }}{{ request.path }}">
     <meta property="og:title" content="{% block og_title %}{{ seo.og_title }}{% endblock %}">
     <meta property="og:description" content="{% block og_desc %}{{ seo.og_description }}{% endblock %}">
@@ -39,19 +50,32 @@
       "alternateName": "ACD Digital Consulting",
       "url": "{{ seo.canonical_url }}",
       "logo": "{{ seo.canonical_url }}/static/images/logo_acd_icon.png",
+      "email": "{{ contact_cfg.email }}",
       "contactPoint": {
         "@type": "ContactPoint",
-        "telephone": "{{ config.COMPANY_PHONE }}",
+        "telephone": "{{ contact_cfg.phone }}",
         "contactType": "Customer Support",
         "areaServed": "ID",
         "availableLanguage": ["Indonesian", "English"]
       },
       "address": {
         "@type": "PostalAddress",
-        "streetAddress": "{{ config.COMPANY_ADDRESS }}"
+        "streetAddress": "{{ contact_cfg.address_main }}",
+        "addressRegion": "Jawa Barat",
+        "postalCode": "46182",
+        "addressCountry": "ID"
       }
     }
     </script>
+
+    {% if seo.gtm_id %}
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','{{ seo.gtm_id }}');</script>
+    {% endif %}
 
     {% if seo.google_analytics_id %}
     <!-- Google Analytics (GA4) -->
@@ -66,6 +90,7 @@
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo_acd_icon.png') }}">
+    <link rel="apple-touch-icon" href="{{ url_for('static', filename='images/logo_acd_icon.png') }}">
 
     <!-- Tailwind CSS (CDN) -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -115,7 +140,11 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-[#020617] text-slate-100 antialiased flex flex-col min-h-screen">
+<body class="bg-[#020617] text-slate-100 antialiased flex flex-col min-h-screen" data-wa-number="{{ contact_cfg.wa_number }}">
+    {% if seo.gtm_id %}
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ seo.gtm_id }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    {% endif %}
 
 
 
@@ -618,7 +647,7 @@
     </footer>
 
     <!-- 5. FLOATING WHATSAPP BUTTON (Official WhatsApp Brand Icon) -->
-    <a href="https://wa.me/{{ config.COMPANY_WHATSAPP }}?text=%5BACD%20Digital%20Consulting%5D%20Halo%20tim%20ACD%2C%20saya%20tertarik%20untuk%20konsultasi%20pembuatan%20aplikasi%20%2F%20website%20%2F%20sistem%20ERP." 
+    <a href="https://wa.me/{{ contact_cfg.wa_number }}?text=%5BACD%20Digital%20Consulting%5D%20Halo%20tim%20ACD%2C%20saya%20tertarik%20untuk%20konsultasi%20pembuatan%20aplikasi%20%2F%20website%20%2F%20sistem%20ERP." 
        target="_blank" 
        rel="noopener noreferrer"
        class="floating-wa-btn track-wa-btn flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white rounded-full transition-all duration-300 shadow-[0_8px_25px_rgba(37,211,102,0.45)] hover:shadow-[0_12px_30px_rgba(37,211,102,0.6)] group" 
@@ -689,7 +718,7 @@
                 </button>
                 <p class="text-[10px] text-center text-slate-400 mt-2 flex items-center justify-center space-x-1.5">
                     <i data-lucide="shield-check" class="w-3.5 h-3.5 text-emerald-400 shrink-0"></i>
-                    <span>{{ t.contact_direct_wa_notice }} <strong class="text-white font-mono">+62 852-8789-8937</strong></span>
+                    <span>{{ t.contact_direct_wa_notice }} <strong class="text-white font-mono">{{ contact_cfg.phone }}</strong></span>
                 </p>
             </form>
         </div>
