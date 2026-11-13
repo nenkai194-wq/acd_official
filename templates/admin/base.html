@@ -212,6 +212,16 @@
                     {% endif %}
                 </a>
 
+                <a href="{{ url_for('admin_partnerships') }}" title="Kemitraan & Transaksi (LOI Korporat)" class="sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition relative {% if active_page == 'partnerships' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
+                    <div class="flex items-center space-x-2.5 min-w-0">
+                        <i data-lucide="file-signature" class="w-4 h-4 shrink-0 text-cyan-400"></i>
+                        <span class="sidebar-text truncate font-semibold">Kemitraan & Transaksi</span>
+                    </div>
+                    {% if badge_new_partnerships and badge_new_partnerships > 0 %}
+                    <span class="sidebar-badge px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-emerald-500 text-white animate-pulse">{{ badge_new_partnerships }}</span>
+                    {% endif %}
+                </a>
+
                 <a href="{{ url_for('admin_wa_logs') }}" title="Log WA & Anti-Spam" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition {% if active_page == 'wa_logs' %}bg-indigo-600 text-white font-bold shadow-lg shadow-indigo-600/30{% else %}text-slate-400 hover:bg-slate-900 hover:text-white{% endif %}">
                     <i data-lucide="shield-alert" class="w-4 h-4 shrink-0"></i>
                     <span class="sidebar-text truncate">Log WA & Anti-Spam</span>

@@ -278,7 +278,23 @@ TRANSLATIONS = {
             'Website Korporat': 'Website Korporat',
             'Sistem Informasi': 'Sistem Informasi',
             'Semua': 'Semua'
-        }
+        },
+
+        # Formulir Kemitraan & Transaksi Kerjasama
+        'nav_partnership': 'Kemitraan & Transaksi',
+        'partner_hero_badge': 'Kemitraan Korporat & Pengadaan Solusi Digital',
+        'partner_hero_title': 'Formulir Kemitraan & Permohonan Proyek Aplikasi',
+        'partner_hero_desc': 'Kanal resmi PT. Aksara Cipta Digital (ACD) bagi instansi pemerintah, BUMN, dan korporasi untuk merancang spesifikasi sistem, estimasi timeline, alokasi anggaran, dan fasilitas layanan profesional.',
+        'partner_step1_badge': 'Langkah 1',
+        'partner_step1_title': 'Profil Calon Mitra & PIC Penanggung Jawab',
+        'partner_step2_badge': 'Langkah 2',
+        'partner_step2_title': 'Klasifikasi Sistem & Lingkup Kebutuhan',
+        'partner_step3_badge': 'Langkah 3',
+        'partner_step3_title': 'Estimasi Waktu Pengerjaan & Plafon Anggaran',
+        'partner_step4_badge': 'Langkah 4',
+        'partner_step4_title': 'Fasilitas Layanan & Executive Inclusions',
+        'partner_step5_badge': 'Ringkasan Transaksi',
+        'partner_step5_title': 'Pratinjau Pengajuan Kemitraan'
     },
 
     'en': {
@@ -558,6 +574,22 @@ TRANSLATIONS = {
             'Website Korporat': 'Corporate Websites',
             'Sistem Informasi': 'Information Systems',
             'Semua': 'All'
-        }
+        },
+
+        # Partnership & Procurement
+        'nav_partnership': 'Partnership & Deals',
+        'partner_hero_badge': 'Corporate Partnership & Digital Procurement',
+        'partner_hero_title': 'Enterprise Partnership & Application Project Request',
+        'partner_hero_desc': 'Official portal of PT. Aksara Cipta Digital (ACD) for government institutions, SOEs, and corporate enterprises to plan development timelines, budget allocations, and premium digital transformation services.',
+        'partner_step1_badge': 'Step 1',
+        'partner_step1_title': 'Partner Profile & PIC Information',
+        'partner_step2_badge': 'Step 2',
+        'partner_step2_title': 'System Specifications & Solution Scope',
+        'partner_step3_badge': 'Step 3',
+        'partner_step3_title': 'Estimated Timeline & Budget Allocation',
+        'partner_step4_badge': 'Step 4',
+        'partner_step4_title': 'Service Amenities & Executive Inclusions',
+        'partner_step5_badge': 'Transaction Summary',
+        'partner_step5_title': 'Partnership Proposal Preview'
     }
 }

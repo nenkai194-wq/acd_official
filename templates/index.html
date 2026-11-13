@@ -431,12 +431,13 @@
                         <p class="text-xs text-slate-400 mt-1">{% if current_lang == 'en' %}Estimated Delivery Schedule:{% else %}Estimasi Jadwal Pengerjaan:{% endif %} <strong id="est-result-timeline" class="text-white">{% if current_lang == 'en' %}8 - 12 Weeks{% else %}8 - 12 Minggu{% endif %}</strong></p>
                     </div>
                     <div class="shrink-0 w-full lg:w-auto flex flex-col sm:flex-row items-center gap-3">
-                        <a id="est-wa-btn" href="https://wa.me/{{ contact_cfg.wa_number }}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white px-6 py-3 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg transition">
+                        <a id="est-wa-btn" href="https://wa.me/{{ contact_cfg.wa_number }}" target="_blank" rel="noopener noreferrer" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white px-5 py-3 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg transition">
                             <i data-lucide="message-circle" class="w-4 h-4"></i>
-                            <span>{% if current_lang == 'en' %}Send Estimate via WhatsApp{% else %}Kirim Simulasi ke WhatsApp{% endif %}</span>
+                            <span>{% if current_lang == 'en' %}Send via WhatsApp{% else %}Kirim ke WhatsApp{% endif %}</span>
                         </a>
-                        <a id="est-contact-btn" href="{{ url_for('contact') }}" class="w-full sm:w-auto inline-flex items-center justify-center deptech-btn-primary px-6 py-3 text-xs font-bold uppercase tracking-wider">
-                            {% if current_lang == 'en' %}Request Detailed Proposal →{% else %}Konsultasikan RAB Rinci →{% endif %}
+                        <a href="{{ url_for('partnership') }}" class="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3 rounded-full bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white text-xs font-extrabold uppercase tracking-wider shadow-lg shadow-indigo-600/30 transition">
+                            <i data-lucide="file-signature" class="w-4 h-4 mr-1.5"></i>
+                            <span>{% if current_lang == 'en' %}Formulir Kemitraan Resmi →{% else %}Formulir Kemitraan Resmi →{% endif %}</span>
                         </a>
                     </div>
                 </div>

@@ -171,6 +171,7 @@
                 {% set is_portfolio = (request.endpoint in ['portfolio', 'portfolio_detail'] or curr_p.startswith('/portofolio')) %}
                 {% set is_about = (request.endpoint == 'about' or curr_p in ['/tentang-kami', '/company-profile']) %}
                 {% set is_career = (request.endpoint in ['career', 'career_detail'] or curr_p.startswith('/karir')) %}
+                {% set is_partnership = (request.endpoint in ['partnership', 'partnership_success'] or curr_p.startswith('/kemitraan') or curr_p.startswith('/transaksi')) %}
 
                 <!-- 2. Center: Desktop Menu Utama Navigasi -->
                 <nav class="hidden lg:flex items-center gap-1 xl:gap-2">
@@ -407,6 +408,10 @@
                         <a href="{{ url_for('portfolio') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap {% if is_portfolio %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/5{% endif %}">{{ t.nav_portfolio }}</a>
                         <a href="{{ url_for('about') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap {% if is_about %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/5{% endif %}">{{ t.nav_about }}</a>
                         <a href="{{ url_for('career') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap {% if is_career %}nav-link-active text-white font-bold{% else %}text-slate-300 hover:text-white hover:bg-white/5{% endif %}">{{ t.nav_career }}</a>
+                        <a href="{{ url_for('partnership') }}" class="main-nav-link relative px-2.5 xl:px-3 py-2 text-xs xl:text-sm font-semibold transition rounded-xl whitespace-nowrap inline-flex items-center gap-1.5 {% if is_partnership %}nav-link-active text-white font-bold{% else %}text-cyan-300 hover:text-white hover:bg-white/5{% endif %}">
+                            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                            <span>{{ t.nav_partnership }}</span>
+                        </a>
                     </nav>
 
                 <!-- 3. Right: Action Controls (Hubungi Kami + Language Switcher ID/EN + Mobile Hamburger) -->
@@ -515,6 +520,13 @@
             <a href="{{ url_for('portfolio') }}" class="block px-3 py-2 rounded-lg font-semibold transition {% if is_portfolio %}text-white bg-indigo-950/70 border-l-2 border-white pl-3.5 font-bold{% else %}text-slate-300 hover:bg-indigo-950/50 hover:text-white{% endif %}">{{ t.nav_portfolio }}</a>
             <a href="{{ url_for('about') }}" class="block px-3 py-2 rounded-lg font-semibold transition {% if is_about %}text-white bg-indigo-950/70 border-l-2 border-white pl-3.5 font-bold{% else %}text-slate-300 hover:bg-indigo-950/50 hover:text-white{% endif %}">{{ t.nav_about }}</a>
             <a href="{{ url_for('career') }}" class="block px-3 py-2 rounded-lg font-semibold transition {% if is_career %}text-white bg-indigo-950/70 border-l-2 border-white pl-3.5 font-bold{% else %}text-slate-300 hover:bg-indigo-950/50 hover:text-white{% endif %}">{{ t.nav_career }}</a>
+            <a href="{{ url_for('partnership') }}" class="block px-3 py-2 rounded-lg font-semibold transition {% if is_partnership %}text-white bg-indigo-950/70 border-l-2 border-cyan-400 pl-3.5 font-bold{% else %}text-cyan-300 hover:bg-indigo-950/50 hover:text-white{% endif %} flex items-center justify-between">
+                <span class="flex items-center gap-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+                    <span>{{ t.nav_partnership }}</span>
+                </span>
+                <span class="px-2 py-0.5 text-[10px] font-bold rounded-full bg-cyan-500/20 text-cyan-300 border border-cyan-500/40">MoU & Transaksi</span>
+            </a>
         </div>
         <div class="p-4 border-t border-indigo-950/60 bg-[#070c24]">
             <a href="{{ url_for('contact') }}" class="w-full deptech-btn-primary font-semibold py-2.5 rounded-xl text-center shadow-lg block">

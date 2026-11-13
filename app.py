@@ -21,6 +21,7 @@ from models import (
     TestimonialModel,
     FAQModel,
     InquiryModel,
+    PartnershipModel,
     WALogModel,
     SettingModel,
     SecurityModel
@@ -341,11 +342,16 @@ def inject_global_data():
         return url_for('set_language', lang=target_lang)
 
     badge_new = 0
+    badge_new_partnerships = 0
     if session.get('admin_logged_in'):
         try:
             badge_new = InquiryModel.get_stats().get('baru', 0)
         except Exception:
             badge_new = 0
+        try:
+            badge_new_partnerships = PartnershipModel.count_new()
+        except Exception:
+            badge_new_partnerships = 0
 
     return {
         'config': Config,
@@ -355,6 +361,7 @@ def inject_global_data():
         'set_lang_url': set_lang_url,
         'csrf_token': get_csrf_token,
         'badge_new_inquiries': badge_new,
+        'badge_new_partnerships': badge_new_partnerships,
         'admin_inactivity_timeout': ADMIN_INACTIVITY_TIMEOUT,
         'footer': get_footer_data(current_lang),
         'contact_cfg': get_contact_data(current_lang),
@@ -402,6 +409,7 @@ def sitemap_xml():
         {'loc': f"{base_url}/blog", 'changefreq': 'weekly', 'priority': '0.8'},
         {'loc': f"{base_url}/tentang-kami", 'changefreq': 'monthly', 'priority': '0.8'},
         {'loc': f"{base_url}/karir", 'changefreq': 'weekly', 'priority': '0.8'},
+        {'loc': f"{base_url}/kemitraan", 'changefreq': 'weekly', 'priority': '0.9'},
         {'loc': f"{base_url}/kontak", 'changefreq': 'monthly', 'priority': '0.8'},
         {'loc': f"{base_url}/kebijakan-privasi", 'changefreq': 'yearly', 'priority': '0.4'},
         {'loc': f"{base_url}/syarat-ketentuan", 'changefreq': 'yearly', 'priority': '0.4'},
@@ -572,6 +580,106 @@ def generate_consultation_whatsapp_url(name, company, email, phone, service_type
         )
     return f"https://wa.me/{target_wa}?text={urllib.parse.quote(wa_text)}"
 
+def generate_partnership_whatsapp_url(data, lang='id'):
+    import urllib.parse
+    target_wa = SettingModel.get('contact_wa_number') or SettingModel.get('company_whatsapp') or '6285287898937'
+    target_wa = re.sub(r'[^0-9]', '', str(target_wa))
+    if not target_wa:
+        target_wa = '6285287898937'
+    elif target_wa.startswith('08'):
+        target_wa = '62' + target_wa[1:]
+
+    code = data.get('code', '-')
+    client_name = data.get('client_name', '-')
+    client_title = data.get('client_title') or '-'
+    company = data.get('company_name', '-')
+    entity_type = data.get('entity_type', 'PT')
+    npwp = data.get('npwp') or '-'
+    email = data.get('email', '-')
+    phone = data.get('phone', '-')
+    city = data.get('city') or '-'
+    service_category = data.get('service_category', '-')
+    project_title = data.get('project_title') or '-'
+    platforms = data.get('platforms_list') or data.get('platforms') or []
+    if isinstance(platforms, list):
+        platforms_str = ', '.join(platforms) if platforms else '-'
+    else:
+        platforms_str = str(platforms)
+    
+    timeline = data.get('timeline_choice') or '-'
+    user_scale = data.get('user_scale') or '-'
+    budget = data.get('budget_range') or '-'
+    desc = data.get('description', '-')
+    doc_url = data.get('reference_doc_url') or '-'
+    facilities = data.get('facilities_list') or data.get('services_facilities') or []
+    if isinstance(facilities, list):
+        fac_bullet = "\n".join([f"  ✓ {f}" for f in facilities]) if facilities else "  ✓ Standar Pengembangan Enterprise ACD"
+    else:
+        fac_bullet = f"  ✓ {facilities}"
+
+    if lang == 'en':
+        wa_text = (
+            f"🏛️ *ENTERPRISE PARTNERSHIP & SOFTWARE PROCUREMENT PROPOSAL*\n"
+            f"*PT. AKSARA CIPTA DIGITAL (ACD)*\n"
+            f"Registration No: *{code}*\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"👤 *CLIENT & ENTITY PROFILE:*\n"
+            f"• PIC Name: {client_name}\n"
+            f"• Title / Role: {client_title}\n"
+            f"• Organization: {company} ({entity_type})\n"
+            f"• Tax ID / NPWP: {npwp}\n"
+            f"• City / Domicile: {city}\n"
+            f"• Official Email: {email}\n"
+            f"• WhatsApp: {phone}\n\n"
+            f"💻 *PROJECT SCOPE & SPECIFICATIONS:*\n"
+            f"• Category: {service_category}\n"
+            f"• Project Title: {project_title}\n"
+            f"• Target Platforms: {platforms_str}\n"
+            f"• Reference Document (TOR/SRS): {doc_url}\n\n"
+            f"⏱️ *TIMELINE & BUDGET ALLOCATION:*\n"
+            f"• Target Timeline: {timeline}\n"
+            f"• User Concurrency Scale: {user_scale}\n"
+            f"• Budget Ceiling: {budget}\n\n"
+            f"⭐ *EXECUTIVE INCLUSIONS & AMENITIES:*\n"
+            f"{fac_bullet}\n\n"
+            f"📄 *BUSINESS PROCESS & REQUIREMENTS OVERVIEW:*\n"
+            f"{desc}\n\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"Please confirm schedule availability for our NDA signing and official executive kick-off meeting. Thank you."
+        )
+    else:
+        wa_text = (
+            f"🏛️ *PERMOHONAN KEMITRAAN & PENGADAAN APLIKASI KORPORAT*\n"
+            f"*PT. AKSARA CIPTA DIGITAL (ACD)*\n"
+            f"Nomor Registrasi: *{code}*\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━\n\n"
+            f"👤 *PROFIL CALON MITRA & ENTITAS:*\n"
+            f"• Nama PIC: {client_name}\n"
+            f"• Jabatan: {client_title}\n"
+            f"• Instansi / Perusahaan: {company} ({entity_type})\n"
+            f"• NPWP Instansi: {npwp}\n"
+            f"• Domisili / Kota: {city}\n"
+            f"• Email Resmi: {email}\n"
+            f"• No. WhatsApp: {phone}\n\n"
+            f"💻 *SPESIFIKASI PROYEK & KEBUTUHAN SISTEM:*\n"
+            f"• Kategori Solusi: {service_category}\n"
+            f"• Judul Rencana Sistem: {project_title}\n"
+            f"• Target Platform: {platforms_str}\n"
+            f"• Tautan Dokumen KAK/TOR: {doc_url}\n\n"
+            f"⏱️ *ESTIMASI JADWAL (TIMELINE) & ANGGARAN:*\n"
+            f"• Target Waktu: {timeline}\n"
+            f"• Skala Pengguna: {user_scale}\n"
+            f"• Plafon Anggaran: {budget}\n\n"
+            f"⭐ *FASILITAS LAYANAN YANG DIMINTA:*\n"
+            f"{fac_bullet}\n\n"
+            f"📄 *DESKRIPSI KEBUTUHAN & ALUR OPERASIONAL:*\n"
+            f"{desc}\n\n"
+            f"━━━━━━━━━━━━━━━━━━━━━━━━━\n"
+            f"Kami bermaksud mengajukan kerja sama resmi rancang bangun perangkat lunak ini bersama PT. Aksara Cipta Digital. Mohon konfirmasi jadwal temu teknis / kick-off meeting serta penandatanganan NDA. Terima kasih."
+        )
+
+    return f"https://wa.me/{target_wa}?text={urllib.parse.quote(wa_text)}"
+
 @app.route('/hubungi-kami', methods=['GET', 'POST'])
 @app.route('/kontak', methods=['GET', 'POST'])
 def contact():
@@ -613,6 +721,96 @@ def contact():
         return redirect(wa_url)
 
     return render_template('contact.html')
+
+# --- FORM KEMITRAAN & TRANSAKSI KORPORAT (LOI / PROCUREMENT PORTAL) ---
+
+@app.route('/transaksi', methods=['GET', 'POST'])
+@app.route('/partnership', methods=['GET', 'POST'])
+@app.route('/kemitraan', methods=['GET', 'POST'])
+def partnership():
+    lang = session.get('lang', 'id')
+    services = ServiceModel.get_all(only_published=True)
+
+    if request.method == 'POST':
+        # CSRF check
+        token = request.form.get('_csrf_token')
+        if not token or token != session.get('_csrf_token'):
+            flash('Sesi transaksi telah kadaluarsa. Silakan muat ulang halaman.' if lang != 'en' else 'Form session expired. Please refresh the page.', 'error')
+            return redirect(url_for('partnership'))
+
+        client_name = request.form.get('client_name', '').strip()[:150]
+        client_title = request.form.get('client_title', '').strip()[:150]
+        company_name = request.form.get('company_name', '').strip()[:200]
+        entity_type = request.form.get('entity_type', 'PT (Perseroan Terbatas)').strip()[:100]
+        npwp = request.form.get('npwp', '').strip()[:50]
+        phone = request.form.get('phone', '').strip()[:25]
+        email = request.form.get('email', '').strip()[:150]
+        city = request.form.get('city', '').strip()[:120]
+
+        service_category = request.form.get('service_category', 'Aplikasi & Website').strip()[:150]
+        project_title = request.form.get('project_title', '').strip()[:200]
+        platforms = request.form.getlist('platforms')
+        description = request.form.get('description', '').strip()[:4000]
+        reference_doc_url = request.form.get('reference_doc_url', '').strip()[:500]
+
+        timeline_choice = request.form.get('timeline_choice', 'Standar Korporat (2 - 4 Bulan)').strip()[:150]
+        user_scale = request.form.get('user_scale', 'Multi-Cabang (50 - 500 Pengguna)').strip()[:150]
+        budget_range = request.form.get('budget_range', 'Rp 75.000.000 – Rp 175.000.000 (Tier Bisnis / ERP)').strip()[:150]
+        facilities = request.form.getlist('facilities')
+
+        if not client_name or not company_name or not phone or not email or not description:
+            flash('Mohon lengkapi seluruh field wajib bertanda bintang (*).' if lang != 'en' else 'Please fill in all mandatory fields marked with (*).', 'error')
+            return render_template('partnership.html', services=services, form_data=request.form)
+
+        # Phone validation (Standar Nasional Indonesia)
+        is_phone_valid, normalized_phone, phone_err = InquiryModel.validate_and_normalize_phone(phone)
+        if not is_phone_valid:
+            flash(phone_err, 'error')
+            return render_template('partnership.html', services=services, form_data=request.form)
+
+        # Anti-spam check (maksimal 3 pengajuan kemitraan dalam 24 jam)
+        if PartnershipModel.count_recent_by_email(email, hours=24) >= 3 or PartnershipModel.count_recent_by_phone(normalized_phone, hours=24) >= 3:
+            flash('Batas maksimal pengajuan kemitraan (3x dalam 24 jam) telah tercapai untuk nomor/email ini.' if lang != 'en' else 'Maximum submission limit reached for this number/email.', 'error')
+            return render_template('partnership.html', services=services, form_data=request.form)
+
+        estimated_summary = f"{timeline_choice} | {budget_range}"
+
+        row_id, code = PartnershipModel.create(
+            client_name=client_name,
+            client_title=client_title,
+            company_name=company_name,
+            entity_type=entity_type,
+            npwp=npwp,
+            phone=normalized_phone,
+            email=email,
+            city=city,
+            service_category=service_category,
+            project_title=project_title or 'Pengembangan Sistem Aplikasi Korporat',
+            platforms=platforms,
+            description=description,
+            reference_doc_url=reference_doc_url,
+            timeline_choice=timeline_choice,
+            user_scale=user_scale,
+            budget_range=budget_range,
+            services_facilities=facilities,
+            estimated_total_summary=estimated_summary,
+            ip_address=get_client_ip()
+        )
+
+        return redirect(url_for('partnership_success', code=code))
+
+    return render_template('partnership.html', services=services)
+
+@app.route('/kemitraan/sukses/<code>')
+def partnership_success(code):
+    lang = session.get('lang', 'id')
+    item = PartnershipModel.get_by_code(code)
+    if not item:
+        flash('Dokumen permohonan kemitraan tidak ditemukan.' if lang != 'en' else 'Partnership proposal document not found.', 'error')
+        return redirect(url_for('partnership'))
+
+    wa_url = generate_partnership_whatsapp_url(item, lang=lang)
+    return render_template('partnership_success.html', partnership=item, wa_url=wa_url)
 
 # --- REST API ENDPOINTS ---
 
@@ -1096,6 +1294,68 @@ def admin_delete_inquiry(inquiry_id):
     InquiryModel.delete(inquiry_id)
     flash(f'Data konsultasi #{inquiry_id} berhasil dihapus.', 'info')
     return redirect(url_for('admin_inquiries'))
+
+# --- 1B. KELOLA PERMOHONAN KEMITRAAN & TRANSAKSI (PARTNERSHIPS) ---
+
+@app.route('/admin/partnerships')
+@admin_required
+def admin_partnerships():
+    status = request.args.get('status')
+    search = request.args.get('search')
+    partnerships = PartnershipModel.get_all(status=status, search=search)
+    return render_template(
+        'admin/partnerships.html',
+        active_page='partnerships',
+        partnerships=partnerships,
+        current_status=status or 'Semua',
+        search_query=search or ''
+    )
+
+@app.route('/admin/partnerships/<int:partnership_id>')
+@admin_required
+def admin_partnership_detail(partnership_id):
+    item = PartnershipModel.get_by_id(partnership_id)
+    if not item:
+        flash('Dokumen kemitraan tidak ditemukan.', 'error')
+        return redirect(url_for('admin_partnerships'))
+
+    target_phone = item['phone']
+    if target_phone.startswith('08'):
+        target_phone = '62' + target_phone[1:]
+    
+    import urllib.parse
+    resp_text = (
+        f"Yth. Bapak/Ibu {item['client_name']},\n"
+        f"Salam hangat dari Direksi PT. Aksara Cipta Digital (ACD).\n\n"
+        f"Kami telah menerima dan menelaah Surat Permohonan Kemitraan Anda (No. Registrasi: *{item['code']}*) "
+        f"untuk instansi/perusahaan *{item['company_name']}* perihal rancang bangun *{item['project_title']}*.\n\n"
+        f"Tim System Architect kami siap menjadwalkan sesi Executive Discovery / Kick-Off Meeting dan mempersiapkan draf NDA resmi. "
+        f"Apakah berkenan bila kami diskusikan jadwal pertemuan teknisnya? Terima kasih."
+    )
+    reply_wa_url = f"https://wa.me/{target_phone}?text={urllib.parse.quote(resp_text)}"
+
+    return render_template(
+        'admin/partnership_detail.html',
+        active_page='partnerships',
+        partnership=item,
+        reply_wa_url=reply_wa_url
+    )
+
+@app.route('/admin/partnerships/<int:partnership_id>/status', methods=['POST'])
+@admin_required
+def admin_partnership_update_status(partnership_id):
+    status = request.form.get('status', 'Baru')
+    notes = request.form.get('notes')
+    PartnershipModel.update_status(partnership_id, status, notes)
+    flash(f'Status dokumen kemitraan #{partnership_id} berhasil diperbarui menjadi "{status}".', 'success')
+    return redirect(url_for('admin_partnership_detail', partnership_id=partnership_id))
+
+@app.route('/admin/partnerships/<int:partnership_id>/delete', methods=['POST'])
+@admin_required
+def admin_partnership_delete(partnership_id):
+    PartnershipModel.delete(partnership_id)
+    flash(f'Dokumen kemitraan #{partnership_id} berhasil dihapus.', 'info')
+    return redirect(url_for('admin_partnerships'))
 
 # --- 2. KELOLA LAYANAN (SERVICES) ---
 
