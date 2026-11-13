@@ -48,36 +48,6 @@ def init_db():
     )
     ''')
 
-    # Partnerships & Project Transaction table (Form Kerjasama Korporat & Kemitraan)
-    cursor.execute('''
-    CREATE TABLE IF NOT EXISTS partnerships (
-        id INTEGER PRIMARY KEY AUTOINCREMENT,
-        code TEXT UNIQUE NOT NULL,
-        client_name TEXT NOT NULL,
-        client_title TEXT,
-        company_name TEXT NOT NULL,
-        entity_type TEXT DEFAULT 'PT',
-        npwp TEXT,
-        phone TEXT NOT NULL,
-        email TEXT NOT NULL,
-        city TEXT,
-        service_category TEXT NOT NULL,
-        project_title TEXT,
-        platforms TEXT,
-        description TEXT NOT NULL,
-        reference_doc_url TEXT,
-        timeline_choice TEXT,
-        user_scale TEXT,
-        budget_range TEXT,
-        services_facilities TEXT,
-        estimated_total_summary TEXT,
-        status TEXT DEFAULT 'Baru',
-        notes TEXT,
-        ip_address TEXT,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-    )
-    ''')
-
     # Services table
     cursor.execute('''
     CREATE TABLE IF NOT EXISTS services (
