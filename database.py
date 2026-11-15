@@ -195,7 +195,7 @@ def init_db():
         ('security_max_attempts', '3'),
         ('footer_brand_name', 'AKSARA CIPTA DIGITAL'),
         ('footer_brand_tagline', 'IT Consultant - AI, Software Developer'),
-        ('footer_about', 'PT Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.'),
+        ('footer_about', 'Aksara Cipta Digital (ACD) adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.'),
         ('footer_address_main', 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182'),
         ('footer_address_branch', ''),
         ('footer_phone', '+62 852-8789-8937'),
@@ -823,7 +823,7 @@ Investasi pada Custom ERP terbukti memberikan penghematan biaya total (TCO - Tot
     faqs = [
         (
             'Umum',
-            'Mengapa memilih PT Aksara Cipta Digital (ACD) untuk pembuatan software?',
+            'Mengapa memilih ACD untuk pembuatan software?',
             'ACD bukan sekadar vendor koding lepas, melainkan mitra konsultan teknologi strategis. Kami mendalami alur proses bisnis Anda terlebih dahulu sebelum membangun arsitektur software. Seluruh aplikasi kami bergaransi, bebas biaya lisensi per user, didukung tim berpengalaman lebih dari 15 tahun, dan memiliki standar keamanan setara perbankan.',
             1
         ),

@@ -250,7 +250,7 @@ TRANSLATIONS = {
         'contact_direct_wa_notice': 'Formulir otomatis tersimpan & diteruskan langsung ke WhatsApp:',
 
         # Footer
-        'footer_about': 'PT Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
+        'footer_about': 'Aksara Cipta Digital (ACD) adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
         'footer_security_standards': 'Standar Keamanan & Mutu:',
         'footer_consultation_support': 'Layanan Konsultasi & Aduan:',
         'footer_all_rights': 'Hak Cipta Dilindungi Undang-Undang.',

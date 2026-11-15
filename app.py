@@ -268,7 +268,7 @@ def get_footer_data(lang='id'):
         terms_label = s_val('footer_terms_label_en', 'Terms & Conditions')
         consult_label = s_val('footer_consult_label_en', 'Contact Consultant')
     else:
-        about = s_val('footer_about', 'PT Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
+        about = s_val('footer_about', 'Aksara Cipta Digital (ACD) adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
         col2_title = s_val('footer_col2_title', 'Aplikasi & Website')
         col2_raw = s_val('footer_col2_links', "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nWebsite Korporat | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nIntegrasi Sistem & API | /layanan/integrasi-sistem\nSemua Aplikasi & Website \u2192 | /layanan/kategori/Aplikasi%20&%20Website")
         col3_title = s_val('footer_col3_title', 'Aplikasi Bisnis ERP')
@@ -1819,7 +1819,7 @@ def admin_footer_reset_defaults():
     defaults = {
         'footer_brand_name': 'AKSARA CIPTA DIGITAL',
         'footer_brand_tagline': 'IT Consultant - AI, Software Developer',
-        'footer_about': 'PT Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
+        'footer_about': 'Aksara Cipta Digital (ACD) adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
         'footer_address_main': 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182',
         'footer_address_branch': '',
         'footer_phone': '+62 852-8789-8937',
