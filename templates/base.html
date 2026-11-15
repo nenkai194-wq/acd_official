@@ -140,11 +140,25 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     {% block extra_head %}{% endblock %}
 </head>
-<body class="bg-[#020617] text-slate-100 antialiased flex flex-col min-h-screen" data-wa-number="{{ contact_cfg.wa_number }}">
+<body class="bg-[#020617] text-slate-100 antialiased flex flex-col min-h-screen relative" data-wa-number="{{ contact_cfg.wa_number }}">
     {% if seo.gtm_id %}
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id={{ seo.gtm_id }}" height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
     {% endif %}
+
+    <!-- 1. GLOBAL AMBIENT BODY ANIMATION (KOMUNIGRAFIK STYLE WITH ACD ENTERPRISE BRAND COLORS) -->
+    <div id="ambient-body-bg" class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
+        <!-- Interactive Fullscreen Canvas (Particles, Stars & Glowing Neural Wave Nodes) -->
+        <canvas id="ambient-body-canvas" class="w-full h-full block"></canvas>
+        
+        <!-- Ambient Glowing Nebula Blurs (ACD Corporate Palette: Indigo, Cyan, Violet, Midnight) -->
+        <div class="ambient-glow ambient-glow-1"></div>
+        <div class="ambient-glow ambient-glow-2"></div>
+        <div class="ambient-glow ambient-glow-3"></div>
+
+        <!-- Cyber Micro-Grid Texture Overlay -->
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,102,241,0.025)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,102,241,0.025)_1px,transparent_1px)] bg-[size:4.5rem_4.5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_60%,transparent_100%)] opacity-70"></div>
+    </div>
 
 
 
@@ -524,12 +538,12 @@
     </div>
 
     <!-- MAIN BODY CONTENT -->
-    <main class="flex-grow animate-fade-in-up">
+    <main class="flex-grow animate-fade-in-up relative z-10">
         {% block content %}{% endblock %}
     </main>
 
     <!-- 4. FOOTER (DEPTECH STYLE DEEP DARK & CYBER GLOW) -->
-    <footer class="bg-[#020617] text-slate-300 pt-16 pb-12 border-t border-indigo-950/80 relative overflow-hidden">
+    <footer class="bg-[#020617]/95 text-slate-300 pt-16 pb-12 border-t border-indigo-950/80 relative z-10 overflow-hidden">
         <!-- Background subtle glow -->
         <div class="absolute -top-32 left-1/4 w-96 h-96 bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
         <div class="absolute -bottom-32 right-1/4 w-96 h-96 bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
