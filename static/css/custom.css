@@ -402,9 +402,9 @@ h1, h2, h3, .font-heading {
 .ambient-glow {
   position: absolute;
   border-radius: 9999px;
-  filter: blur(120px);
+  filter: blur(140px);
   pointer-events: none;
-  opacity: 0.85;
+  opacity: 0.35;
   mix-blend-mode: screen;
   will-change: transform;
 }
