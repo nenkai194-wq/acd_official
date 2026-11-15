@@ -9,7 +9,7 @@
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-indigo-950/70">
         <div>
             <h1 class="text-2xl font-black text-white tracking-tight">Optimasi SEO (Search Engine Optimization)</h1>
-            <p class="text-xs text-slate-400 mt-1">Konfigurasi meta tag Google, preview snippet pencarian, indeks sitemap, dan verifikasi webmaster PT. Aksara Cipta Digital</p>
+            <p class="text-xs text-slate-400 mt-1">Konfigurasi meta tag Google, preview snippet pencarian, indeks sitemap, dan verifikasi webmaster PT Aksara Cipta Digital</p>
         </div>
         <div class="flex flex-wrap items-center gap-2.5">
             <a href="{{ url_for('sitemap_xml') }}" target="_blank" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 text-xs font-semibold border border-slate-800 transition inline-flex items-center space-x-1.5">
@@ -20,7 +20,7 @@
                 <i data-lucide="bot" class="w-3.5 h-3.5 text-cyan-400"></i>
                 <span>Robots.txt</span>
             </a>
-            <form method="POST" action="{{ url_for('admin_seo_reset_defaults') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan seluruh konfigurasi SEO ke standar bawaan PT. Aksara Cipta Digital?');" class="inline">
+            <form method="POST" action="{{ url_for('admin_seo_reset_defaults') }}" onsubmit="return confirm('Apakah Anda yakin ingin mengembalikan seluruh konfigurasi SEO ke standar bawaan PT Aksara Cipta Digital?');" class="inline">
             <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
                 <button type="submit" class="px-3.5 py-2 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 text-xs font-semibold border border-rose-500/30 transition inline-flex items-center space-x-1.5">
                     <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>
@@ -82,7 +82,7 @@
                 </div>
                 <div>
                     <h3 class="text-sm font-bold text-white">Pratinjau Hasil Pencarian Google (Snippet Simulation)</h3>
-                    <p class="text-[11px] text-slate-400">Simulasi tampilan website PT. Aksara Cipta Digital ketika muncul di halaman hasil pencarian Google</p>
+                    <p class="text-[11px] text-slate-400">Simulasi tampilan website PT Aksara Cipta Digital ketika muncul di halaman hasil pencarian Google</p>
                 </div>
             </div>
             <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 border border-emerald-800/60 px-2.5 py-1 rounded-full">
@@ -97,7 +97,7 @@
                     <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" class="w-4 h-4 object-contain" alt="favicon">
                 </div>
                 <div class="leading-tight">
-                    <div class="font-medium text-xs text-[#202124]">PT. Aksara Cipta Digital</div>
+                    <div class="font-medium text-xs text-[#202124]">PT Aksara Cipta Digital</div>
                     <div class="text-[11px] text-[#4d5156] truncate max-w-md">{{ seo.canonical_url }} › id</div>
                 </div>
             </div>
@@ -280,7 +280,7 @@
 
     if (titleInput && previewTitle) {
         titleInput.addEventListener('input', function() {
-            previewTitle.textContent = this.value || 'PT. Aksara Cipta Digital';
+            previewTitle.textContent = this.value || 'PT Aksara Cipta Digital';
             titleCounter.textContent = 'Panjang: ' + this.value.length + ' / 60 karakter (Optimal: 50-60)';
         });
     }

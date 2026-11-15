@@ -195,7 +195,7 @@ def init_db():
         ('security_max_attempts', '3'),
         ('footer_brand_name', 'AKSARA CIPTA DIGITAL'),
         ('footer_brand_tagline', 'IT Consultant - AI, Software Developer'),
-        ('footer_about', 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.'),
+        ('footer_about', 'PT Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.'),
         ('footer_address_main', 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182'),
         ('footer_address_branch', ''),
         ('footer_phone', '+62 852-8789-8937'),
@@ -215,7 +215,7 @@ def init_db():
         ('footer_badge3', 'SLA 99.9% Uptime Support'),
         ('footer_support_text', 'Layanan Konsultasi & Aduan:'),
         ('footer_support_label', 'WhatsApp 24/7 Support'),
-        ('footer_copyright', '\u00a9 2026 PT. Aksara Cipta Digital. All rights reserved.'),
+        ('footer_copyright', '\u00a9 2026 PT Aksara Cipta Digital. All rights reserved.'),
         ('footer_privacy_label', 'Kebijakan Privasi'),
         ('footer_privacy_url', '/kebijakan-privasi'),
         ('footer_terms_label', 'Syarat & Ketentuan Layanan'),
@@ -238,13 +238,13 @@ def init_db():
         ('contact_address_branch', ''),
         ('contact_categories', 'Aplikasi Bisnis ERP (HRIS, Payroll, Akuntansi, Stok)\nAplikasi E-Government (Smart Governance / SPBE)\nMobile Apps (Android & iOS Native/Flutter)\nWeb Base App & Sistem Informasi Operasional\nWebsite Korporat & Portal Berita\nGIS & Geoportal Spasial\nIntegrasi Sistem & API Enterprise\nKonsultasi & Audit IT'),
         ('contact_budget_ranges', 'Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)'),
-        ('seo_meta_title', 'PT. Aksara Cipta Digital | IT Consultant - AI, Software Developer'),
-        ('seo_meta_description', 'PT. Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.'),
+        ('seo_meta_title', 'PT Aksara Cipta Digital | IT Consultant - AI, Software Developer'),
+        ('seo_meta_description', 'PT Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.'),
         ('seo_meta_keywords', 'IT Consultant, Konsultan IT Indonesia, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD'),
         ('seo_canonical_url', 'https://acd.co.id'),
-        ('seo_author', 'PT. Aksara Cipta Digital'),
+        ('seo_author', 'PT Aksara Cipta Digital'),
         ('seo_robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1'),
-        ('seo_og_title', 'PT. Aksara Cipta Digital - IT Consultant & Enterprise Software House'),
+        ('seo_og_title', 'PT Aksara Cipta Digital - IT Consultant & Enterprise Software House'),
         ('seo_og_description', 'Solusi software inovatif, arsitektur sistem berkinerja tinggi, dan transformasi digital terpercaya untuk Korporasi Swasta, BUMN, dan Pemerintahan di seluruh Indonesia.'),
         ('seo_og_image', '/static/images/logo_acd_icon.png'),
         ('seo_og_type', 'website'),
@@ -500,7 +500,7 @@ def seed_db():
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         ''', s)
 
-    # --- PORTFOLIO SEED (HASIL PROJEK RESMI PT. AKSARA CIPTA DIGITAL) ---
+    # --- PORTFOLIO SEED (HASIL PROJEK RESMI PT AKSARA CIPTA DIGITAL) ---
     portfolios = [
         (
             'sisurvei-lembaga-survei-riset',
@@ -663,7 +663,7 @@ Banyak perusahaan terjebak memilih vendor perangkat lunak yang hanya menawarkan 
 3. **Standar Keamanan Internasional**: Pastikan sistem lolos uji penetration testing (pentest) dan memenuhi prinsip OWASP Top 10 serta enkripsi data saat disimpan (at rest) maupun saat dikirim (in transit).
 4. **Kepemilikan Source Code & Dokumentasi Arsitektur**: Anda harus memiliki hak milik penuh atas kode sumber aplikasi beserta dokumentasi API dan petunjuk deployment yang rapi.
 
-Di PT. Aksara Cipta Digital (ACD), kami menerapkan pendekatan konsultatif dari tahap discovery hingga post-launch maintenance, memastikan investasi digital perusahaan Anda memberikan ROI (Return on Investment) yang nyata.''',
+Di PT Aksara Cipta Digital (ACD), kami menerapkan pendekatan konsultatif dari tahap discovery hingga post-launch maintenance, memastikan investasi digital perusahaan Anda memberikan ROI (Return on Investment) yang nyata.''',
             'Jasa Pembuatan Aplikasi, Software Enterprise, Konsultan IT, Transformasi Digital',
             '/static/images/blog_1.svg',
             '18 Oktober 2024'
@@ -823,7 +823,7 @@ Investasi pada Custom ERP terbukti memberikan penghematan biaya total (TCO - Tot
     faqs = [
         (
             'Umum',
-            'Mengapa memilih PT. Aksara Cipta Digital (ACD) untuk pembuatan software?',
+            'Mengapa memilih PT Aksara Cipta Digital (ACD) untuk pembuatan software?',
             'ACD bukan sekadar vendor koding lepas, melainkan mitra konsultan teknologi strategis. Kami mendalami alur proses bisnis Anda terlebih dahulu sebelum membangun arsitektur software. Seluruh aplikasi kami bergaransi, bebas biaya lisensi per user, didukung tim berpengalaman lebih dari 15 tahun, dan memiliki standar keamanan setara perbankan.',
             1
         ),

@@ -1,7 +1,7 @@
-# PT. Aksara Cipta Digital (ACD Digital Consulting) - acd.co.id
+# PT Aksara Cipta Digital (ACD Digital Consulting) - acd.co.id
 ### Official Website, Enterprise Solutions Platform & Consultation CMS
 
-Platform website korporat & konsultasi teknologi modern untuk **PT. Aksara Cipta Digital (ACD)**, dirancang dan diadaptasi secara komprehensif berdasarkan struktur navigasi, redaksi, dan proposisi nilai konsultan IT papan atas seperti JMC IT Consultant (`jmc.co.id`).
+Platform website korporat & konsultasi teknologi modern untuk **PT Aksara Cipta Digital (ACD)**, dirancang dan diadaptasi secara komprehensif berdasarkan struktur navigasi, redaksi, dan proposisi nilai konsultan IT papan atas seperti JMC IT Consultant (`jmc.co.id`).
 
 ---
 
@@ -38,7 +38,7 @@ Platform website korporat & konsultasi teknologi modern untuk **PT. Aksara Cipta
   - e-Planning Musrenbang Kabupaten
   - Fleet Driver Logistics Mobile App
 - **Tentang Kami**:
-  - Profil PT. Aksara Cipta Digital
+  - Profil PT Aksara Cipta Digital
   - Visi & Misi Transformasi Digital
   - Core Values **CIPTA** (*Credible, Innovative, Professional, Transformative, Agile*)
   - 6 Tahap Metodologi Pengembangan Software (Discovery, Architecture, Sprint, Testing, Deployment, SLA)
@@ -79,7 +79,7 @@ Platform website korporat & konsultasi teknologi modern untuk **PT. Aksara Cipta
 ---
 
 ## 🏢 Identitas & Kontak Perusahaan
-- **Nama Perusahaan**: PT. Aksara Cipta Digital (ACD Digital Consulting)
+- **Nama Perusahaan**: PT Aksara Cipta Digital (ACD Digital Consulting)
 - **Domain**: `acd.co.id`
 - **Email**: `info@acd.co.id`
 - **Telepon**: `+62 21 8299 8765`

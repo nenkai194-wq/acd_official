@@ -1,5 +1,5 @@
 /**
- * PT. Aksara Cipta Digital (ACD Official)
+ * PT Aksara Cipta Digital (ACD Official)
  * Ambient Body Animation & Constellation Mesh (Komunigrafik Style)
  * 
  * Features:

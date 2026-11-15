@@ -1,4 +1,4 @@
-// PT. Aksara Cipta Digital (ACD Digital Consulting) - Interactive Scripts
+// PT Aksara Cipta Digital (ACD Digital Consulting) - Interactive Scripts
 
 document.addEventListener('DOMContentLoaded', () => {
     // 1. Mobile Menu Toggle
@@ -342,8 +342,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Update direct WhatsApp & Contact Form links with live estimator payload
             const summaryNote = isEn
-                ? `Hello PT. Aksara Cipta Digital (ACD) Team,\n\nI ran a project budget simulation on the website:\n• Solution Category: ${typeLabels[projectType] || projectType}\n• User Scale: ${scaleLabels[scale] || scale}\n• Priority Mode: ${timelineLabels[timeline] || timeline}\n• Estimated Investment: ${priceStr.replace('*', '')}\n• Estimated Delivery: ${estWeeks}\n\nPlease share a detailed technical proposal and consultation schedule.`
-                : `Halo Tim Konsultan PT. Aksara Cipta Digital (ACD),\n\nSaya telah melakukan simulasi anggaran proyek di website:\n• Kategori Solusi: ${typeLabels[projectType] || projectType}\n• Skala Pengguna: ${scaleLabels[scale] || scale}\n• Prioritas Rilis: ${timelineLabels[timeline] || timeline}\n• Perkiraan Investasi: ${priceStr.replace('*', '')}\n• Estimasi Pengerjaan: ${estWeeks}\n\nMohon diskusi lebih lanjut mengenai rincian RAB dan jadwal konsultasinya.`;
+                ? `Hello PT Aksara Cipta Digital (ACD) Team,\n\nI ran a project budget simulation on the website:\n• Solution Category: ${typeLabels[projectType] || projectType}\n• User Scale: ${scaleLabels[scale] || scale}\n• Priority Mode: ${timelineLabels[timeline] || timeline}\n• Estimated Investment: ${priceStr.replace('*', '')}\n• Estimated Delivery: ${estWeeks}\n\nPlease share a detailed technical proposal and consultation schedule.`
+                : `Halo Tim Konsultan PT Aksara Cipta Digital (ACD),\n\nSaya telah melakukan simulasi anggaran proyek di website:\n• Kategori Solusi: ${typeLabels[projectType] || projectType}\n• Skala Pengguna: ${scaleLabels[scale] || scale}\n• Prioritas Rilis: ${timelineLabels[timeline] || timeline}\n• Perkiraan Investasi: ${priceStr.replace('*', '')}\n• Estimasi Pengerjaan: ${estWeeks}\n\nMohon diskusi lebih lanjut mengenai rincian RAB dan jadwal konsultasinya.`;
 
             const estWaBtn = document.getElementById('est-wa-btn');
             if (estWaBtn) {

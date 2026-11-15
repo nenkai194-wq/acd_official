@@ -1,7 +1,7 @@
 {% extends 'admin/base.html' %}
 {% set active_page = 'portfolios' %}
 
-{% block title %}Kelola Portofolio Proyek - PT. Aksara Cipta Digital{% endblock %}
+{% block title %}Kelola Portofolio Proyek - PT Aksara Cipta Digital{% endblock %}
 
 {% block content %}
 <div class="space-y-5">
@@ -14,7 +14,7 @@
                 <span class="text-xs text-slate-400">{{ portfolios | length }} Proyek Resmi Terdaftar</span>
             </div>
             <h1 class="text-2xl font-black text-white tracking-tight mt-1">Kelola Portofolio & Proyek ACD</h1>
-            <p class="text-xs text-slate-400 mt-1">Katalog implementasi software resmi PT. Aksara Cipta Digital untuk Pemerintahan, BUMN, UMKM, dan Swasta</p>
+            <p class="text-xs text-slate-400 mt-1">Katalog implementasi software resmi PT Aksara Cipta Digital untuk Pemerintahan, BUMN, UMKM, dan Swasta</p>
         </div>
         <a href="{{ url_for('admin_portfolio_add') }}" class="px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold transition inline-flex items-center space-x-2 shadow-lg shadow-indigo-600/30 shrink-0">
             <i data-lucide="plus" class="w-4 h-4"></i>

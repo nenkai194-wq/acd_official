@@ -7,7 +7,7 @@ class Config:
     DATABASE_PATH = os.path.join(BASE_DIR, 'acd_database.sqlite')
     
     # Company Profile Settings
-    COMPANY_NAME = "PT. Aksara Cipta Digital"
+    COMPANY_NAME = "PT Aksara Cipta Digital"
     COMPANY_SHORT_NAME = "ACD Digital Consulting"
     COMPANY_TAGLINE = "Solusi Software Inovatif & Transformasi Digital Terpercaya"
     COMPANY_SUBTAGLINE = "Jasa Pembuatan Aplikasi Mobile, Web Base, Sistem ERP & E-Government Bergaransi"

@@ -1,7 +1,7 @@
 @echo off
-title PT. Aksara Cipta Digital (ACD Official)
+title PT Aksara Cipta Digital (ACD Official)
 echo =====================================================================
-echo    PT. AKSARA CIPTA DIGITAL (ACD OFFICIAL)
+echo    PT AKSARA CIPTA DIGITAL (ACD OFFICIAL)
 echo    "Solusi Software Inovatif & Transformasi Digital Terpercaya"
 echo =====================================================================
 echo.

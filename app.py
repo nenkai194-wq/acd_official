@@ -131,13 +131,13 @@ def get_seo_data():
         v = all_s.get(k)
         return v if (v is not None and str(v).strip() != '') else fallback
 
-    meta_title = s_val('seo_meta_title', 'PT. Aksara Cipta Digital | IT Consultant - AI, Software Developer')
-    meta_desc = s_val('seo_meta_description', 'PT. Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.')
+    meta_title = s_val('seo_meta_title', 'PT Aksara Cipta Digital | IT Consultant - AI, Software Developer')
+    meta_desc = s_val('seo_meta_description', 'PT Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.')
     meta_keywords = s_val('seo_meta_keywords', 'IT Consultant, Konsultan IT Indonesia, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD')
     canonical_url = s_val('seo_canonical_url', 'https://acd.co.id').rstrip('/')
-    author = s_val('seo_author', 'PT. Aksara Cipta Digital')
+    author = s_val('seo_author', 'PT Aksara Cipta Digital')
     robots = s_val('seo_robots', 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1')
-    og_title = s_val('seo_og_title', 'PT. Aksara Cipta Digital - IT Consultant & Enterprise Software House')
+    og_title = s_val('seo_og_title', 'PT Aksara Cipta Digital - IT Consultant & Enterprise Software House')
     og_desc = s_val('seo_og_description', 'Solusi software inovatif, arsitektur sistem berkinerja tinggi, dan transformasi digital terpercaya untuk Korporasi Swasta, BUMN, dan Pemerintahan di seluruh Indonesia.')
     og_image = s_val('seo_og_image', '/static/images/logo_acd_icon.png')
     og_type = s_val('seo_og_type', 'website')
@@ -252,7 +252,7 @@ def get_footer_data(lang='id'):
     whatsapp = s_val('footer_whatsapp', '6285287898937')
 
     if lang == 'en':
-        about = s_val('footer_about_en', 'PT. Aksara Cipta Digital is an experienced IT consulting and software house building enterprise-grade applications for private corporations, state-owned enterprises, and government institutions across Indonesia.')
+        about = s_val('footer_about_en', 'PT Aksara Cipta Digital is an experienced IT consulting and software house building enterprise-grade applications for private corporations, state-owned enterprises, and government institutions across Indonesia.')
         col2_title = s_val('footer_col2_title_en', 'Applications & Websites')
         col2_raw = s_val('footer_col2_links_en', "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nCorporate Websites | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nSystem Integration & API | /layanan/integrasi-sistem\nAll Apps & Websites \u2192 | /layanan/kategori/Aplikasi%20&%20Website")
         col3_title = s_val('footer_col3_title_en', 'Business ERP Software')
@@ -268,7 +268,7 @@ def get_footer_data(lang='id'):
         terms_label = s_val('footer_terms_label_en', 'Terms & Conditions')
         consult_label = s_val('footer_consult_label_en', 'Contact Consultant')
     else:
-        about = s_val('footer_about', 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
+        about = s_val('footer_about', 'PT Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.')
         col2_title = s_val('footer_col2_title', 'Aplikasi & Website')
         col2_raw = s_val('footer_col2_links', "Mobile Apps (Android & iOS) | /layanan/mobile-apps\nWeb Base Apps | /layanan/sistem-informasi\nWebsite Korporat | /layanan/website-korporat\nGeographic Information System (GIS) | /layanan/gis-geoportal\nIntegrasi Sistem & API | /layanan/integrasi-sistem\nSemua Aplikasi & Website \u2192 | /layanan/kategori/Aplikasi%20&%20Website")
         col3_title = s_val('footer_col3_title', 'Aplikasi Bisnis ERP')
@@ -288,7 +288,7 @@ def get_footer_data(lang='id'):
     badge2 = s_val('footer_badge2', 'OWASP Top 10 Compliant')
     badge3 = s_val('footer_badge3', 'SLA 99.9% Uptime Support')
 
-    copyright_text = s_val('footer_copyright', '\u00a9 2026 PT. Aksara Cipta Digital. All rights reserved.')
+    copyright_text = s_val('footer_copyright', '\u00a9 2026 PT Aksara Cipta Digital. All rights reserved.')
     privacy_url = s_val('footer_privacy_url', '/kebijakan-privasi')
     terms_url = s_val('footer_terms_url', '/syarat-ketentuan')
     consult_url = s_val('footer_consult_url', '/kontak')
@@ -548,7 +548,7 @@ def generate_consultation_whatsapp_url(name, company, email, phone, service_type
 
     if lang == 'en':
         wa_text = (
-            "Hello PT. Aksara Cipta Digital (ACD) Consultant Team,\n\n"
+            "Hello PT Aksara Cipta Digital (ACD) Consultant Team,\n\n"
             "I would like to submit a *Free Software Consultation Request* via the website:\n\n"
             f"👤 *Full Name*: {name}\n"
             f"🏢 *Company / Organization*: {company_display}\n"
@@ -561,7 +561,7 @@ def generate_consultation_whatsapp_url(name, company, email, phone, service_type
         )
     else:
         wa_text = (
-            "Halo Tim Konsultan PT. Aksara Cipta Digital (ACD),\n\n"
+            "Halo Tim Konsultan PT Aksara Cipta Digital (ACD),\n\n"
             "Saya ingin mengirimkan *Formulir Kebutuhan / Konsultasi Gratis* melalui website:\n\n"
             f"👤 *Nama Lengkap*: {name}\n"
             f"🏢 *Instansi / Perusahaan*: {company_display}\n"
@@ -1766,7 +1766,7 @@ def admin_contact_form_reset_defaults():
         'contact_budget_ranges': "Di bawah Rp 50 Juta\nRp 50 Juta - Rp 150 Juta\nRp 150 Juta - Rp 300 Juta\n> Rp 300 Juta (Enterprise Scale)"
     }
     SettingModel.update_many(defaults)
-    flash('Pengaturan form kontak berhasil dikembalikan ke standar awal PT. Aksara Cipta Digital.', 'info')
+    flash('Pengaturan form kontak berhasil dikembalikan ke standar awal PT Aksara Cipta Digital.', 'info')
     return redirect(url_for('admin_contact_form'))
 
 # --- KELOLA FOOTER WEBSITE ---
@@ -1819,7 +1819,7 @@ def admin_footer_reset_defaults():
     defaults = {
         'footer_brand_name': 'AKSARA CIPTA DIGITAL',
         'footer_brand_tagline': 'IT Consultant - AI, Software Developer',
-        'footer_about': 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
+        'footer_about': 'PT Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
         'footer_address_main': 'Gununggede Kawalu, Kota Tasikmalaya Jawa Barat 46182',
         'footer_address_branch': '',
         'footer_phone': '+62 852-8789-8937',
@@ -1839,7 +1839,7 @@ def admin_footer_reset_defaults():
         'footer_badge3': 'SLA 99.9% Uptime Support',
         'footer_support_text': 'Layanan Konsultasi & Aduan:',
         'footer_support_label': 'WhatsApp 24/7 Support',
-        'footer_copyright': '\u00a9 2026 PT. Aksara Cipta Digital. All rights reserved.',
+        'footer_copyright': '\u00a9 2026 PT Aksara Cipta Digital. All rights reserved.',
         'footer_privacy_label': 'Kebijakan Privasi',
         'footer_privacy_url': '/kebijakan-privasi',
         'footer_terms_label': 'Syarat & Ketentuan Layanan',
@@ -1848,7 +1848,7 @@ def admin_footer_reset_defaults():
         'footer_consult_url': '/kontak',
     }
     SettingModel.update_many(defaults)
-    flash('Pengaturan footer berhasil dikembalikan ke standar awal PT. Aksara Cipta Digital.', 'info')
+    flash('Pengaturan footer berhasil dikembalikan ke standar awal PT Aksara Cipta Digital.', 'info')
     return redirect(url_for('admin_footer'))
 
 
@@ -1876,7 +1876,7 @@ def admin_seo():
             'seo_organization_type': request.form.get('seo_organization_type', 'Corporation').strip(),
         }
         SettingModel.update_many(updates)
-        flash('Konfigurasi optimasi SEO website PT. Aksara Cipta Digital berhasil diperbarui!', 'success')
+        flash('Konfigurasi optimasi SEO website PT Aksara Cipta Digital berhasil diperbarui!', 'success')
         return redirect(url_for('admin_seo'))
 
     seo_data = get_seo_data()
@@ -1886,13 +1886,13 @@ def admin_seo():
 @admin_required
 def admin_seo_reset_defaults():
     defaults = {
-        'seo_meta_title': 'PT. Aksara Cipta Digital | IT Consultant - AI, Software Developer',
-        'seo_meta_description': 'PT. Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.',
+        'seo_meta_title': 'PT Aksara Cipta Digital | IT Consultant - AI, Software Developer',
+        'seo_meta_description': 'PT Aksara Cipta Digital (ACD) adalah konsultan IT terkemuka dan software house spesialis arsitektur sistem ERP, E-Government, Mobile Apps, dan solusi kecerdasan buatan (AI) terpercaya di Indonesia.',
         'seo_meta_keywords': 'IT Consultant, Konsultan IT Indonesia, Software Developer Indonesia, Jasa Pembuatan Aplikasi, Jasa Sistem ERP, E-Government SPBE, AI Developer, GIS Geoportal, PT Aksara Cipta Digital, ACD',
         'seo_canonical_url': 'https://acd.co.id',
-        'seo_author': 'PT. Aksara Cipta Digital',
+        'seo_author': 'PT Aksara Cipta Digital',
         'seo_robots': 'index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1',
-        'seo_og_title': 'PT. Aksara Cipta Digital - IT Consultant & Enterprise Software House',
+        'seo_og_title': 'PT Aksara Cipta Digital - IT Consultant & Enterprise Software House',
         'seo_og_description': 'Solusi software inovatif, arsitektur sistem berkinerja tinggi, dan transformasi digital terpercaya untuk Korporasi Swasta, BUMN, dan Pemerintahan di seluruh Indonesia.',
         'seo_og_image': '/static/images/logo_acd_icon.png',
         'seo_og_type': 'website',
@@ -1904,7 +1904,7 @@ def admin_seo_reset_defaults():
         'seo_organization_type': 'Corporation'
     }
     SettingModel.update_many(defaults)
-    flash('Konfigurasi SEO berhasil dikembalikan ke standar awal PT. Aksara Cipta Digital.', 'info')
+    flash('Konfigurasi SEO berhasil dikembalikan ke standar awal PT Aksara Cipta Digital.', 'info')
     return redirect(url_for('admin_seo'))
 
 @app.route('/admin/settings', methods=['GET', 'POST'])

@@ -1,9 +1,9 @@
-# PT. Aksara Cipta Digital - Multilingual Translations (Bahasa Indonesia & English)
+# PT Aksara Cipta Digital - Multilingual Translations (Bahasa Indonesia & English)
 
 TRANSLATIONS = {
     'id': {
         # Brand & Nav
-        'brand_name': 'PT. AKSARA CIPTA DIGITAL',
+        'brand_name': 'PT AKSARA CIPTA DIGITAL',
         'brand_tagline': 'TEKNOLOGI & INOVASI SISTEM',
         'brand_subtitle': 'IT Consultant - AI, Software Developer',
         'nav_home': 'Beranda',
@@ -175,12 +175,12 @@ TRANSLATIONS = {
         'about_hero_subtitle': 'ACD akan mendalami alur proses bisnis Anda secara komprehensif sebelum membangun software, didukung oleh tim ahli berpengalaman, standar keamanan tingkat tinggi, dan komitmen penuh pada ketepatan waktu serta kualitas.',
         'about_who_badge': 'Siapa Kami',
         'about_who_title': 'Mitra Terpercaya Transformasi Digital Bisnis & Pemerintahan',
-        'about_who_p1': 'Berangkat dari cita-cita memajukan ekosistem teknologi nasional, PT. Aksara Cipta Digital (ACD) telah sukses merancang dan mengimplementasikan kebutuhan sistem informasi, ERP, aplikasi mobile, dan solusi e-Government di seluruh penjuru Indonesia.',
+        'about_who_p1': 'Berangkat dari cita-cita memajukan ekosistem teknologi nasional, PT Aksara Cipta Digital (ACD) telah sukses merancang dan mengimplementasikan kebutuhan sistem informasi, ERP, aplikasi mobile, dan solusi e-Government di seluruh penjuru Indonesia.',
         'about_who_p2': 'Kami paham betul bahwa setiap orang/ lembaga/ institusi/ client memiliki dinamika unik. Dari pemahaman inilah, ACD hadir bukan sekadar sebagai vendor koding konvensional, melainkan sebagai Strategic IT Consultant yang mendiagnosis hambatan alur kerja Anda dan merumuskan arsitektur software yang terbukti meningkatkan efisiensi biaya dan produktivitas tim.',
         'about_stat_clients': 'Klien Aktif',
         'about_stat_provinces': 'Provinsi Terjangkau',
         'about_stat_sla': 'SLA Kepuasan',
-        'about_corp_badge': 'Identitas Korporat Resmi PT. Aksara Cipta Digital (ACD)',
+        'about_corp_badge': 'Identitas Korporat Resmi PT Aksara Cipta Digital (ACD)',
         'about_corp_tagline': 'TEKNOLOGI & INOVASI SISTEM',
         'about_vision_mission': 'Visi & Misi Perusahaan',
         'about_vision_title': 'Visi Kami',
@@ -250,7 +250,7 @@ TRANSLATIONS = {
         'contact_direct_wa_notice': 'Formulir otomatis tersimpan & diteruskan langsung ke WhatsApp:',
 
         # Footer
-        'footer_about': 'PT. Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
+        'footer_about': 'PT Aksara Cipta Digital adalah perusahaan konsultan IT dan software house yang berpengalaman membangun ratusan aplikasi terbaik untuk berbagai sektor bisnis swasta, BUMN, dan institusi pemerintahan di seluruh Indonesia.',
         'footer_security_standards': 'Standar Keamanan & Mutu:',
         'footer_consultation_support': 'Layanan Konsultasi & Aduan:',
         'footer_all_rights': 'Hak Cipta Dilindungi Undang-Undang.',
@@ -283,7 +283,7 @@ TRANSLATIONS = {
 
     'en': {
         # Brand & Nav
-        'brand_name': 'PT. AKSARA CIPTA DIGITAL',
+        'brand_name': 'PT AKSARA CIPTA DIGITAL',
         'brand_tagline': 'SYSTEM TECHNOLOGY & INNOVATION',
         'brand_subtitle': 'IT Consultant - AI, Software Developer',
         'nav_home': 'Home',
@@ -455,12 +455,12 @@ TRANSLATIONS = {
         'about_hero_subtitle': 'ACD will thoroughly analyze your business workflows comprehensively before engineering software, backed by domain experts, high-grade security protocols, and an uncompromising commitment to quality and punctuality.',
         'about_who_badge': 'Who We Are',
         'about_who_title': 'Trusted Partner in Digital Transformation for Business & Government',
-        'about_who_p1': 'Founded with the mission to advance the national digital ecosystem, PT. Aksara Cipta Digital (ACD) has successfully engineered and deployed enterprise information systems, ERP platforms, mobile apps, and e-Government solutions across Indonesia.',
+        'about_who_p1': 'Founded with the mission to advance the national digital ecosystem, PT Aksara Cipta Digital (ACD) has successfully engineered and deployed enterprise information systems, ERP platforms, mobile apps, and e-Government solutions across Indonesia.',
         'about_who_p2': 'We recognize that every enterprise has distinct operational dynamics. ACD operates not merely as a conventional software vendor, but as a Strategic IT Consultant diagnosing process bottlenecks and architecting systems proven to reduce operational costs and enhance team productivity.',
         'about_stat_clients': 'Active Clients',
         'about_stat_provinces': 'Provinces Covered',
         'about_stat_sla': 'Satisfaction SLA',
-        'about_corp_badge': 'Official Corporate Identity of PT. Aksara Cipta Digital (ACD)',
+        'about_corp_badge': 'Official Corporate Identity of PT Aksara Cipta Digital (ACD)',
         'about_corp_tagline': 'SYSTEM TECHNOLOGY & INNOVATION',
         'about_vision_mission': 'Corporate Vision & Mission',
         'about_vision_title': 'Our Vision',
@@ -530,7 +530,7 @@ TRANSLATIONS = {
         'contact_direct_wa_notice': 'Form automatically saved & routed directly to WhatsApp:',
 
         # Footer
-        'footer_about': 'PT. Aksara Cipta Digital is an established IT consulting and enterprise software development firm with a proven track record delivering mission-critical applications for corporations, state-owned enterprises (BUMN), and government institutions across Indonesia.',
+        'footer_about': 'PT Aksara Cipta Digital is an established IT consulting and enterprise software development firm with a proven track record delivering mission-critical applications for corporations, state-owned enterprises (BUMN), and government institutions across Indonesia.',
         'footer_security_standards': 'Security & Quality Standards:',
         'footer_consultation_support': 'Consultation & Support Inquiries:',
         'footer_all_rights': 'All Rights Reserved.',

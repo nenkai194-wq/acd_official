@@ -1,6 +1,6 @@
 # Panduan Deploy Gratis (Rp 0) & Menghubungkan Domain `acd.co.id`
 
-Dokumen ini disiapkan khusus agar website **PT. Aksara Cipta Digital (ACD)** dapat langsung online di internet menggunakan domain sendiri (`acd.co.id`) **tanpa harus menyewa hosting berbayar** terlebih dahulu.
+Dokumen ini disiapkan khusus agar website **PT Aksara Cipta Digital (ACD)** dapat langsung online di internet menggunakan domain sendiri (`acd.co.id`) **tanpa harus menyewa hosting berbayar** terlebih dahulu.
 
 ---
 
