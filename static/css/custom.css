@@ -481,3 +481,17 @@ h1, h2, h3, .font-heading {
   background-color: #000;
   z-index: 0;
 }
+
+/* Optimasi Khusus Tampilan Layar HP / Mobile: Api Partikel Tidak Mendominasi / Tidak Terlalu Penuh */
+@media (max-width: 768px) {
+  #hero-ambient-video {
+    min-width: auto;
+    min-height: auto;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    transform: translate(-50%, -52%) scale(1.28);
+    opacity: 0.82;
+    filter: brightness(0.95);
+  }
+}
