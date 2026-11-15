@@ -3,34 +3,30 @@
 {% block title %}{{ seo.meta_title }}{% endblock %}
 
 {% block content %}
-<!-- 1. HERO SECTION (DEPTECH DIGITAL SIGNATURE STYLE) -->
-<section class="deptech-hero-bg text-white pt-20 pb-24 lg:pt-28 lg:pb-36 relative overflow-hidden">
-    <!-- Interactive Particle Constellation Canvas (Deptech Digital Style) -->
-    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+<!-- 1. HERO SECTION (KOMUNIGRAFIK FLUID FIRE VIDEO AT TOP HERO ONLY) -->
+<section class="relative min-h-[92vh] flex items-center justify-center text-white pt-24 pb-28 lg:pt-32 lg:pb-36 overflow-hidden bg-black">
+    <!-- Exact Komunigrafik Swirling Fluid Particle Wave Video (Animasi Api HANYA di Tampilan Awal / Hero) -->
+    <video autoplay muted loop playsinline id="hero-ambient-video" class="absolute inset-0 w-full h-full object-cover pointer-events-none z-0" preload="auto">
+        <source src="{{ url_for('static', filename='video/abstract-particles-loop.mp4') }}" type="video/mp4">
+    </video>
 
-    <!-- Cyber Matrix Grid Lines -->
-    <div class="deptech-grid-pattern"></div>
+    <!-- Smooth Bottom Blend into Base Dark Color (#020617) -->
+    <div class="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#020617] via-[#020617]/70 to-transparent pointer-events-none z-1"></div>
 
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
-        <div class="space-y-6 max-w-4xl mx-auto">
-            <!-- Badge -->
-            <div class="inline-flex items-center space-x-2 deptech-badge px-4 py-1.5 rounded-full text-xs font-semibold animate-fade-in-up delay-100">
-                <span class="w-2 h-2 rounded-full bg-accent-cyan animate-pulse"></span>
-                <span>{{ t.hero_badge }}</span>
-            </div>
-
-            <!-- Headline -->
-            <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight sm:leading-snug text-white drop-shadow-[0_4px_24px_rgba(0,0,0,0.9)] animate-fade-in-up delay-200">
-                {{ t.hero_headline_before }} <span class="text-deptech-gradient">{{ t.hero_headline_highlight }}</span> {{ t.hero_headline_after }}
+        <div class="space-y-7 max-w-4xl mx-auto">
+            <!-- Headline: Solusi Software dan Sistem Aplikasi Terbaik untuk Anda (Ukuran Font Diperbesar) -->
+            <h1 class="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-7xl font-extrabold tracking-tight leading-[1.12] text-white drop-shadow-[0_4px_30px_rgba(0,0,0,0.95)] animate-fade-in-up">
+                Solusi Software dan Sistem Aplikasi <span class="text-deptech-gradient">Terbaik untuk Anda</span>
             </h1>
 
-            <!-- Main Paragraph -->
-            <p class="text-sm sm:text-base text-slate-200 max-w-2xl font-medium leading-relaxed mx-auto drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)] animate-fade-in-up delay-300">
+            <!-- Sub-Headline / Deskripsi Bawahnya -->
+            <p class="text-base sm:text-lg md:text-xl text-slate-200 max-w-3xl font-normal leading-relaxed mx-auto drop-shadow-[0_2px_14px_rgba(0,0,0,0.95)] animate-fade-in-up delay-200">
                 {{ t.hero_description }}
             </p>
 
             <!-- CTA Actions -->
-            <div class="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-400">
+            <div class="pt-3 flex flex-col sm:flex-row items-center justify-center gap-4 animate-fade-in-up delay-300">
                 <a href="{{ url_for('contact') }}" class="w-full sm:w-auto inline-flex items-center justify-center space-x-2.5 deptech-btn-primary px-8 py-4 font-bold text-sm tracking-wide">
                     <i data-lucide="message-square-plus" class="w-4 h-4"></i>
                     <span>{{ t.hero_cta_primary }}</span>
@@ -42,7 +38,7 @@
             </div>
 
             <!-- Trust Metrics Bar -->
-            <div class="pt-12 mt-6 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto animate-fade-in-up delay-500">
+            <div class="pt-10 mt-6 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-3xl mx-auto animate-fade-in-up delay-400">
                 <div class="p-3">
                     <p class="text-2xl lg:text-4xl font-extrabold text-white">20+</p>
                     <p class="text-xs text-slate-400 font-medium mt-1">{{ t.metric_clients_label }}</p>
@@ -65,7 +61,7 @@
 </section>
 
 <!-- 2. SOLUSI UTAMA (DEPTECH CARD STYLE DENGAN GRADASI WARNA ELEGAN & NYAMAN DI MATA) -->
-<section id="solusi-utama" class="py-24 bg-gradient-to-b from-black/25 via-black/45 to-black/35 text-slate-100 relative overflow-hidden border-t border-indigo-950/30">
+<section id="solusi-utama" class="py-24 bg-gradient-to-b from-[#020617] via-[#070c26] to-[#0a1030] text-slate-100 relative overflow-hidden border-t border-indigo-950/60">
     <!-- Ambient Soft Glow Background (Mencegah silau, sejuk di mata) -->
     <div class="absolute -top-32 left-1/2 -translate-x-1/2 w-[700px] h-[350px] bg-indigo-600/10 rounded-full blur-3xl pointer-events-none"></div>
     <div class="absolute bottom-10 right-10 w-[500px] h-[300px] bg-purple-600/10 rounded-full blur-3xl pointer-events-none"></div>
@@ -158,7 +154,7 @@
 </section>
 
 <!-- 3. VALUE PROPOSITION: "KAMI PAHAMI PROSES BISNIS ANDA SEBELUM MEMBANGUN SOFTWARE" -->
-<section class="py-24 bg-gradient-to-b from-black/35 via-black/45 to-black/25 text-white border-t border-indigo-950/30 relative overflow-hidden">
+<section class="py-24 bg-gradient-to-b from-[#0a1030] via-[#060b20] to-[#020617] text-white border-t border-indigo-950/60 relative overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
             <div class="lg:col-span-6 space-y-5">

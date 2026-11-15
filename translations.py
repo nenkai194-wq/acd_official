@@ -22,9 +22,9 @@ TRANSLATIONS = {
 
         # Hero (Home)
         'hero_badge': 'Konsultan IT & Jasa Pembuatan Software Terpercaya',
-        'hero_headline_before': 'Partner Terpercaya dalam Mewujudkan',
-        'hero_headline_highlight': 'Solusi Software dan Sistem Aplikasi Terbaik',
-        'hero_headline_after': 'untuk Kebutuhan Anda',
+        'hero_headline_before': '',
+        'hero_headline_highlight': 'Solusi Software dan Sistem Aplikasi Terbaik untuk Anda',
+        'hero_headline_after': '',
         'hero_description': 'ACD akan mendalami alur proses bisnis Anda terlebih dahulu sebelum membangun software. Didukung oleh tim ahli berpengalaman, standar keamanan tingkat tinggi, dan komitmen penuh pada ketepatan waktu serta kualitas.',
         'hero_cta_primary': 'Mulai Konsultasi Gratis',
         'hero_cta_secondary': 'Lihat Portofolio Kami',
@@ -170,9 +170,9 @@ TRANSLATIONS = {
         'cta_banner_btn': 'Jadwalkan Sesi Konsultasi Gratis',
 
         # About Us Page (/company-profile /tentang-kami)
-        'about_hero_badge': 'Company Profile',
-        'about_hero_title': 'Tentang ACD Digital Consulting',
-        'about_hero_subtitle': 'Membangun masa depan Indonesia melalui perangkat lunak inovatif, konsultasi proses bisnis mendalam, dan komitmen mutu tanpa kompromi.',
+        'about_hero_badge': 'Konsultan IT & Jasa Pembuatan Software Profesional',
+        'about_hero_title': 'Partner Terpercaya dalam Mewujudkan Solusi Software dan Sistem Aplikasi Terbaik',
+        'about_hero_subtitle': 'PT. Aksara Cipta Digital (ACD) mendalami alur proses bisnis Anda secara komprehensif sebelum membangun software, didukung oleh tim ahli berpengalaman, standar keamanan tingkat tinggi, dan komitmen penuh pada ketepatan waktu serta kualitas.',
         'about_who_badge': 'Siapa Kami',
         'about_who_title': 'Mitra Terpercaya Transformasi Digital Bisnis & Pemerintahan',
         'about_who_p1': 'Berangkat dari cita-cita memajukan ekosistem teknologi nasional, PT. Aksara Cipta Digital (ACD) telah sukses merancang dan mengimplementasikan kebutuhan sistem informasi, ERP, aplikasi mobile, dan solusi e-Government di seluruh penjuru Indonesia.',
@@ -450,9 +450,9 @@ TRANSLATIONS = {
         'cta_banner_btn': 'Schedule a Free Consultation Session',
 
         # About Us Page (/company-profile /tentang-kami)
-        'about_hero_badge': 'Company Profile',
-        'about_hero_title': 'About ACD Digital Consulting',
-        'about_hero_subtitle': 'Engineering Indonesia’s digital future through innovative software, in-depth business process consulting, and uncompromising quality.',
+        'about_hero_badge': 'Trusted IT Consultant & Professional Software Developer',
+        'about_hero_title': 'Your Trusted Partner in Delivering Best-in-Class Software & Application Systems',
+        'about_hero_subtitle': 'PT. Aksara Cipta Digital (ACD) thoroughly analyzes your business workflows before engineering software, backed by domain experts, high-grade security protocols, and an uncompromising commitment to quality and punctuality.',
         'about_who_badge': 'Who We Are',
         'about_who_title': 'Trusted Partner in Digital Transformation for Business & Government',
         'about_who_p1': 'Founded with the mission to advance the national digital ecosystem, PT. Aksara Cipta Digital (ACD) has successfully engineered and deployed enterprise information systems, ERP platforms, mobile apps, and e-Government solutions across Indonesia.',
