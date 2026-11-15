@@ -656,6 +656,10 @@
                     {% if footer.consult_label %}
                     <a href="{{ footer.consult_url }}" class="hover:text-slate-400">{{ footer.consult_label }}</a>
                     {% endif %}
+                    <a href="{{ url_for('admin_login') }}" class="hover:text-indigo-400 inline-flex items-center space-x-1.5 transition text-slate-500 py-0.5 px-2 rounded hover:bg-indigo-950/40">
+                        <i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-400"></i>
+                        <span>Admin Portal</span>
+                    </a>
 
                 </div>
             </div>
