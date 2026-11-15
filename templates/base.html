@@ -153,11 +153,11 @@
             <source src="{{ url_for('static', filename='video/abstract-particles-loop.mp4') }}" type="video/mp4">
         </video>
 
-        <!-- Ambient Color & Contrast Balance Overlay -->
-        <div class="absolute inset-0 bg-gradient-to-b from-[#020617]/55 via-transparent to-[#020617]/85 pointer-events-none"></div>
+        <!-- Ambient Color & Contrast Balance Overlay (Ultra-clean so glowing particles pop vividly) -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#020617]/20 via-transparent to-[#020617]/40 pointer-events-none"></div>
 
-        <!-- Vignette & Edge Blend to ensure content & typography are always 100% crisp and readable -->
-        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,#020617_95%)] pointer-events-none"></div>
+        <!-- Smooth Vignette to keep text readable without smothering radiant fluid wave -->
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_65%,#020617_95%)] opacity-60 pointer-events-none"></div>
 
         <!-- Interactive Fullscreen Micro-Sparks Canvas -->
         <canvas id="ambient-body-canvas" class="w-full h-full block absolute inset-0 pointer-events-none"></canvas>
