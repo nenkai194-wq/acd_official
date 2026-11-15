@@ -478,6 +478,6 @@ h1, h2, h3, .font-heading {
   object-fit: cover;
   pointer-events: none;
   opacity: 1;
-  filter: brightness(1.22) contrast(1.18) saturate(1.45);
+  background-color: #000;
   z-index: 0;
 }
