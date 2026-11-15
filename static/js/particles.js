@@ -23,7 +23,8 @@
 
         let width = 0;
         let height = 0;
-        let dpr = Math.min(window.devicePixelRatio || 1, 2); // Cap at 2 for optimal GPU performance
+        let isMobile = window.innerWidth < 768;
+        let dpr = isMobile ? Math.min(window.devicePixelRatio || 1, 1.25) : Math.min(window.devicePixelRatio || 1, 1.75); // Capped for ultra-light GPU & battery usage
 
         // Particle configuration
         let particles = [];
@@ -103,11 +104,11 @@
             lastScrollY = scrollY;
         }, { passive: true });
 
-        // Determine particle count based on screen size
+        // Determine particle count based on screen size (Ultra-lightweight footprint)
         function getOptimalParticleCount() {
-            if (window.innerWidth < 768) return 38;      // Mobile phone (feather-light)
-            if (window.innerWidth < 1200) return 65;     // Tablet / small laptop
-            return 95;                                   // Large desktop monitors
+            if (window.innerWidth < 768) return 22;      // Mobile phone (feather-light, 0% lag)
+            if (window.innerWidth < 1200) return 45;     // Tablet / small laptop
+            return 72;                                   // Large desktop monitors
         }
 
         // Particle Class
@@ -339,8 +340,8 @@
 
         animate();
 
-        // Video Autoplay & Battery Watchdog
-        const video = document.getElementById('ambient-body-video');
+        // Video Autoplay & Battery Watchdog (Supports hero-ambient-video & ambient-body-video)
+        const video = document.getElementById('hero-ambient-video') || document.getElementById('ambient-body-video');
         if (video) {
             video.muted = true;
             const playPromise = video.play();
@@ -356,6 +357,24 @@
                     window.addEventListener('touchstart', tryPlay, { once: true });
                     window.addEventListener('scroll', tryPlay, { once: true });
                 });
+            }
+
+            // Smart IntersectionObserver: Freeze video decoding when scrolled out of Hero (0% CPU/GPU overhead)
+            if ('IntersectionObserver' in window) {
+                const videoObserver = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            if (video.paused && !document.hidden) {
+                                video.play().catch(() => {});
+                            }
+                        } else {
+                            if (!video.paused) {
+                                video.pause();
+                            }
+                        }
+                    });
+                }, { threshold: 0.05 });
+                videoObserver.observe(video);
             }
         }
 

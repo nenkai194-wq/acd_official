@@ -58,6 +58,8 @@ def add_security_headers(response):
     response.headers['X-XSS-Protection'] = '1; mode=block'
     response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
+    if request.path.startswith('/static/'):
+        response.headers['Cache-Control'] = 'public, max-age=604800'
     if request.path.startswith('/admin'):
         response.headers['X-Robots-Tag'] = 'noindex, nofollow'
     return response
