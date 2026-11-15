@@ -339,15 +339,37 @@
 
         animate();
 
-        // Battery Saver: Pause loop when tab is hidden or minimized
+        // Video Autoplay & Battery Watchdog
+        const video = document.getElementById('ambient-body-video');
+        if (video) {
+            video.muted = true;
+            const playPromise = video.play();
+            if (playPromise !== undefined) {
+                playPromise.catch(() => {
+                    const tryPlay = () => {
+                        video.play().catch(() => {});
+                        window.removeEventListener('click', tryPlay);
+                        window.removeEventListener('touchstart', tryPlay);
+                        window.removeEventListener('scroll', tryPlay);
+                    };
+                    window.addEventListener('click', tryPlay, { once: true });
+                    window.addEventListener('touchstart', tryPlay, { once: true });
+                    window.addEventListener('scroll', tryPlay, { once: true });
+                });
+            }
+        }
+
+        // Battery Saver: Pause loop and video when tab is hidden or minimized
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 isTabActive = false;
                 if (animationFrameId) cancelAnimationFrame(animationFrameId);
+                if (video && !video.paused) video.pause();
             } else {
                 isTabActive = true;
                 lastScrollY = window.scrollY || 0;
                 scrollDelta = 0;
+                if (video && video.paused) video.play().catch(() => {});
                 animate();
             }
         });

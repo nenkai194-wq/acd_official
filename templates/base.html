@@ -147,17 +147,28 @@
     {% endif %}
 
     <!-- 1. GLOBAL AMBIENT BODY ANIMATION (KOMUNIGRAFIK STYLE WITH ACD ENTERPRISE BRAND COLORS) -->
-    <div id="ambient-body-bg" class="fixed inset-0 pointer-events-none z-0 overflow-hidden" aria-hidden="true">
-        <!-- Interactive Fullscreen Canvas (Particles, Stars & Glowing Neural Wave Nodes) -->
-        <canvas id="ambient-body-canvas" class="w-full h-full block"></canvas>
-        
+    <div id="ambient-body-bg" class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#020617]" aria-hidden="true">
+        <!-- Exact Komunigrafik Swirling Fluid Particle Wave Video, Color-graded to ACD Primary Colors (Indigo, Cyan, Violet) -->
+        <video autoplay muted loop playsinline id="ambient-body-video" class="absolute inset-0 w-full h-full object-cover pointer-events-none" preload="auto">
+            <source src="{{ url_for('static', filename='video/abstract-particles-loop.mp4') }}" type="video/mp4">
+        </video>
+
+        <!-- Ambient Color & Contrast Balance Overlay -->
+        <div class="absolute inset-0 bg-gradient-to-b from-[#020617]/55 via-transparent to-[#020617]/85 pointer-events-none"></div>
+
+        <!-- Vignette & Edge Blend to ensure content & typography are always 100% crisp and readable -->
+        <div class="absolute inset-0 bg-[radial-gradient(ellipse_at_center,transparent_45%,#020617_95%)] pointer-events-none"></div>
+
+        <!-- Interactive Fullscreen Micro-Sparks Canvas -->
+        <canvas id="ambient-body-canvas" class="w-full h-full block absolute inset-0 pointer-events-none"></canvas>
+
         <!-- Ambient Glowing Nebula Blurs (ACD Corporate Palette: Indigo, Cyan, Violet, Midnight) -->
         <div class="ambient-glow ambient-glow-1"></div>
         <div class="ambient-glow ambient-glow-2"></div>
         <div class="ambient-glow ambient-glow-3"></div>
 
         <!-- Cyber Micro-Grid Texture Overlay -->
-        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,102,241,0.025)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,102,241,0.025)_1px,transparent_1px)] bg-[size:4.5rem_4.5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_60%,transparent_100%)] opacity-70"></div>
+        <div class="absolute inset-0 bg-[linear-gradient(to_right,rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(to_bottom,rgba(99,102,241,0.02)_1px,transparent_1px)] bg-[size:4.5rem_4.5rem] [mask-image:radial-gradient(ellipse_70%_60%_at_50%_50%,#000_60%,transparent_100%)] opacity-60"></div>
     </div>
 
 
