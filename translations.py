@@ -23,7 +23,7 @@ TRANSLATIONS = {
         # Hero (Home)
         'hero_badge': 'Konsultan IT & Jasa Pembuatan Software Terpercaya',
         'hero_headline_before': '',
-        'hero_headline_highlight': 'Partner Terpercaya untuk Anda',
+        'hero_headline_highlight': 'Mitra Strategis Transformasi Digital Anda',
         'hero_headline_after': '',
         'hero_description': 'ACD akan mendalami alur proses bisnis Anda terlebih dahulu sebelum membangun software. Didukung oleh tim ahli berpengalaman, standar keamanan tingkat tinggi, dan komitmen penuh pada ketepatan waktu serta kualitas.',
         'hero_cta_primary': 'Mulai Konsultasi Gratis',
@@ -303,7 +303,7 @@ TRANSLATIONS = {
         # Hero (Home)
         'hero_badge': 'Trusted IT Consultant & Custom Software Development',
         'hero_headline_before': '',
-        'hero_headline_highlight': 'Your Trusted Partner for You',
+        'hero_headline_highlight': 'Your Strategic Digital Transformation Partner',
         'hero_headline_after': '',
         'hero_description': 'ACD thoroughly analyzes your business workflows before engineering software. Powered by seasoned domain experts, high-grade security protocols, and an uncompromising commitment to quality and punctuality.',
         'hero_cta_primary': 'Start Free Consultation',
