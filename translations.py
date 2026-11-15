@@ -172,7 +172,7 @@ TRANSLATIONS = {
         # About Us Page (/company-profile /tentang-kami)
         'about_hero_badge': 'Konsultan IT & Jasa Pembuatan Software Profesional',
         'about_hero_title': 'Partner Terpercaya dalam Mewujudkan Solusi Software dan Sistem Aplikasi Terbaik',
-        'about_hero_subtitle': 'PT. Aksara Cipta Digital (ACD) mendalami alur proses bisnis Anda secara komprehensif sebelum membangun software, didukung oleh tim ahli berpengalaman, standar keamanan tingkat tinggi, dan komitmen penuh pada ketepatan waktu serta kualitas.',
+        'about_hero_subtitle': 'ACD akan mendalami alur proses bisnis Anda secara komprehensif sebelum membangun software, didukung oleh tim ahli berpengalaman, standar keamanan tingkat tinggi, dan komitmen penuh pada ketepatan waktu serta kualitas.',
         'about_who_badge': 'Siapa Kami',
         'about_who_title': 'Mitra Terpercaya Transformasi Digital Bisnis & Pemerintahan',
         'about_who_p1': 'Berangkat dari cita-cita memajukan ekosistem teknologi nasional, PT. Aksara Cipta Digital (ACD) telah sukses merancang dan mengimplementasikan kebutuhan sistem informasi, ERP, aplikasi mobile, dan solusi e-Government di seluruh penjuru Indonesia.',
@@ -452,7 +452,7 @@ TRANSLATIONS = {
         # About Us Page (/company-profile /tentang-kami)
         'about_hero_badge': 'Trusted IT Consultant & Professional Software Developer',
         'about_hero_title': 'Your Trusted Partner in Delivering Best-in-Class Software & Application Systems',
-        'about_hero_subtitle': 'PT. Aksara Cipta Digital (ACD) thoroughly analyzes your business workflows before engineering software, backed by domain experts, high-grade security protocols, and an uncompromising commitment to quality and punctuality.',
+        'about_hero_subtitle': 'ACD will thoroughly analyze your business workflows comprehensively before engineering software, backed by domain experts, high-grade security protocols, and an uncompromising commitment to quality and punctuality.',
         'about_who_badge': 'Who We Are',
         'about_who_title': 'Trusted Partner in Digital Transformation for Business & Government',
         'about_who_p1': 'Founded with the mission to advance the national digital ecosystem, PT. Aksara Cipta Digital (ACD) has successfully engineered and deployed enterprise information systems, ERP platforms, mobile apps, and e-Government solutions across Indonesia.',
