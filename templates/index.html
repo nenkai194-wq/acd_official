@@ -19,16 +19,28 @@
         <div class="space-y-4 sm:space-y-6 w-full max-w-6xl mx-auto flex flex-col items-center justify-center text-center">
             <!-- Headline: "Mitra Strategis Transformasi Digital Anda" (Simetris 100% Persis Rata Tengah) -->
             <h1 class="block w-full text-center text-3xl xs:text-4xl sm:text-5xl lg:text-[3.25rem] xl:text-[3.85rem] font-black tracking-tight leading-tight lg:leading-none text-white lg:whitespace-nowrap drop-shadow-[0_4px_35px_rgba(0,0,0,0.95)] animate-fade-in-up mx-auto">
-                Mitra Strategis Transformasi Digital Anda
+                {% if current_lang == 'en' %}
+                    Your Strategic Digital Transformation Partner
+                {% else %}
+                    Mitra Strategis Transformasi Digital Anda
+                {% endif %}
             </h1>
 
             <!-- Sub-Headline / Deskripsi (Proporsional Lebar Body, Terbagi 2-3 Baris Rapi & Tidak Menumpuk) -->
             <p class="block w-full text-center text-sm sm:text-base md:text-lg xl:text-[1.125rem] text-slate-300 font-normal leading-relaxed md:leading-relaxed max-w-4xl lg:max-w-5xl xl:max-w-6xl mx-auto drop-shadow-[0_2px_16px_rgba(0,0,0,0.95)] animate-fade-in-up delay-200 px-4">
-                <span class="inline md:block">ACD akan mendalami alur proses bisnis Anda terlebih dahulu sebelum membangun software.</span>
-                <span class="inline md:block">
-                    Didukung oleh tim ahli berpengalaman, standar keamanan tingkat tinggi,<br class="hidden md:inline xl:hidden">
-                    dan komitmen penuh pada ketepatan waktu serta kualitas.
-                </span>
+                {% if current_lang == 'en' %}
+                    <span class="inline md:block">ACD will thoroughly explore your business workflows before engineering software.</span>
+                    <span class="inline md:block">
+                        Supported by experienced domain experts, high-grade security standards,<br class="hidden md:inline xl:hidden">
+                        and full commitment to punctuality and quality.
+                    </span>
+                {% else %}
+                    <span class="inline md:block">ACD akan mendalami alur proses bisnis Anda terlebih dahulu sebelum membangun software.</span>
+                    <span class="inline md:block">
+                        Didukung oleh tim ahli berpengalaman, standar keamanan tingkat tinggi,<br class="hidden md:inline xl:hidden">
+                        dan komitmen penuh pada ketepatan waktu serta kualitas.
+                    </span>
+                {% endif %}
             </p>
         </div>
     </div>
@@ -232,7 +244,7 @@
                     <!-- Top Row: Category + Year -->
                     <div class="flex items-center justify-between mb-3">
                         <span class="px-2.5 py-1 rounded-full text-[10px] font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-900/60">
-                            {{ item.category }}
+                            {{ t.categories.get(item.category, item.category) }}
                         </span>
                         <span class="px-2 py-0.5 rounded text-[10px] font-mono bg-slate-900 text-slate-400 border border-slate-800">
                             {% if current_lang == 'en' %}Year {{ item.year }}{% else %}Tahun {{ item.year }}{% endif %}

@@ -105,7 +105,7 @@
                                     <span>{{ t.contact_label_phone }}</span>
                                     <span class="text-[10px] text-emerald-400 font-medium normal-case flex items-center space-x-1">
                                         <i data-lucide="check-circle" class="w-3 h-3 inline"></i>
-                                        <span>WhatsApp Aktif</span>
+                                        <span>{% if current_lang == 'en' %}Active WhatsApp{% else %}WhatsApp Aktif{% endif %}</span>
                                     </span>
                                 </label>
                                 <input type="tel" name="phone" required placeholder="{{ t.contact_placeholder_phone }}" inputmode="numeric" autocomplete="tel" maxlength="16" class="input-wa-national w-full px-4 py-3 text-sm border border-indigo-950/80 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 focus:outline-none bg-[#05091d] text-white placeholder-slate-500 transition shadow-inner">

@@ -571,3 +571,70 @@ TRANSLATIONS = {
         }
     }
 }
+
+FAQ_TRANSLATIONS = {
+    'en': {
+        1: {
+            'question': 'Why choose ACD for software development?',
+            'answer': 'ACD is not merely an outsourced coding vendor, but a strategic technology consulting partner. We thoroughly analyze your business workflows before architecting software. All our applications come with full warranties, zero recurring per-user licensing fees, over 15 years of domain experience, and banking-grade security standards.'
+        },
+        2: {
+            'question': 'How long does it take to develop an application?',
+            'answer': 'Development timelines vary based on system scope and feature complexity. Professional Corporate Websites typically take 2-4 weeks. Mid-scale Mobile Apps or operational Information Systems take 1.5 to 3 months. Integrated Custom ERP and E-Government implementations take 3 to 6 months with progressive milestone releases powered by Agile Scrum.'
+        },
+        3: {
+            'question': 'What are the warranty and maintenance guarantees after deployment?',
+            'answer': 'Every application built by ACD includes an official Bug & Error-Free Warranty throughout the maintenance period. We also provide Service Level Agreements (SLA) with rapid technical support response, routine security patches, hands-on user training sessions, and flexible annual maintenance extension options.'
+        },
+        4: {
+            'question': 'Does the client own 100% of the source code and intellectual property?',
+            'answer': 'Yes, 100%. We transfer complete source code, database schemas, intellectual property rights, and comprehensive technical documentation to the client upon project handover. Your company retains full ownership and freedom over the digital asset with zero recurring rental or vendor-lock fees.'
+        },
+        5: {
+            'question': 'How do we get started with a consultation, and what are the cost estimates?',
+            'answer': 'You can click the "Start Free Consultation" button or reach out to our official WhatsApp in the bottom-right corner. ACD\'s Technical Consulting team will schedule a discovery session (online via Zoom/Meet or in person) to analyze your requirements and prepare a Technical Proposal & Detailed Budget Estimate free of charge.'
+        }
+    }
+}
+
+PORTFOLIO_TRANSLATIONS = {
+    'en': {
+        'sicepat-desa': {
+            'title': 'SICEPAT DESA (Village Population Registry & Public Administration System)',
+            'summary': 'An integrated digital application managing village demographic records, civil registration, and automated administrative letter issuance digitally and swiftly.'
+        },
+        'simanja-waroeng-jamur-mang-yayat': {
+            'title': 'SIMANJA (Work & Operational Expense Monitoring System)',
+            'summary': 'Mobile application for agricultural yield logging, logistics tracking, daily operational expense reporting, and automated P&L statements.'
+        },
+        'simantra-alokasi-pekerjaan-honor-mitra': {
+            'title': 'SIMANTRA (Partner Work Allocation & Honorarium Distribution System)',
+            'summary': 'Governance information system for equitable, accountable, and budget-capped job allocations and partner honorarium disbursements.'
+        },
+        'website-profil-transparansi-desa': {
+            'title': 'Village Profile Website & Public Transparency Portal',
+            'summary': 'Official village portal showcasing eco-tourism, local MSME products, APBDes budget transparency, and community activities.'
+        },
+        'website-profil-akademik-sekolah': {
+            'title': 'School Official Profile, Academics & Online Admission (PPDB) Portal',
+            'summary': 'Modern school website featuring institutional vision, vocational programs, student achievements, faculty directory, and online admissions.'
+        },
+        'cuan-servis-ac-mobile-apk': {
+            'title': 'CUAN (HVAC Service, Field Work Orders & Equipment Sales)',
+            'summary': 'Mobile application for residential & commercial air conditioning services, technician work order dispatching, customer CRM, and P&L tracking.'
+        },
+        'umkm-dimsum-pos-outlet-apk': {
+            'title': 'Point of Sale (POS) & Multi-Outlet Management for Food Enterprises',
+            'summary': 'Mobile POS cashier app for multi-outlet retail operations, inventory tracking, daily expense control, and consolidated real-time financial reporting.'
+        },
+        'platform-ecommerce-sewa-toko-digital': {
+            'title': 'E-Commerce Platform & Digital Storefront Rental System',
+            'summary': 'Modern multi-tenant digital commerce platform providing turnkey e-storefront rentals for merchants with automated subscription billing.'
+        },
+        'sisurvei-lembaga-survei-riset': {
+            'title': 'SISURVEI (Field Survey & Market Research Management System)',
+            'summary': 'Comprehensive survey management platform for research institutes and market consultants, coordinating field enumerators for high-accuracy real-time data collection.'
+        }
+    }
+}
+

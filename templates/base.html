@@ -213,8 +213,8 @@
                                             <i data-lucide="globe" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Web Base Apps</p>
-                                            <p class="text-[11px] text-slate-400">Sistem informasi operasional</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Web-Based Apps{% else %}Web Base Apps{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Operational information systems{% else %}Sistem informasi operasional{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='website-korporat') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -222,8 +222,8 @@
                                             <i data-lucide="layout" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Website Korporat</p>
-                                            <p class="text-[11px] text-slate-400">Company profile & portal berita</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Corporate Websites{% else %}Website Korporat{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Company profiles & media portals{% else %}Company profile & portal berita{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='gis-geoportal') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -232,7 +232,7 @@
                                         </div>
                                         <div>
                                             <p class="text-xs font-bold text-white group-hover:text-indigo-300">GIS & Geoportal</p>
-                                            <p class="text-[11px] text-slate-400">Pemetaan spasial & tata ruang</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Spatial mapping & GIS portals{% else %}Pemetaan spasial & tata ruang{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='integrasi-sistem') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -240,8 +240,8 @@
                                             <i data-lucide="layers" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Integrasi Sistem & API</p>
-                                            <p class="text-[11px] text-slate-400">Sinkronisasi data antar platform</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}System Integration & API{% else %}Integrasi Sistem & API{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Cross-platform data synchronization{% else %}Sinkronisasi data antar platform{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('services_category', category='Aplikasi & Website') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -249,8 +249,8 @@
                                             <i data-lucide="arrow-right-circle" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Semua Aplikasi & Web</p>
-                                            <p class="text-[11px] text-slate-400">Lihat katalog solusi lengkap</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}All Apps & Websites{% else %}Semua Aplikasi & Web{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Explore full solution catalog{% else %}Lihat katalog solusi lengkap{% endif %}</p>
                                         </div>
                                     </a>
                                 </div>
@@ -274,8 +274,8 @@
                                             <i data-lucide="users" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">HRIS & Kepegawaian</p>
-                                            <p class="text-[11px] text-slate-400">Manajemen SDM & talenta</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}HRIS & Personnel{% else %}HRIS & Kepegawaian{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}HR & talent management{% else %}Manajemen SDM & talenta{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='erp-presensi-absensi') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -283,8 +283,8 @@
                                             <i data-lucide="check-circle" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Presensi & Geofencing</p>
-                                            <p class="text-[11px] text-slate-400">Absensi GPS & mobile</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Attendance & Geofencing{% else %}Presensi & Geofencing{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}GPS & mobile clock-in{% else %}Absensi GPS & mobile{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='erp-payroll-penggajian') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -292,8 +292,8 @@
                                             <i data-lucide="dollar-sign" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Payroll & PPh 21 TER</p>
-                                            <p class="text-[11px] text-slate-400">Penggajian & pajak otomatis</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Payroll & Tax Compliance{% else %}Payroll & PPh 21 TER{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Automated payroll & tax{% else %}Penggajian & pajak otomatis{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='erp-accounting-keuangan') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -301,8 +301,8 @@
                                             <i data-lucide="trending-up" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Akuntansi & Finansial</p>
-                                            <p class="text-[11px] text-slate-400">Jurnal & laporan keuangan</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Accounting & Finance{% else %}Akuntansi & Finansial{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Ledgers & financial reporting{% else %}Jurnal & laporan keuangan{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='erp-asset-management') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -310,8 +310,8 @@
                                             <i data-lucide="box" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Asset Management</p>
-                                            <p class="text-[11px] text-slate-400">Inventaris aset korporat</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Asset Management{% else %}Asset Management{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Corporate asset inventory{% else %}Inventaris aset korporat{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='erp-warehouse-management') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -319,8 +319,8 @@
                                             <i data-lucide="archive" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Warehouse & Stok</p>
-                                            <p class="text-[11px] text-slate-400">Mutasi stok & gudang</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Warehouse & Stock{% else %}Warehouse & Stok{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Stock movement & warehouse{% else %}Mutasi stok & gudang{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='erp-document-management') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -328,8 +328,8 @@
                                             <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">E-Persuratan Dokumen</p>
-                                            <p class="text-[11px] text-slate-400">Tata naskah & arsip digital</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Document Management{% else %}E-Persuratan Dokumen{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Digital correspondence & archives{% else %}Tata naskah & arsip digital{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='erp-dashboard-eksekutif') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -337,8 +337,8 @@
                                             <i data-lucide="pie-chart" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Executive Dashboard</p>
-                                            <p class="text-[11px] text-slate-400">BI & analisis indikator kinerja</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Executive Dashboard{% else %}Executive Dashboard{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}BI & KPI performance analytics{% else %}BI & analisis indikator kinerja{% endif %}</p>
                                         </div>
                                     </a>
                                 </div>
@@ -362,8 +362,8 @@
                                             <i data-lucide="shield" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">Portal Pemda & OPD</p>
-                                            <p class="text-[11px] text-slate-400">Website resmi pemerintah</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Regional Government Portals{% else %}Portal Pemda & OPD{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Official government portals{% else %}Website resmi pemerintah{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='egov-data-sektoral') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -371,8 +371,8 @@
                                             <i data-lucide="database" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">e-Data Sektoral SDI</p>
-                                            <p class="text-[11px] text-slate-400">Satu Data Indonesia</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}Sectoral Open Data{% else %}e-Data Sektoral SDI{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}One Data Indonesia Standard{% else %}Satu Data Indonesia{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='egov-e-planning-musrenbang') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -380,8 +380,8 @@
                                             <i data-lucide="calendar" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">e-Planning & Pokir</p>
-                                            <p class="text-[11px] text-slate-400">Perencanaan & Musrenbang</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}e-Planning & Budgeting{% else %}e-Planning & Pokir{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Planning & Musrenbang online{% else %}Perencanaan & Musrenbang{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='egov-e-monev-sakip') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -389,8 +389,8 @@
                                             <i data-lucide="award" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">e-Monev & e-SAKIP</p>
-                                            <p class="text-[11px] text-slate-400">Akuntabilitas kinerja Pemda</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}e-Monev & SAKIP{% else %}e-Monev & e-SAKIP{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Government performance accountability{% else %}Akuntabilitas kinerja Pemda{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='egov-e-lapor-pengaduan') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -398,8 +398,8 @@
                                             <i data-lucide="message-square" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">e-Lapor Aduan Warga</p>
-                                            <p class="text-[11px] text-slate-400">Aspirasi & laporan publik</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}e-Reporting & Citizen Helpdesk{% else %}e-Lapor Aduan Warga{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Public aspiration & complaints{% else %}Aspirasi & laporan publik{% endif %}</p>
                                         </div>
                                     </a>
                                     <a href="{{ url_for('service_detail', slug='egov-e-perizinan-mpp') }}" class="flex items-start space-x-2.5 p-2 rounded-xl hover:bg-indigo-950/60 transition group">
@@ -407,8 +407,8 @@
                                             <i data-lucide="clipboard" class="w-3.5 h-3.5"></i>
                                         </div>
                                         <div>
-                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">e-Perizinan MPP</p>
-                                            <p class="text-[11px] text-slate-400">Layanan terpadu & BSrE</p>
+                                            <p class="text-xs font-bold text-white group-hover:text-indigo-300">{% if current_lang == 'en' %}e-Licensing & Public Service Mall{% else %}e-Perizinan MPP{% endif %}</p>
+                                            <p class="text-[11px] text-slate-400">{% if current_lang == 'en' %}Certified digital signatures (BSrE){% else %}Layanan terpadu & BSrE{% endif %}</p>
                                         </div>
                                     </a>
                                 </div>
@@ -484,10 +484,10 @@
                 </button>
                 <div id="m-sub-aplikasi" class="hidden pl-4 pr-2 py-1 space-y-1 text-sm bg-[#070c24]/80 border border-indigo-950/60 rounded-lg mt-1">
                     <a href="{{ url_for('service_detail', slug='mobile-apps') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">Mobile Apps (Android & iOS)</a>
-                    <a href="{{ url_for('service_detail', slug='sistem-informasi') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">Web Base & Sistem Informasi</a>
-                    <a href="{{ url_for('service_detail', slug='website-korporat') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">Website Korporat & Portal</a>
+                    <a href="{{ url_for('service_detail', slug='sistem-informasi') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">{% if current_lang == 'en' %}Web-Based & Information Systems{% else %}Web Base & Sistem Informasi{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='website-korporat') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">{% if current_lang == 'en' %}Corporate Websites & Portals{% else %}Website Korporat & Portal{% endif %}</a>
                     <a href="{{ url_for('service_detail', slug='gis-geoportal') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">GIS & Geoportal</a>
-                    <a href="{{ url_for('service_detail', slug='integrasi-sistem') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">Integrasi Sistem & API</a>
+                    <a href="{{ url_for('service_detail', slug='integrasi-sistem') }}" class="block py-1.5 text-slate-400 hover:text-indigo-300 transition">{% if current_lang == 'en' %}System Integration & API{% else %}Integrasi Sistem & API{% endif %}</a>
                 </div>
             </div>
 
@@ -497,13 +497,13 @@
                     <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 arrow-icon transition-transform"></i>
                 </button>
                 <div id="m-sub-erp" class="hidden pl-4 pr-2 py-1 space-y-1 text-sm bg-[#070c24]/80 border border-indigo-950/60 rounded-lg mt-1">
-                    <a href="{{ url_for('service_detail', slug='erp-hris-kepegawaian') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">HRIS & Kepegawaian</a>
-                    <a href="{{ url_for('service_detail', slug='erp-presensi-absensi') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Presensi & Geofencing</a>
-                    <a href="{{ url_for('service_detail', slug='erp-payroll-penggajian') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Payroll & Pajak PPh 21</a>
-                    <a href="{{ url_for('service_detail', slug='erp-accounting-keuangan') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Akuntansi & Finansial</a>
+                    <a href="{{ url_for('service_detail', slug='erp-hris-kepegawaian') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">{% if current_lang == 'en' %}HRIS & Personnel{% else %}HRIS & Kepegawaian{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='erp-presensi-absensi') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">{% if current_lang == 'en' %}Attendance & Geofencing{% else %}Presensi & Geofencing{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='erp-payroll-penggajian') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">{% if current_lang == 'en' %}Payroll & Tax Compliance{% else %}Payroll & Pajak PPh 21{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='erp-accounting-keuangan') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">{% if current_lang == 'en' %}Accounting & Finance{% else %}Akuntansi & Finansial{% endif %}</a>
                     <a href="{{ url_for('service_detail', slug='erp-asset-management') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Asset Management</a>
-                    <a href="{{ url_for('service_detail', slug='erp-warehouse-management') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Warehouse & Inventori</a>
-                    <a href="{{ url_for('service_detail', slug='erp-document-management') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">E-Persuratan Dokumen</a>
+                    <a href="{{ url_for('service_detail', slug='erp-warehouse-management') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">{% if current_lang == 'en' %}Warehouse & Inventory{% else %}Warehouse & Inventori{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='erp-document-management') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">{% if current_lang == 'en' %}Document Management{% else %}E-Persuratan Dokumen{% endif %}</a>
                     <a href="{{ url_for('service_detail', slug='erp-dashboard-eksekutif') }}" class="block py-1.5 text-slate-400 hover:text-purple-300 transition">Executive Dashboard BI</a>
                 </div>
             </div>
@@ -514,12 +514,12 @@
                     <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 arrow-icon transition-transform"></i>
                 </button>
                 <div id="m-sub-egov" class="hidden pl-4 pr-2 py-1 space-y-1 text-sm bg-[#070c24]/80 border border-indigo-950/60 rounded-lg mt-1">
-                    <a href="{{ url_for('service_detail', slug='egov-portal-daerah') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">Portal Pemda & OPD</a>
-                    <a href="{{ url_for('service_detail', slug='egov-data-sektoral') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Data Sektoral SDI</a>
-                    <a href="{{ url_for('service_detail', slug='egov-e-planning-musrenbang') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Planning & Pokir</a>
-                    <a href="{{ url_for('service_detail', slug='egov-e-monev-sakip') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Monev & SAKIP</a>
-                    <a href="{{ url_for('service_detail', slug='egov-e-lapor-pengaduan') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Lapor Aduan Warga</a>
-                    <a href="{{ url_for('service_detail', slug='egov-e-perizinan-mpp') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">e-Perizinan TTE BSrE</a>
+                    <a href="{{ url_for('service_detail', slug='egov-portal-daerah') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">{% if current_lang == 'en' %}Regional Government Portals{% else %}Portal Pemda & OPD{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='egov-data-sektoral') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">{% if current_lang == 'en' %}Sectoral Open Data (SDI){% else %}e-Data Sektoral SDI{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='egov-e-planning-musrenbang') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">{% if current_lang == 'en' %}e-Planning & Budgeting{% else %}e-Planning & Pokir{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='egov-e-monev-sakip') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">{% if current_lang == 'en' %}e-Monev & SAKIP{% else %}e-Monev & SAKIP{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='egov-e-lapor-pengaduan') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">{% if current_lang == 'en' %}e-Reporting & Citizen Helpdesk{% else %}e-Lapor Aduan Warga{% endif %}</a>
+                    <a href="{{ url_for('service_detail', slug='egov-e-perizinan-mpp') }}" class="block py-1.5 text-slate-400 hover:text-cyan-300 transition">{% if current_lang == 'en' %}e-Licensing & Public Service Mall{% else %}e-Perizinan TTE BSrE{% endif %}</a>
                 </div>
             </div>
 
@@ -658,11 +658,11 @@
     </footer>
 
     <!-- 5. FLOATING WHATSAPP BUTTON (Official WhatsApp Brand Icon) -->
-    <a href="https://wa.me/{{ contact_cfg.wa_number }}?text=Halo%20tim%20ACD%2C%20saya%20tertarik%20untuk%20konsultasi%20pembuatan%20aplikasi%20%2F%20website%20%2F%20sistem%20ERP." 
+    <a href="https://wa.me/{{ contact_cfg.wa_number }}?text={% if current_lang == 'en' %}Hello%20team%20ACD%2C%20I%20am%20interested%20in%20consulting%20on%20building%20an%20application%20%2F%20website%20%2F%20ERP%20system.{% else %}Halo%20tim%20ACD%2C%20saya%20tertarik%20untuk%20konsultasi%20pembuatan%20aplikasi%20%2F%20website%20%2F%20sistem%20ERP.{% endif %}" 
        target="_blank" 
        rel="noopener noreferrer"
        class="floating-wa-btn track-wa-btn flex items-center justify-center w-14 h-14 bg-[#25D366] hover:bg-[#20ba59] active:scale-95 text-white rounded-full transition-all duration-300 shadow-[0_8px_25px_rgba(37,211,102,0.45)] hover:shadow-[0_12px_30px_rgba(37,211,102,0.6)] group" 
-       aria-label="Chat WhatsApp PT Aksara Cipta Digital" 
+       aria-label="{% if current_lang == 'en' %}Chat via WhatsApp PT Aksara Cipta Digital{% else %}Chat WhatsApp PT Aksara Cipta Digital{% endif %}" 
        data-wa-source="floating_btn">
         <!-- Pulse radar ping effect -->
         <span class="absolute -inset-1 rounded-full bg-[#25D366]/40 animate-ping pointer-events-none opacity-60"></span>
@@ -672,7 +672,7 @@
     </a>
 
     <!-- 6. BACK TO TOP BUTTON -->
-    <button id="back-to-top" class="back-to-top-btn w-11 h-11 bg-[#070c24]/90 hover:bg-indigo-900/60 text-indigo-400 hover:text-white rounded-full border border-indigo-900/60 shadow-[0_0_15px_rgba(99,102,241,0.25)] flex items-center justify-center transition backdrop-blur-md" aria-label="Kembali ke atas">
+    <button id="back-to-top" class="back-to-top-btn w-11 h-11 bg-[#070c24]/90 hover:bg-indigo-900/60 text-indigo-400 hover:text-white rounded-full border border-indigo-900/60 shadow-[0_0_15px_rgba(99,102,241,0.25)] flex items-center justify-center transition backdrop-blur-md" aria-label="{% if current_lang == 'en' %}Back to top{% else %}Kembali ke atas{% endif %}">
         <i data-lucide="chevron-up" class="w-5 h-5"></i>
     </button>
 

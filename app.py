@@ -30,7 +30,7 @@ app = Flask(__name__)
 app.config.from_object(Config)
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
-from translations import TRANSLATIONS
+from translations import TRANSLATIONS, FAQ_TRANSLATIONS, PORTFOLIO_TRANSLATIONS
 
 # Ensure database is initialized and seeded
 with app.app_context():
@@ -445,10 +445,29 @@ Sitemap: {base_url}/sitemap.xml
 
 @app.route('/')
 def index():
+    current_lang = session.get('lang', 'id')
     featured_portfolios = PortfolioModel.get_all(limit=3)
+    if current_lang == 'en':
+        featured_portfolios = [
+            {
+                **p,
+                'title': PORTFOLIO_TRANSLATIONS['en'].get(p.get('slug', ''), {}).get('title', p.get('title')),
+                'summary': PORTFOLIO_TRANSLATIONS['en'].get(p.get('slug', ''), {}).get('summary', p.get('summary'))
+            }
+            for p in featured_portfolios
+        ]
     recent_blogs = BlogModel.get_all(limit=3)
     testimonials = TestimonialModel.get_all()
     faqs = FAQModel.get_all()
+    if current_lang == 'en':
+        faqs = [
+            {
+                **f,
+                'question': FAQ_TRANSLATIONS['en'].get(f.get('id', 0), {}).get('question', f.get('question')),
+                'answer': FAQ_TRANSLATIONS['en'].get(f.get('id', 0), {}).get('answer', f.get('answer'))
+            }
+            for f in faqs
+        ]
     return render_template(
         'index.html',
         featured_portfolios=featured_portfolios,
@@ -477,15 +496,32 @@ def service_detail(slug):
 
 @app.route('/portofolio')
 def portfolio():
+    current_lang = session.get('lang', 'id')
     category = request.args.get('category')
     portfolios = PortfolioModel.get_all(category=category)
+    if current_lang == 'en':
+        portfolios = [
+            {
+                **p,
+                'title': PORTFOLIO_TRANSLATIONS['en'].get(p.get('slug', ''), {}).get('title', p.get('title')),
+                'summary': PORTFOLIO_TRANSLATIONS['en'].get(p.get('slug', ''), {}).get('summary', p.get('summary'))
+            }
+            for p in portfolios
+        ]
     return render_template('portfolio.html', portfolios=portfolios, current_category=category or 'Semua')
 
 @app.route('/portofolio/<slug>')
 def portfolio_detail(slug):
+    current_lang = session.get('lang', 'id')
     item = PortfolioModel.get_by_slug(slug)
     if not item:
         abort(404)
+    if current_lang == 'en':
+        item = {
+            **item,
+            'title': PORTFOLIO_TRANSLATIONS['en'].get(item.get('slug', ''), {}).get('title', item.get('title')),
+            'summary': PORTFOLIO_TRANSLATIONS['en'].get(item.get('slug', ''), {}).get('summary', item.get('summary'))
+        }
     return render_template('portfolio_detail.html', portfolio=item)
 
 @app.route('/tentang')
