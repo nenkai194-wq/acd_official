@@ -1,30 +1,29 @@
 /**
  * PT Aksara Cipta Digital (ACD Official)
- * "Interactive Holographic Core / Prismatic Monolith"
- * (Kubus Geometri Kristal 3D Interaktif & Cincin Gyroskopik Holografis)
+ * "Prismatic Light Beams / Cyber Laser Aurora"
+ * (Berkas Serat Optik & Pita Cahaya Mengalir)
  * 
  * Filosofi Visual:
- * - Merepresentasikan "Inti Kecerdasan Digital" (Digital Intelligence Core) ACD:
- *   presisi, multidimensi, kokoh, dan berorientasi arsitektur masa depan.
- * - Kristal prismatik 3D ganda (Outer Monolith & Inner Energy Core) yang berotasi dinamis
- *   dikelilingi cincin gyroskopik holografis berkecepatan tinggi.
- * - Tampilan berwibawa, sangat elegan, futuristik ala Apple / Nvidia Keynote,
- *   dan memiliki keunikan visual tinggi yang membedakan ACD dari website manapun.
+ * - Merepresentasikan "Transmisi Data Berkecepatan Cahaya" (Light-Speed Data Highway):
+ *   kelancaran integrasi sistem, transformasi digital tanpa hambatan, dan konektivitas tak terbatas.
+ * - Pita gelombang laser optik multi-lapisan (Fiber Optic Aurora Ribbons) dengan dispersi
+ *   warna prismatik (Electric Cyan, Sky Blue, Royal Indigo, dan Velvet Violet).
+ * - Berkas foton data meluncur kencang di sepanjang kurva serat optik.
+ * - Sangat anggun, halus, futuristik, berkelas premium korporat, dan menenangkan di mata.
  * 
  * Fitur:
- * - Real-time 3D Matrix Projection (Yaw, Pitch, Roll & Perspective 3D)
- * - Nested Dual Geometry (Outer Prismatic Monolith + Inner Counter-Rotating Octahedron)
- * - Concentric Gyroscopic Rings dengan orbital photon markers
- * - Interaktivitas Kursor 3D (Inersia mouse & sentuhan touch memutar kristal secara elastis)
- * - Holographic Scanlines & Quantum Data Dust di ruang 3D
- * - Masking kontras di area tengah: Teks headline tetap 100% jernih, tebal, dan mudah dibaca
- * - 0 MB Video Overhead, 60 FPS Canvas Ringan, perlindungan baterai otomatis
+ * - Multi-layered Harmonic Bezier Laser Ribbons dengan dispersi spektral prismatik
+ * - Traveling Photon Data Sparks dengan ekor komet bercahaya
+ * - Interaktivitas Defleksi Fluida Elastis (Kursor mouse & sentuhan touch meliukkan pita cahaya)
+ * - Gelombang denyut klik (Shockwave Optical Ping)
+ * - Perlindungan kontras 100% jernih untuk teks headline
+ * - 0 MB Video Overhead, 60 FPS Native Canvas, hemat daya baterai
  */
 
 (function() {
     'use strict';
 
-    function initHolographicMonolith() {
+    function initLaserAurora() {
         const canvas = document.getElementById('ambient-body-canvas');
         if (!canvas) return;
 
@@ -41,201 +40,93 @@
         let lastTimestamp = 0;
         let time = 0;
 
-        // 3D Scene Parameters
-        let centerX = 0;
-        let centerY = 0;
-        let fov = 420;
-        let cameraDistance = 550;
-
-        // Rotation & Physics
-        let rotX = 0.25;
-        let rotY = 0.45;
-        let rotZ = 0.12;
-        let targetRotX = 0.25;
-        let targetRotY = 0.45;
-        let baseSpinSpeedY = 0.006;
-        let baseSpinSpeedX = 0.003;
-
-        // Interactive Pointer
+        // Pointer state & fluid physics
         const pointer = {
             x: null,
             y: null,
             targetX: null,
             targetY: null,
+            vx: 0,
+            vy: 0,
+            radius: 220,
+            strength: 0,
             isActive: false,
-            lastX: 0,
-            lastY: 0,
-            isDragging: false
+            shockwaves: []
         };
 
-        // Geometric Models
-        let outerVertices = [];
-        let outerEdges = [];
-        let outerFaces = [];
+        // Fiber optic ribbons configuration
+        let ribbons = [];
+        const RIBBON_COUNT = isMobile ? 6 : 9;
 
-        let innerVertices = [];
-        let innerEdges = [];
+        // Photon data pulses traveling along ribbons
+        let photons = [];
+        const PHOTON_COUNT = isMobile ? 12 : 24;
 
-        // Orbital Gyroscopic Rings
-        let orbitalRings = [];
+        // Optical background glints
+        let glints = [];
+        const GLINT_COUNT = isMobile ? 25 : 55;
 
-        // 3D Ambient Dust Particles
-        let dustParticles = [];
-        const DUST_COUNT = isMobile ? 35 : 75;
+        // Palette presets (Prismatic Spectrum)
+        const beamGradients = [
+            { primary: 'rgba(6, 182, 212, ',  glow: '#06b6d4', core: '#38bdf8' }, // Electric Cyan
+            { primary: 'rgba(56, 189, 248, ', glow: '#38bdf8', core: '#ffffff' }, // Sky Blue
+            { primary: 'rgba(99, 102, 241, ', glow: '#6366f1', core: '#a5b4fc' }, // Royal Indigo
+            { primary: 'rgba(139, 92, 246, ', glow: '#8b5cf6', core: '#c4b5fd' }, // Violet
+            { primary: 'rgba(168, 85, 247, ', glow: '#a855f7', core: '#e9d5ff' }, // Purple
+            { primary: 'rgba(236, 72, 153, ', glow: '#ec4899', core: '#fbcfe8' }  // Pink prism edge
+        ];
 
-        // Holographic Scanline Wave
-        let scanlineY = -250;
+        function setupRibbons() {
+            ribbons = [];
+            const count = isMobile ? 6 : 9;
 
-        // Helper: 3D Vector Rotate & Project
-        function project3D(v, rx, ry, rz, scaleFactor = 1.0) {
-            // Apply scale
-            let x = v.x * scaleFactor;
-            let y = v.y * scaleFactor;
-            let z = v.z * scaleFactor;
+            for (let i = 0; i < count; i++) {
+                const colorDef = beamGradients[i % beamGradients.length];
+                // Base Y distribution: sweep gracefully from mid-bottom to diagonal crest
+                const yRatio = isMobile 
+                    ? 0.35 + (i / count) * 0.45 
+                    : 0.30 + (i / count) * 0.48;
 
-            // Rotate around Y (Yaw)
-            let x1 = x * Math.cos(ry) + z * Math.sin(ry);
-            let z1 = -x * Math.sin(ry) + z * Math.cos(ry);
+                ribbons.push({
+                    baseY: height * yRatio,
+                    amplitude1: (isMobile ? 35 : 65) + Math.sin(i * 1.3) * 20,
+                    amplitude2: (isMobile ? 20 : 40) + Math.cos(i * 0.9) * 15,
+                    freq1: 0.0018 + (i * 0.0003),
+                    freq2: 0.0035 + (i * 0.0005),
+                    speed1: 0.75 + (i * 0.12),
+                    speed2: -0.55 - (i * 0.10),
+                    phaseOffset: i * 0.75,
+                    lineWidth: (isMobile ? 1.2 : 1.8) + (i % 2 === 0 ? 0.6 : 0),
+                    alpha: isMobile ? 0.35 : 0.45,
+                    colorDef: colorDef,
+                    hasCurtain: i % 2 === 1 // Aurora translucent curtain fill
+                });
+            }
 
-            // Rotate around X (Pitch)
-            let y2 = y * Math.cos(rx) - z1 * Math.sin(rx);
-            let z2 = y * Math.sin(rx) + z1 * Math.cos(rx);
+            // Setup photons
+            photons = [];
+            const pCount = isMobile ? 12 : 24;
+            for (let j = 0; j < pCount; j++) {
+                photons.push({
+                    ribbonIndex: j % ribbons.length,
+                    progress: Math.random(),
+                    speed: (isMobile ? 0.0025 : 0.0035) + Math.random() * 0.002,
+                    tailLength: isMobile ? 18 : 32,
+                    size: isMobile ? 2.2 : 3.2,
+                    color: beamGradients[j % beamGradients.length]
+                });
+            }
 
-            // Rotate around Z (Roll)
-            let x3 = x1 * Math.cos(rz) - y2 * Math.sin(rz);
-            let y3 = x1 * Math.sin(rz) + y2 * Math.cos(rz);
-
-            // Perspective scale
-            const zTotal = z2 + cameraDistance;
-            const pScale = fov / Math.max(10, zTotal);
-
-            return {
-                x2d: centerX + x3 * pScale,
-                y2d: centerY + y3 * pScale,
-                depth: z2,
-                scale: pScale
-            };
-        }
-
-        // Initialize 3D Geometries
-        function setupGeometries() {
-            const baseSize = isMobile ? (width < 400 ? 110 : 130) : 190;
-
-            // 1. Outer Prismatic Monolith (Chamfered Rhombic Cube / Hyper-Monolith)
-            const s = baseSize;
-            const h = baseSize * 1.15; // Sleek tall proportions
-
-            outerVertices = [
-                // Top facet
-                { x: 0, y: -h, z: 0 },
-                // Upper ring
-                { x: -s * 0.75, y: -h * 0.45, z: -s * 0.75 },
-                { x:  s * 0.75, y: -h * 0.45, z: -s * 0.75 },
-                { x:  s * 0.75, y: -h * 0.45, z:  s * 0.75 },
-                { x: -s * 0.75, y: -h * 0.45, z:  s * 0.75 },
-                // Equatorial ring (equator)
-                { x: -s, y: 0, z: 0 },
-                { x: 0, y: 0, z: -s },
-                { x: s, y: 0, z: 0 },
-                { x: 0, y: 0, z: s },
-                // Lower ring
-                { x: -s * 0.75, y: h * 0.45, z: -s * 0.75 },
-                { x:  s * 0.75, y: h * 0.45, z: -s * 0.75 },
-                { x:  s * 0.75, y: h * 0.45, z:  s * 0.75 },
-                { x: -s * 0.75, y: h * 0.45, z:  s * 0.75 },
-                // Bottom facet
-                { x: 0, y: h, z: 0 }
-            ];
-
-            // Outer wireframe edges
-            outerEdges = [
-                // Top cap to upper ring
-                [0, 1], [0, 2], [0, 3], [0, 4],
-                // Upper ring loop
-                [1, 2], [2, 3], [3, 4], [4, 1],
-                // Upper ring to equator
-                [1, 5], [1, 6], [2, 6], [2, 7], [3, 7], [3, 8], [4, 8], [4, 5],
-                // Equator to lower ring
-                [5, 9], [6, 9], [6, 10], [7, 10], [7, 11], [8, 11], [8, 12], [5, 12],
-                // Lower ring loop
-                [9, 10], [10, 11], [11, 12], [12, 9],
-                // Lower ring to bottom cap
-                [13, 9], [13, 10], [13, 11], [13, 12]
-            ];
-
-            // Outer crystalline translucent faces (for depth shading)
-            outerFaces = [
-                [0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 1],
-                [1, 6, 2], [2, 7, 3], [3, 8, 4], [4, 5, 1],
-                [5, 9, 6], [6, 10, 7], [7, 11, 8], [8, 12, 5],
-                [13, 10, 9], [13, 11, 10], [13, 12, 11], [13, 9, 12]
-            ];
-
-            // 2. Inner Energy Core (Inverted Octahedron)
-            const isize = baseSize * 0.48;
-            innerVertices = [
-                { x: 0, y: -isize * 1.25, z: 0 },
-                { x:  isize, y: 0, z: 0 },
-                { x: -isize, y: 0, z: 0 },
-                { x: 0, y: 0, z:  isize },
-                { x: 0, y: 0, z: -isize },
-                { x: 0, y:  isize * 1.25, z: 0 }
-            ];
-
-            innerEdges = [
-                [0, 1], [0, 2], [0, 3], [0, 4],
-                [1, 3], [3, 2], [2, 4], [4, 1],
-                [5, 1], [5, 2], [5, 3], [5, 4]
-            ];
-
-            // 3. Orbital Gyroscopic Rings
-            orbitalRings = [
-                {
-                    radius: baseSize * 1.35,
-                    tiltX: 0.55,
-                    tiltZ: 0.25,
-                    speed: 0.015,
-                    angle: 0,
-                    color: 'rgba(6, 182, 212, ',
-                    beadColor: '#38bdf8',
-                    dashPattern: [12, 8, 4, 8]
-                },
-                {
-                    radius: baseSize * 1.62,
-                    tiltX: -0.65,
-                    tiltZ: -0.35,
-                    speed: -0.012,
-                    angle: Math.PI * 0.35,
-                    color: 'rgba(99, 102, 241, ',
-                    beadColor: '#818cf8',
-                    dashPattern: [16, 10]
-                },
-                {
-                    radius: baseSize * 1.88,
-                    tiltX: 0.22,
-                    tiltZ: -0.75,
-                    speed: 0.008,
-                    angle: Math.PI * 0.75,
-                    color: 'rgba(168, 85, 247, ',
-                    beadColor: '#c084fc',
-                    dashPattern: [24, 12, 6, 12]
-                }
-            ];
-
-            // 4. Ambient 3D Dust Particles
-            dustParticles = [];
-            for (let i = 0; i < DUST_COUNT; i++) {
-                const rad = baseSize * (0.8 + Math.random() * 2.2);
-                const theta = Math.random() * Math.PI * 2;
-                const phi = (Math.random() - 0.5) * Math.PI;
-
-                dustParticles.push({
-                    x: rad * Math.cos(phi) * Math.cos(theta),
-                    y: rad * Math.sin(phi),
-                    z: rad * Math.cos(phi) * Math.sin(theta),
+            // Setup optical glints
+            glints = [];
+            const gCount = isMobile ? 25 : 55;
+            for (let k = 0; k < gCount; k++) {
+                glints.push({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
                     size: Math.random() * 1.8 + 0.6,
-                    pulseSpeed: Math.random() * 0.02 + 0.01,
-                    pulsePhase: Math.random() * Math.PI * 2,
+                    phase: Math.random() * Math.PI * 2,
+                    speed: Math.random() * 0.02 + 0.01,
                     color: Math.random() > 0.4 ? '6, 182, 212' : '99, 102, 241'
                 });
             }
@@ -251,60 +142,90 @@
             canvas.height = Math.floor(height * dpr);
             ctx.scale(dpr, dpr);
 
-            // Centering: Position core gracefully to frame the hero headline
-            centerX = width * 0.5;
-            centerY = height * (isMobile ? 0.44 : 0.42);
+            pointer.radius = isMobile ? 140 : 230;
 
-            fov = isMobile ? 360 : 440;
-            cameraDistance = isMobile ? 580 : 540;
-
-            setupGeometries();
+            setupRibbons();
         }
 
         window.addEventListener('resize', resize, { passive: true });
 
-        // Pointer Interaction
+        // Pointer interactions
         window.addEventListener('mousemove', (e) => {
             pointer.targetX = e.clientX;
             pointer.targetY = e.clientY;
             pointer.isActive = true;
-
-            const normX = (e.clientX / width - 0.5) * 2;
-            const normY = (e.clientY / height - 0.5) * 2;
-
-            // Interactive 3D Perspective Tilt
-            targetRotY = normX * 0.85;
-            targetRotX = -normY * 0.55 + 0.25;
+            if (pointer.x === null) {
+                pointer.x = pointer.targetX;
+                pointer.y = pointer.targetY;
+            }
         }, { passive: true });
 
         window.addEventListener('mouseleave', () => {
             pointer.isActive = false;
         }, { passive: true });
 
-        // Mobile Touch Gestures
-        window.addEventListener('touchstart', (e) => {
-            if (e.touches && e.touches[0]) {
-                pointer.lastX = e.touches[0].clientX;
-                pointer.lastY = e.touches[0].clientY;
-                pointer.isDragging = true;
-            }
-        }, { passive: true });
-
+        // Touch interactions
         window.addEventListener('touchmove', (e) => {
-            if (pointer.isDragging && e.touches && e.touches[0]) {
-                const dx = e.touches[0].clientX - pointer.lastX;
-                const dy = e.touches[0].clientY - pointer.lastY;
-                pointer.lastX = e.touches[0].clientX;
-                pointer.lastY = e.touches[0].clientY;
-
-                rotY += dx * 0.008;
-                rotX += dy * 0.008;
+            if (e.touches && e.touches[0]) {
+                pointer.targetX = e.touches[0].clientX;
+                pointer.targetY = e.touches[0].clientY;
+                pointer.isActive = true;
+                if (pointer.x === null) {
+                    pointer.x = pointer.targetX;
+                    pointer.y = pointer.targetY;
+                }
             }
         }, { passive: true });
 
         window.addEventListener('touchend', () => {
-            pointer.isDragging = false;
+            pointer.isActive = false;
         }, { passive: true });
+
+        // Optical Ping shockwave on click/tap
+        window.addEventListener('click', (e) => {
+            pointer.shockwaves.push({
+                x: e.clientX,
+                y: e.clientY,
+                r: 10,
+                maxR: isMobile ? 180 : 320,
+                alpha: 0.85
+            });
+        }, { passive: true });
+
+        // Calculate Y on a ribbon curve at given X coordinate
+        function getRibbonY(ribbon, x, t) {
+            // Harmonic multi-frequency wave calculation
+            const wave1 = Math.sin(x * ribbon.freq1 + t * ribbon.speed1 + ribbon.phaseOffset) * ribbon.amplitude1;
+            const wave2 = Math.cos(x * ribbon.freq2 + t * ribbon.speed2 + ribbon.phaseOffset * 1.5) * ribbon.amplitude2;
+            let currentY = ribbon.baseY + wave1 + wave2;
+
+            // Interactive pointer elastic fluid deflection
+            if (pointer.isActive && pointer.x !== null) {
+                const dx = x - pointer.x;
+                const dy = currentY - pointer.y;
+                const dist = Math.hypot(dx, dy);
+
+                if (dist < pointer.radius) {
+                    const factor = (1 - dist / pointer.radius);
+                    // Smooth gaussian bell deflection
+                    const deflection = Math.sin(factor * Math.PI) * (isMobile ? 35 : 65);
+                    currentY += (dy > 0 ? deflection : -deflection) * 0.7;
+                }
+            }
+
+            // Shockwave perturbation
+            for (let s = 0; s < pointer.shockwaves.length; s++) {
+                const sw = pointer.shockwaves[s];
+                const distToShock = Math.hypot(x - sw.x, currentY - sw.y);
+                const diff = Math.abs(distToShock - sw.r);
+                if (diff < 35) {
+                    const waveFactor = (1 - diff / 35) * sw.alpha;
+                    currentY += Math.sin(diff * 0.2) * 20 * waveFactor;
+                }
+            }
+
+            return currentY;
+        }
 
         // Initial setup
         resize();
@@ -319,196 +240,171 @@
 
             ctx.clearRect(0, 0, width, height);
 
-            // 1. Smooth Spring Physics for Rotations
-            if (!pointer.isDragging) {
-                // Constant ambient rotation + mouse tilt blending
-                rotY += baseSpinSpeedY;
-                rotX += (targetRotX - rotX) * 0.04;
-                rotZ = Math.sin(time * 0.5) * 0.08;
+            // 1. Smooth Pointer Lerp
+            if (pointer.isActive && pointer.targetX !== null) {
+                pointer.vx = (pointer.targetX - pointer.x) * 0.12;
+                pointer.vy = (pointer.targetY - pointer.y) * 0.12;
+                pointer.x += pointer.vx;
+                pointer.y += pointer.vy;
             }
 
-            // Internal core counter-rotation
-            const innerRotY = -rotY * 1.4;
-            const innerRotX = rotX * 1.2;
-            const innerRotZ = time * 0.4;
+            // 2. Update Shockwaves
+            for (let s = pointer.shockwaves.length - 1; s >= 0; s--) {
+                const sw = pointer.shockwaves[s];
+                sw.r += delta * (isMobile ? 220 : 380);
+                sw.alpha -= delta * 1.4;
 
-            // Holographic scanline sweep
-            scanlineY += delta * 120;
-            if (scanlineY > 280) scanlineY = -280;
+                if (sw.alpha <= 0 || sw.r >= sw.maxR) {
+                    pointer.shockwaves.splice(s, 1);
+                    continue;
+                }
 
-            // 2. Draw Central Ambient Core Glow (Atmospheric Depth)
-            const coreGlow = ctx.createRadialGradient(
-                centerX, centerY, 10,
-                centerX, centerY, isMobile ? 180 : 280
-            );
-            coreGlow.addColorStop(0, 'rgba(6, 182, 212, 0.14)');
-            coreGlow.addColorStop(0.4, 'rgba(99, 102, 241, 0.08)');
-            coreGlow.addColorStop(0.8, 'rgba(124, 58, 237, 0.03)');
-            coreGlow.addColorStop(1, 'transparent');
-            ctx.fillStyle = coreGlow;
-            ctx.beginPath();
-            ctx.arc(centerX, centerY, isMobile ? 180 : 280, 0, Math.PI * 2);
-            ctx.fill();
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(6, 182, 212, ${sw.alpha * 0.6})`;
+                ctx.lineWidth = 1.5;
+                ctx.stroke();
+                ctx.restore();
+            }
 
-            // 3. Project & Render 3D Dust Particles (Deep Background Layer)
-            dustParticles.forEach(p => {
-                const proj = project3D(p, rotX * 0.5, rotY * 0.5, rotZ * 0.5);
-                const pulse = Math.sin(time * 2 + p.pulsePhase);
-                const alpha = Math.max(0.1, (0.4 + pulse * 0.25) * Math.min(1, proj.scale * 1.5));
+            // 3. Render Optical Background Glints
+            glints.forEach(g => {
+                const pulse = Math.sin(time * 3 + g.phase);
+                const alpha = Math.max(0.1, 0.45 + pulse * 0.35);
 
                 ctx.beginPath();
-                ctx.arc(proj.x2d, proj.y2d, Math.max(0.6, p.size * proj.scale), 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(${p.color}, ${alpha})`;
+                ctx.arc(g.x, g.y, g.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${g.color}, ${alpha})`;
                 ctx.fill();
             });
 
-            // 4. Render Orbital Gyroscopic Rings (Cincin Gyroskopik Holografis)
-            orbitalRings.forEach(ring => {
-                ring.angle += ring.speed;
+            // 4. Render Aurora Light Beams & Fiber Optic Ribbons
+            const stepX = isMobile ? 18 : 14;
 
+            ribbons.forEach((ribbon, rIdx) => {
+                const points = [];
+                for (let x = -20; x <= width + 20; x += stepX) {
+                    points.push({ x, y: getRibbonY(ribbon, x, time) });
+                }
+
+                // Render Aurora Translucent Curtain Fill below ribbon (for atmospheric depth)
+                if (ribbon.hasCurtain) {
+                    ctx.save();
+                    ctx.beginPath();
+                    ctx.moveTo(points[0].x, points[0].y);
+                    for (let p = 1; p < points.length; p++) {
+                        ctx.lineTo(points[p].x, points[p].y);
+                    }
+                    // Extend down
+                    ctx.lineTo(width + 20, height);
+                    ctx.lineTo(-20, height);
+                    ctx.closePath();
+
+                    const curtainGrad = ctx.createLinearGradient(0, ribbon.baseY - 50, 0, height);
+                    curtainGrad.addColorStop(0, ribbon.colorDef.primary + (isMobile ? '0.04)' : '0.07)'));
+                    curtainGrad.addColorStop(0.5, ribbon.colorDef.primary + (isMobile ? '0.015)' : '0.025)'));
+                    curtainGrad.addColorStop(1, 'transparent');
+
+                    ctx.fillStyle = curtainGrad;
+                    ctx.fill();
+                    ctx.restore();
+                }
+
+                // Render Main Fiber Optic Laser Strand
                 ctx.save();
-                ctx.translate(centerX, centerY);
-
-                // Rotate ring in 3D using composite 2D transform projection
-                ctx.scale(1, Math.cos(ring.tiltX + rotX * 0.4));
-                ctx.rotate(ring.tiltZ + rotY * 0.3);
-
-                // Ring Track Stroke
                 ctx.beginPath();
-                ctx.arc(0, 0, ring.radius, 0, Math.PI * 2);
-                ctx.strokeStyle = ring.color + (isMobile ? '0.22)' : '0.35)');
-                ctx.lineWidth = isMobile ? 1 : 1.4;
-                ctx.setLineDash(ring.dashPattern);
+                ctx.moveTo(points[0].x, points[0].y);
+                for (let p = 1; p < points.length - 1; p++) {
+                    const xc = (points[p].x + points[p + 1].x) * 0.5;
+                    const yc = (points[p].y + points[p + 1].y) * 0.5;
+                    ctx.quadraticCurveTo(points[p].x, points[p].y, xc, yc);
+                }
+                ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
+
+                // Prismatic Horizontal Gradient along wave
+                const waveGrad = ctx.createLinearGradient(0, 0, width, 0);
+                waveGrad.addColorStop(0, 'rgba(6, 182, 212, 0.15)');
+                waveGrad.addColorStop(0.25, ribbon.colorDef.primary + ribbon.alpha + ')');
+                waveGrad.addColorStop(0.65, ribbon.colorDef.primary + (ribbon.alpha * 1.1) + ')');
+                waveGrad.addColorStop(0.9, 'rgba(168, 85, 247, ' + ribbon.alpha + ')');
+                waveGrad.addColorStop(1, 'rgba(236, 72, 153, 0.2)');
+
+                ctx.strokeStyle = waveGrad;
+                ctx.lineWidth = ribbon.lineWidth;
+                ctx.shadowColor = ribbon.colorDef.glow;
+                ctx.shadowBlur = isMobile ? 6 : 12;
                 ctx.stroke();
 
-                // Orbiting Photon Marker Beads
-                const beadAngle1 = ring.angle;
-                const beadAngle2 = ring.angle + Math.PI;
+                ctx.restore();
+            });
 
-                const b1x = Math.cos(beadAngle1) * ring.radius;
-                const b1y = Math.sin(beadAngle1) * ring.radius;
-                const b2x = Math.cos(beadAngle2) * ring.radius;
-                const b2y = Math.sin(beadAngle2) * ring.radius;
+            // 5. Update & Render Traveling Photon Data Sparks (Berkas Foton Cepat)
+            photons.forEach(pt => {
+                pt.progress += pt.speed;
+                if (pt.progress > 1.0) {
+                    pt.progress = 0;
+                    pt.ribbonIndex = Math.floor(Math.random() * ribbons.length);
+                }
 
-                ctx.setLineDash([]);
-                ctx.shadowColor = ring.beadColor;
-                ctx.shadowBlur = 10;
-                ctx.fillStyle = ring.beadColor;
+                const ribbon = ribbons[pt.ribbonIndex];
+                const currentX = pt.progress * (width + 40) - 20;
+                const currentY = getRibbonY(ribbon, currentX, time);
 
+                ctx.save();
+                // Draw comet glowing tail
+                const tailSteps = 6;
+                for (let s = 1; s <= tailSteps; s++) {
+                    const tailX = currentX - (pt.tailLength * (s / tailSteps));
+                    const tailY = getRibbonY(ribbon, tailX, time);
+                    const tailAlpha = (1 - s / tailSteps) * 0.55;
+
+                    ctx.beginPath();
+                    ctx.arc(tailX, tailY, pt.size * (1 - s / tailSteps * 0.4), 0, Math.PI * 2);
+                    ctx.fillStyle = pt.color.primary + tailAlpha + ')';
+                    ctx.fill();
+                }
+
+                // Bright glowing photon head
                 ctx.beginPath();
-                ctx.arc(b1x, b1y, isMobile ? 2.5 : 3.5, 0, Math.PI * 2);
-                ctx.arc(b2x, b2y, isMobile ? 2 : 2.8, 0, Math.PI * 2);
+                ctx.arc(currentX, currentY, pt.size, 0, Math.PI * 2);
+                ctx.fillStyle = pt.color.core;
+                ctx.shadowColor = pt.color.glow;
+                ctx.shadowBlur = isMobile ? 8 : 14;
                 ctx.fill();
 
                 ctx.restore();
             });
 
-            // 5. Project Vertices of Monolith and Inner Core
-            const projectedOuter = outerVertices.map(v => project3D(v, rotX, rotY, rotZ));
-            const projectedInner = innerVertices.map(v => project3D(v, innerRotX, innerRotY, innerRotZ));
+            // 6. Interactive Pointer Laser Aura & Fluid Wake
+            if (pointer.isActive && pointer.x !== null) {
+                ctx.save();
+                // Pointer ambient halo
+                const ptrGlow = ctx.createRadialGradient(
+                    pointer.x, pointer.y, 4,
+                    pointer.x, pointer.y, isMobile ? 55 : 85
+                );
+                ptrGlow.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+                ptrGlow.addColorStop(0.4, 'rgba(99, 102, 241, 0.2)');
+                ptrGlow.addColorStop(1, 'transparent');
 
-            // 6. Render Semi-Transparent Outer Faces (Depth Sorting & Crystal Refraction)
-            const sortedFaces = outerFaces.map(face => {
-                const zAvg = (projectedOuter[face[0]].depth + projectedOuter[face[1]].depth + projectedOuter[face[2]].depth) / 3;
-                return { face, zAvg };
-            }).sort((a, b) => a.zAvg - b.zAvg); // Draw back faces first
-
-            sortedFaces.forEach(item => {
-                const f = item.face;
-                const p0 = projectedOuter[f[0]];
-                const p1 = projectedOuter[f[1]];
-                const p2 = projectedOuter[f[2]];
-
-                // Normal check for subtle dynamic shading
-                const normalZ = (p1.x2d - p0.x2d) * (p2.y2d - p0.y2d) - (p1.y2d - p0.y2d) * (p2.x2d - p0.x2d);
-                const isFront = normalZ > 0;
-                const faceAlpha = isFront ? (isMobile ? 0.05 : 0.08) : (isMobile ? 0.02 : 0.035);
-
+                ctx.fillStyle = ptrGlow;
                 ctx.beginPath();
-                ctx.moveTo(p0.x2d, p0.y2d);
-                ctx.lineTo(p1.x2d, p1.y2d);
-                ctx.lineTo(p2.x2d, p2.y2d);
-                ctx.closePath();
-
-                // Prismatic chromatic gradient fill
-                const faceGrad = ctx.createLinearGradient(p0.x2d, p0.y2d, p2.x2d, p2.y2d);
-                faceGrad.addColorStop(0, `rgba(6, 182, 212, ${faceAlpha * 1.2})`);
-                faceGrad.addColorStop(0.5, `rgba(99, 102, 241, ${faceAlpha})`);
-                faceGrad.addColorStop(1, `rgba(168, 85, 247, ${faceAlpha * 0.8})`);
-
-                ctx.fillStyle = faceGrad;
+                ctx.arc(pointer.x, pointer.y, isMobile ? 55 : 85, 0, Math.PI * 2);
                 ctx.fill();
-            });
 
-            // 7. Render Inner Counter-Rotating Energy Core (Wireframe + Core Glow)
-            ctx.save();
-            ctx.strokeStyle = 'rgba(6, 182, 212, 0.65)';
-            ctx.lineWidth = isMobile ? 1 : 1.4;
-            ctx.shadowColor = '#06b6d4';
-            ctx.shadowBlur = 8;
-
-            innerEdges.forEach(edge => {
-                const pA = projectedInner[edge[0]];
-                const pB = projectedInner[edge[1]];
+                // Center laser probe bead
                 ctx.beginPath();
-                ctx.moveTo(pA.x2d, pA.y2d);
-                ctx.lineTo(pB.x2d, pB.y2d);
-                ctx.stroke();
-            });
-
-            // Inner core glowing vertices
-            projectedInner.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x2d, p.y2d, isMobile ? 2 : 2.8, 0, Math.PI * 2);
-                ctx.fillStyle = '#38bdf8';
-                ctx.fill();
-            });
-            ctx.restore();
-
-            // 8. Render Outer Prismatic Wireframe Edges (Chiseled Crystal Monolith)
-            ctx.save();
-            outerEdges.forEach(edge => {
-                const pA = projectedOuter[edge[0]];
-                const pB = projectedOuter[edge[1]];
-
-                const depthFactor = (pA.depth + pB.depth) * 0.5;
-                const edgeAlpha = Math.max(0.18, Math.min(0.85, 0.45 + (depthFactor / 300) * 0.35));
-
-                ctx.beginPath();
-                ctx.moveTo(pA.x2d, pA.y2d);
-                ctx.lineTo(pB.x2d, pB.y2d);
-
-                // Alternating indigo & cyan crystal edge glow
-                ctx.strokeStyle = `rgba(99, 102, 241, ${edgeAlpha})`;
-                ctx.lineWidth = isMobile ? 1.2 : 1.6;
-                ctx.shadowColor = '#6366f1';
-                ctx.shadowBlur = 6;
-                ctx.stroke();
-            });
-
-            // Outer vertices (Prismatic nodes)
-            projectedOuter.forEach(p => {
-                ctx.beginPath();
-                ctx.arc(p.x2d, p.y2d, isMobile ? 2.2 : 3.2, 0, Math.PI * 2);
-                ctx.fillStyle = '#e0e7ff';
+                ctx.arc(pointer.x, pointer.y, 3.5, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
                 ctx.shadowColor = '#38bdf8';
-                ctx.shadowBlur = 10;
+                ctx.shadowBlur = 12;
                 ctx.fill();
-            });
-            ctx.restore();
 
-            // 9. Holographic Horizontal Scanline Shimmer
-            ctx.save();
-            ctx.translate(centerX, centerY);
-            const scanGrad = ctx.createLinearGradient(0, scanlineY - 15, 0, scanlineY + 15);
-            scanGrad.addColorStop(0, 'transparent');
-            scanGrad.addColorStop(0.5, 'rgba(6, 182, 212, 0.18)');
-            scanGrad.addColorStop(1, 'transparent');
-            ctx.fillStyle = scanGrad;
-            ctx.fillRect(-width * 0.4, scanlineY - 15, width * 0.8, 30);
-            ctx.restore();
+                ctx.restore();
+            }
 
-            // 10. Technical Monolith Telemetry HUD (Desktop Only)
+            // 7. Corner Optical Telemetry HUD (Desktop Only)
             if (!isMobile) {
                 ctx.save();
                 ctx.font = '9px "JetBrains Mono", "Fira Code", monospace';
@@ -519,21 +415,21 @@
                 const margin = 32;
 
                 // Top-Left Legend
-                ctx.fillText('SYS.CORE // PRISMATIC_MONOLITH_v3', margin, margin);
-                ctx.fillText(`ROT_MATRIX: [Yaw: ${(rotY % (Math.PI*2)).toFixed(2)} | Pitch: ${rotX.toFixed(2)}]`, margin, margin + 14);
+                ctx.fillText('ACD // OPTICAL_FIBER_MESH v4.0', margin, margin);
+                ctx.fillText('SPECTRUM: PRISMATIC_AURORA [480nm - 620nm]', margin, margin + 14);
 
                 // Top-Right Legend
                 ctx.textAlign = 'right';
-                ctx.fillText('CRYSTAL_REFRACTION: 1.48 // 60 FPS', width - margin, margin);
-                ctx.fillText('SECURITY: QUANTUM_READY // ISO-27001', width - margin, margin + 14);
+                ctx.fillText('THROUGHPUT: 100 Gbps // LOW_JITTER', width - margin, margin);
+                ctx.fillText('DATA_HIGHWAY: REALTIME_60FPS', width - margin, margin + 14);
 
                 // Bottom-Left
                 ctx.textAlign = 'left';
-                ctx.fillText('ACD // ARCHITECTURE INTELLIGENCE', margin, height - margin);
+                ctx.fillText('INTEGRATION: FLUID_ELASTIC_AURORA', margin, height - margin);
 
                 // Bottom-Right
                 ctx.textAlign = 'right';
-                ctx.fillText('ORBITAL_BUS: DUAL_GYRO [SYNCHRONIZED]', width - margin, height - margin);
+                ctx.fillText('STATUS: OPTICAL_CARRIER_LOCKED', width - margin, height - margin);
 
                 ctx.restore();
             }
@@ -543,7 +439,7 @@
 
         animationFrameId = requestAnimationFrame(animate);
 
-        // Battery Guard: Instantly pause 3D math calculations when tab is hidden
+        // Battery Guard: Instantly halt rendering loop when tab is hidden
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 isTabActive = false;
@@ -558,8 +454,8 @@
 
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initHolographicMonolith);
+        document.addEventListener('DOMContentLoaded', initLaserAurora);
     } else {
-        initHolographicMonolith();
+        initLaserAurora();
     }
 })();
