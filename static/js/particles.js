@@ -1,27 +1,30 @@
 /**
  * PT Aksara Cipta Digital (ACD Official)
- * "Living Architecture Blueprint" (Cetak Biru Arsitektur Sistem Dinamis)
+ * "Interactive Holographic Core / Prismatic Monolith"
+ * (Kubus Geometri Kristal 3D Interaktif & Cincin Gyroskopik Holografis)
  * 
  * Filosofi Visual:
- * - Merepresentasikan pondasi cetak biru arsitektur enterprise: microservices, data bus,
- *   dan pipeline data real-time sebelum software dibangun.
- * - Selaras dengan nilai utama ACD: "ACD akan mendalami alur proses bisnis Anda terlebih
- *   dahulu sebelum membangun software."
- * - Berwibawa, futuristik, presisi engineering-grade, dan berkelas korporat tinggi.
+ * - Merepresentasikan "Inti Kecerdasan Digital" (Digital Intelligence Core) ACD:
+ *   presisi, multidimensi, kokoh, dan berorientasi arsitektur masa depan.
+ * - Kristal prismatik 3D ganda (Outer Monolith & Inner Energy Core) yang berotasi dinamis
+ *   dikelilingi cincin gyroskopik holografis berkecepatan tinggi.
+ * - Tampilan berwibawa, sangat elegan, futuristik ala Apple / Nvidia Keynote,
+ *   dan memiliki keunikan visual tinggi yang membedakan ACD dari website manapun.
  * 
  * Fitur:
- * - Orthogonal Circuit Buses: Jalur sirkuit bersudut presisi 90° dan 45° chamfered
- * - System Architecture Nodes: Blok chip mikro-arsitektur (CORE.AI, GATEWAY.API, ERP.ENGINE, DB.CLUSTER, dll.)
- * - Flowing Photon Data Packets: Pulsa cahaya paket data berkecepatan tinggi dengan comet tail
- * - Dynamic Blueprint Grid: Matriks grid titik & crosshair presisi dengan koordinat telemetri
- * - Interactive Diagnostic Reticle: Kursor mouse & sentuhan touch sebagai probe pemindai arsitektur sistem
- * - 100% Bebas Video, 60 FPS Canvas Ringan, hemat daya baterai (0% CPU saat tab tidak aktif)
+ * - Real-time 3D Matrix Projection (Yaw, Pitch, Roll & Perspective 3D)
+ * - Nested Dual Geometry (Outer Prismatic Monolith + Inner Counter-Rotating Octahedron)
+ * - Concentric Gyroscopic Rings dengan orbital photon markers
+ * - Interaktivitas Kursor 3D (Inersia mouse & sentuhan touch memutar kristal secara elastis)
+ * - Holographic Scanlines & Quantum Data Dust di ruang 3D
+ * - Masking kontras di area tengah: Teks headline tetap 100% jernih, tebal, dan mudah dibaca
+ * - 0 MB Video Overhead, 60 FPS Canvas Ringan, perlindungan baterai otomatis
  */
 
 (function() {
     'use strict';
 
-    function initACDArchitectureBlueprint() {
+    function initHolographicMonolith() {
         const canvas = document.getElementById('ambient-body-canvas');
         if (!canvas) return;
 
@@ -38,319 +41,204 @@
         let lastTimestamp = 0;
         let time = 0;
 
-        // Interactive Cursor & Touch Scanner
+        // 3D Scene Parameters
+        let centerX = 0;
+        let centerY = 0;
+        let fov = 420;
+        let cameraDistance = 550;
+
+        // Rotation & Physics
+        let rotX = 0.25;
+        let rotY = 0.45;
+        let rotZ = 0.12;
+        let targetRotX = 0.25;
+        let targetRotY = 0.45;
+        let baseSpinSpeedY = 0.006;
+        let baseSpinSpeedX = 0.003;
+
+        // Interactive Pointer
         const pointer = {
             x: null,
             y: null,
             targetX: null,
             targetY: null,
             isActive: false,
-            clickPulse: 0,
-            reticleAngle: 0
+            lastX: 0,
+            lastY: 0,
+            isDragging: false
         };
 
-        // Architecture Blueprint Nodes & Circuits
-        let nodes = [];
-        let circuitTracks = [];
-        let dataPackets = [];
-        let pingRipples = [];
+        // Geometric Models
+        let outerVertices = [];
+        let outerEdges = [];
+        let outerFaces = [];
 
-        // Grid parameters
-        let gridStep = 54;
+        let innerVertices = [];
+        let innerEdges = [];
 
-        // Node Definition Templates
-        function setupArchitectureLayout() {
-            nodes = [];
-            circuitTracks = [];
-            dataPackets = [];
+        // Orbital Gyroscopic Rings
+        let orbitalRings = [];
 
-            if (isMobile) {
-                // Mobile layout: Nodes placed safely along perimeter to keep headline 100% clear
-                gridStep = 44;
-                nodes = [
-                    {
-                        id: 'CORE.AI',
-                        label: 'CORE.AI',
-                        sub: 'ACTIVE',
-                        x: width * 0.18,
-                        y: height * 0.12,
-                        w: 72,
-                        h: 30,
-                        color: '#06b6d4',
-                        type: 'ai',
-                        pulse: 0
-                    },
-                    {
-                        id: 'API.GW',
-                        label: 'API.GW',
-                        sub: 'SECURE',
-                        x: width * 0.82,
-                        y: height * 0.12,
-                        w: 72,
-                        h: 30,
-                        color: '#6366f1',
-                        type: 'gw',
-                        pulse: 0
-                    },
-                    {
-                        id: 'ERP.SYS',
-                        label: 'ERP.SYS',
-                        sub: 'ONLINE',
-                        x: width * 0.18,
-                        y: height * 0.88,
-                        w: 74,
-                        h: 30,
-                        color: '#8b5cf6',
-                        type: 'erp',
-                        pulse: 0
-                    },
-                    {
-                        id: 'DB.DATA',
-                        label: 'DB.DATA',
-                        sub: 'SYNCED',
-                        x: width * 0.82,
-                        y: height * 0.88,
-                        w: 74,
-                        h: 30,
-                        color: '#10b981',
-                        type: 'db',
-                        pulse: 0
-                    }
-                ];
-            } else {
-                // Desktop layout: Enterprise Service Grid surrounding the central hero zone
-                gridStep = 56;
-                nodes = [
-                    {
-                        id: 'CORE.AI',
-                        label: 'CORE.AI',
-                        sub: 'NEURAL_ENGINE',
-                        x: width * 0.11,
-                        y: height * 0.22,
-                        w: 104,
-                        h: 38,
-                        color: '#06b6d4',
-                        type: 'ai',
-                        pulse: 0
-                    },
-                    {
-                        id: 'GATEWAY.API',
-                        label: 'GATEWAY.API',
-                        sub: 'REVERSE_PROXY',
-                        x: width * 0.89,
-                        y: height * 0.20,
-                        w: 112,
-                        h: 38,
-                        color: '#6366f1',
-                        type: 'gw',
-                        pulse: 0
-                    },
-                    {
-                        id: 'ERP.ENGINE',
-                        label: 'ERP.ENGINE',
-                        sub: 'BUSINESS_LOGIC',
-                        x: width * 0.09,
-                        y: height * 0.58,
-                        w: 110,
-                        h: 38,
-                        color: '#8b5cf6',
-                        type: 'erp',
-                        pulse: 0
-                    },
-                    {
-                        id: 'DB.CLUSTER',
-                        label: 'DB.CLUSTER',
-                        sub: 'ACID_ENCRYPTED',
-                        x: width * 0.91,
-                        y: height * 0.60,
-                        w: 112,
-                        h: 38,
-                        color: '#10b981',
-                        type: 'db',
-                        pulse: 0
-                    },
-                    {
-                        id: 'AUTH.OAUTH',
-                        label: 'AUTH.2FA',
-                        sub: 'ZERO_TRUST',
-                        x: width * 0.28,
-                        y: height * 0.14,
-                        w: 96,
-                        h: 34,
-                        color: '#38bdf8',
-                        type: 'auth',
-                        pulse: 0
-                    },
-                    {
-                        id: 'SVC.MESH',
-                        label: 'SVC.MESH',
-                        sub: 'K8S_HYBRID',
-                        x: width * 0.73,
-                        y: height * 0.13,
-                        w: 98,
-                        h: 34,
-                        color: '#a855f7',
-                        type: 'mesh',
-                        pulse: 0
-                    },
-                    {
-                        id: 'QUEUE.EVENT',
-                        label: 'QUEUE.EVENT',
-                        sub: 'KAFKA_STREAM',
-                        x: width * 0.23,
-                        y: height * 0.86,
-                        w: 106,
-                        h: 36,
-                        color: '#f59e0b',
-                        type: 'queue',
-                        pulse: 0
-                    },
-                    {
-                        id: 'ANALYTICS.BI',
-                        label: 'ANALYTICS.BI',
-                        sub: 'REALTIME_DASH',
-                        x: width * 0.77,
-                        y: height * 0.85,
-                        w: 110,
-                        h: 36,
-                        color: '#06b6d4',
-                        type: 'bi',
-                        pulse: 0
-                    }
-                ];
-            }
+        // 3D Ambient Dust Particles
+        let dustParticles = [];
+        const DUST_COUNT = isMobile ? 35 : 75;
 
-            // Snap nodes gently to nearest grid coordinate for crisp engineering precision
-            nodes.forEach(node => {
-                node.x = Math.round(node.x / gridStep) * gridStep;
-                node.y = Math.round(node.y / gridStep) * gridStep;
-            });
+        // Holographic Scanline Wave
+        let scanlineY = -250;
 
-            // Generate structured orthogonal circuit tracks with 90° and 45° bends
-            generateCircuitTracks();
+        // Helper: 3D Vector Rotate & Project
+        function project3D(v, rx, ry, rz, scaleFactor = 1.0) {
+            // Apply scale
+            let x = v.x * scaleFactor;
+            let y = v.y * scaleFactor;
+            let z = v.z * scaleFactor;
 
-            // Spawn initial flowing photon packets
-            const packetCount = isMobile ? 8 : 18;
-            for (let i = 0; i < packetCount; i++) {
-                spawnDataPacket(true);
-            }
-        }
+            // Rotate around Y (Yaw)
+            let x1 = x * Math.cos(ry) + z * Math.sin(ry);
+            let z1 = -x * Math.sin(ry) + z * Math.cos(ry);
 
-        // Helper: Create orthogonal path between two points avoiding center headline
-        function buildOrthogonalPath(p1, p2, style = 'solid') {
-            const waypoints = [];
-            waypoints.push({ x: p1.x, y: p1.y });
+            // Rotate around X (Pitch)
+            let y2 = y * Math.cos(rx) - z1 * Math.sin(rx);
+            let z2 = y * Math.sin(rx) + z1 * Math.cos(rx);
 
-            const dx = p2.x - p1.x;
-            const dy = p2.y - p1.y;
+            // Rotate around Z (Roll)
+            let x3 = x1 * Math.cos(rz) - y2 * Math.sin(rz);
+            let y3 = x1 * Math.sin(rz) + y2 * Math.cos(rz);
 
-            // Intermediate corner routing
-            if (Math.abs(dx) > Math.abs(dy)) {
-                const midX = p1.x + dx * 0.5;
-                const chamfer = 16;
-                // Add chamfered 45 degree turn
-                waypoints.push({ x: midX - (dx > 0 ? chamfer : -chamfer), y: p1.y });
-                waypoints.push({ x: midX + (dx > 0 ? chamfer : -chamfer), y: p1.y + (dy > 0 ? chamfer : -chamfer) });
-                waypoints.push({ x: p2.x, y: p1.y + dy });
-            } else {
-                const midY = p1.y + dy * 0.5;
-                const chamfer = 16;
-                waypoints.push({ x: p1.x, y: midY - (dy > 0 ? chamfer : -chamfer) });
-                waypoints.push({ x: p1.x + (dx > 0 ? chamfer : -chamfer), y: midY + (dy > 0 ? chamfer : -chamfer) });
-                waypoints.push({ x: p2.x, y: p2.y });
-            }
-
-            // Calculate cumulative lengths for smooth interpolation
-            let totalLength = 0;
-            const lengths = [0];
-            for (let i = 0; i < waypoints.length - 1; i++) {
-                const segLen = Math.hypot(waypoints[i + 1].x - waypoints[i].x, waypoints[i + 1].y - waypoints[i].y);
-                totalLength += segLen;
-                lengths.push(totalLength);
-            }
+            // Perspective scale
+            const zTotal = z2 + cameraDistance;
+            const pScale = fov / Math.max(10, zTotal);
 
             return {
-                waypoints,
-                lengths,
-                totalLength,
-                style,
-                color: Math.random() > 0.4 ? 'rgba(99, 102, 241, ' : 'rgba(6, 182, 212, ',
-                targetNode: null
+                x2d: centerX + x3 * pScale,
+                y2d: centerY + y3 * pScale,
+                depth: z2,
+                scale: pScale
             };
         }
 
-        function generateCircuitTracks() {
-            circuitTracks = [];
+        // Initialize 3D Geometries
+        function setupGeometries() {
+            const baseSize = isMobile ? (width < 400 ? 110 : 130) : 190;
 
-            if (isMobile) {
-                // Mobile connections
-                if (nodes.length >= 4) {
-                    circuitTracks.push(buildOrthogonalPath(nodes[0], nodes[1]));
-                    circuitTracks.push(buildOrthogonalPath(nodes[0], nodes[2]));
-                    circuitTracks.push(buildOrthogonalPath(nodes[1], nodes[3]));
-                    circuitTracks.push(buildOrthogonalPath(nodes[2], nodes[3]));
-                }
-            } else {
-                // Desktop interconnect topology
-                // 1. Perimeter bus lines
-                if (nodes.length >= 8) {
-                    circuitTracks.push(buildOrthogonalPath(nodes[0], nodes[4])); // AI -> AUTH
-                    circuitTracks.push(buildOrthogonalPath(nodes[4], nodes[5])); // AUTH -> MESH
-                    circuitTracks.push(buildOrthogonalPath(nodes[5], nodes[1])); // MESH -> GATEWAY
-                    circuitTracks.push(buildOrthogonalPath(nodes[0], nodes[2])); // AI -> ERP
-                    circuitTracks.push(buildOrthogonalPath(nodes[1], nodes[3])); // GATEWAY -> DB
-                    circuitTracks.push(buildOrthogonalPath(nodes[2], nodes[6])); // ERP -> QUEUE
-                    circuitTracks.push(buildOrthogonalPath(nodes[6], nodes[7])); // QUEUE -> BI
-                    circuitTracks.push(buildOrthogonalPath(nodes[7], nodes[3])); // BI -> DB
+            // 1. Outer Prismatic Monolith (Chamfered Rhombic Cube / Hyper-Monolith)
+            const s = baseSize;
+            const h = baseSize * 1.15; // Sleek tall proportions
 
-                    // Diagonal cross-highways routing around central text area
-                    circuitTracks.push(buildOrthogonalPath(
-                        { x: nodes[0].x, y: nodes[0].y + 40 },
-                        { x: width * 0.35, y: height * 0.42 }
-                    ));
-                    circuitTracks.push(buildOrthogonalPath(
-                        { x: width * 0.35, y: height * 0.42 },
-                        { x: nodes[6].x + 40, y: nodes[6].y }
-                    ));
-                    circuitTracks.push(buildOrthogonalPath(
-                        { x: nodes[1].x, y: nodes[1].y + 40 },
-                        { x: width * 0.65, y: height * 0.42 }
-                    ));
-                    circuitTracks.push(buildOrthogonalPath(
-                        { x: width * 0.65, y: height * 0.42 },
-                        { x: nodes[7].x - 40, y: nodes[7].y }
-                    ));
+            outerVertices = [
+                // Top facet
+                { x: 0, y: -h, z: 0 },
+                // Upper ring
+                { x: -s * 0.75, y: -h * 0.45, z: -s * 0.75 },
+                { x:  s * 0.75, y: -h * 0.45, z: -s * 0.75 },
+                { x:  s * 0.75, y: -h * 0.45, z:  s * 0.75 },
+                { x: -s * 0.75, y: -h * 0.45, z:  s * 0.75 },
+                // Equatorial ring (equator)
+                { x: -s, y: 0, z: 0 },
+                { x: 0, y: 0, z: -s },
+                { x: s, y: 0, z: 0 },
+                { x: 0, y: 0, z: s },
+                // Lower ring
+                { x: -s * 0.75, y: h * 0.45, z: -s * 0.75 },
+                { x:  s * 0.75, y: h * 0.45, z: -s * 0.75 },
+                { x:  s * 0.75, y: h * 0.45, z:  s * 0.75 },
+                { x: -s * 0.75, y: h * 0.45, z:  s * 0.75 },
+                // Bottom facet
+                { x: 0, y: h, z: 0 }
+            ];
+
+            // Outer wireframe edges
+            outerEdges = [
+                // Top cap to upper ring
+                [0, 1], [0, 2], [0, 3], [0, 4],
+                // Upper ring loop
+                [1, 2], [2, 3], [3, 4], [4, 1],
+                // Upper ring to equator
+                [1, 5], [1, 6], [2, 6], [2, 7], [3, 7], [3, 8], [4, 8], [4, 5],
+                // Equator to lower ring
+                [5, 9], [6, 9], [6, 10], [7, 10], [7, 11], [8, 11], [8, 12], [5, 12],
+                // Lower ring loop
+                [9, 10], [10, 11], [11, 12], [12, 9],
+                // Lower ring to bottom cap
+                [13, 9], [13, 10], [13, 11], [13, 12]
+            ];
+
+            // Outer crystalline translucent faces (for depth shading)
+            outerFaces = [
+                [0, 1, 2], [0, 2, 3], [0, 3, 4], [0, 4, 1],
+                [1, 6, 2], [2, 7, 3], [3, 8, 4], [4, 5, 1],
+                [5, 9, 6], [6, 10, 7], [7, 11, 8], [8, 12, 5],
+                [13, 10, 9], [13, 11, 10], [13, 12, 11], [13, 9, 12]
+            ];
+
+            // 2. Inner Energy Core (Inverted Octahedron)
+            const isize = baseSize * 0.48;
+            innerVertices = [
+                { x: 0, y: -isize * 1.25, z: 0 },
+                { x:  isize, y: 0, z: 0 },
+                { x: -isize, y: 0, z: 0 },
+                { x: 0, y: 0, z:  isize },
+                { x: 0, y: 0, z: -isize },
+                { x: 0, y:  isize * 1.25, z: 0 }
+            ];
+
+            innerEdges = [
+                [0, 1], [0, 2], [0, 3], [0, 4],
+                [1, 3], [3, 2], [2, 4], [4, 1],
+                [5, 1], [5, 2], [5, 3], [5, 4]
+            ];
+
+            // 3. Orbital Gyroscopic Rings
+            orbitalRings = [
+                {
+                    radius: baseSize * 1.35,
+                    tiltX: 0.55,
+                    tiltZ: 0.25,
+                    speed: 0.015,
+                    angle: 0,
+                    color: 'rgba(6, 182, 212, ',
+                    beadColor: '#38bdf8',
+                    dashPattern: [12, 8, 4, 8]
+                },
+                {
+                    radius: baseSize * 1.62,
+                    tiltX: -0.65,
+                    tiltZ: -0.35,
+                    speed: -0.012,
+                    angle: Math.PI * 0.35,
+                    color: 'rgba(99, 102, 241, ',
+                    beadColor: '#818cf8',
+                    dashPattern: [16, 10]
+                },
+                {
+                    radius: baseSize * 1.88,
+                    tiltX: 0.22,
+                    tiltZ: -0.75,
+                    speed: 0.008,
+                    angle: Math.PI * 0.75,
+                    color: 'rgba(168, 85, 247, ',
+                    beadColor: '#c084fc',
+                    dashPattern: [24, 12, 6, 12]
                 }
+            ];
+
+            // 4. Ambient 3D Dust Particles
+            dustParticles = [];
+            for (let i = 0; i < DUST_COUNT; i++) {
+                const rad = baseSize * (0.8 + Math.random() * 2.2);
+                const theta = Math.random() * Math.PI * 2;
+                const phi = (Math.random() - 0.5) * Math.PI;
+
+                dustParticles.push({
+                    x: rad * Math.cos(phi) * Math.cos(theta),
+                    y: rad * Math.sin(phi),
+                    z: rad * Math.cos(phi) * Math.sin(theta),
+                    size: Math.random() * 1.8 + 0.6,
+                    pulseSpeed: Math.random() * 0.02 + 0.01,
+                    pulsePhase: Math.random() * Math.PI * 2,
+                    color: Math.random() > 0.4 ? '6, 182, 212' : '99, 102, 241'
+                });
             }
-        }
-
-        // Spawn a flowing photon data packet
-        function spawnDataPacket(randomStart = false) {
-            if (circuitTracks.length === 0) return;
-            const trackIndex = Math.floor(Math.random() * circuitTracks.length);
-            const track = circuitTracks[trackIndex];
-            if (!track || track.totalLength <= 0) return;
-
-            dataPackets.push({
-                trackIndex: trackIndex,
-                dist: randomStart ? Math.random() * track.totalLength : 0,
-                speed: (isMobile ? 1.4 : 1.8) + Math.random() * 1.2,
-                size: isMobile ? 2.5 : 3.5,
-                tailLength: isMobile ? 22 : 36,
-                colorType: Math.random() > 0.4 ? 'cyan' : 'indigo'
-            });
-        }
-
-        // Trigger Node Ping Ripple
-        function triggerNodePing(x, y, color = '#06b6d4') {
-            pingRipples.push({
-                x,
-                y,
-                r: 6,
-                maxR: isMobile ? 24 : 38,
-                alpha: 0.8,
-                color
-            });
         }
 
         function resize() {
@@ -363,73 +251,65 @@
             canvas.height = Math.floor(height * dpr);
             ctx.scale(dpr, dpr);
 
-            setupArchitectureLayout();
+            // Centering: Position core gracefully to frame the hero headline
+            centerX = width * 0.5;
+            centerY = height * (isMobile ? 0.44 : 0.42);
+
+            fov = isMobile ? 360 : 440;
+            cameraDistance = isMobile ? 580 : 540;
+
+            setupGeometries();
         }
 
         window.addEventListener('resize', resize, { passive: true });
 
-        // Pointer listeners
+        // Pointer Interaction
         window.addEventListener('mousemove', (e) => {
             pointer.targetX = e.clientX;
             pointer.targetY = e.clientY;
             pointer.isActive = true;
-            if (pointer.x === null) {
-                pointer.x = pointer.targetX;
-                pointer.y = pointer.targetY;
-            }
+
+            const normX = (e.clientX / width - 0.5) * 2;
+            const normY = (e.clientY / height - 0.5) * 2;
+
+            // Interactive 3D Perspective Tilt
+            targetRotY = normX * 0.85;
+            targetRotX = -normY * 0.55 + 0.25;
         }, { passive: true });
 
         window.addEventListener('mouseleave', () => {
             pointer.isActive = false;
         }, { passive: true });
 
-        // Touch listeners
-        window.addEventListener('touchmove', (e) => {
+        // Mobile Touch Gestures
+        window.addEventListener('touchstart', (e) => {
             if (e.touches && e.touches[0]) {
-                pointer.targetX = e.touches[0].clientX;
-                pointer.targetY = e.touches[0].clientY;
-                pointer.isActive = true;
-                if (pointer.x === null) {
-                    pointer.x = pointer.targetX;
-                    pointer.y = pointer.targetY;
-                }
+                pointer.lastX = e.touches[0].clientX;
+                pointer.lastY = e.touches[0].clientY;
+                pointer.isDragging = true;
+            }
+        }, { passive: true });
+
+        window.addEventListener('touchmove', (e) => {
+            if (pointer.isDragging && e.touches && e.touches[0]) {
+                const dx = e.touches[0].clientX - pointer.lastX;
+                const dy = e.touches[0].clientY - pointer.lastY;
+                pointer.lastX = e.touches[0].clientX;
+                pointer.lastY = e.touches[0].clientY;
+
+                rotY += dx * 0.008;
+                rotX += dy * 0.008;
             }
         }, { passive: true });
 
         window.addEventListener('touchend', () => {
-            pointer.isActive = false;
+            pointer.isDragging = false;
         }, { passive: true });
-
-        // Click / Tap injection: Dispatches burst of diagnostic pulses
-        window.addEventListener('click', (e) => {
-            pointer.clickPulse = 1.0;
-            triggerNodePing(e.clientX, e.clientY, '#38bdf8');
-            for (let i = 0; i < 3; i++) {
-                spawnDataPacket(false);
-            }
-        }, { passive: true });
-
-        // Interpolate position along track waypoints
-        function getPointOnTrack(track, dist) {
-            const clampedDist = Math.max(0, Math.min(dist, track.totalLength));
-            for (let i = 0; i < track.lengths.length - 1; i++) {
-                if (clampedDist >= track.lengths[i] && clampedDist <= track.lengths[i + 1]) {
-                    const segLen = track.lengths[i + 1] - track.lengths[i];
-                    if (segLen === 0) return track.waypoints[i];
-                    const t = (clampedDist - track.lengths[i]) / segLen;
-                    return {
-                        x: track.waypoints[i].x + (track.waypoints[i + 1].x - track.waypoints[i].x) * t,
-                        y: track.waypoints[i].y + (track.waypoints[i + 1].y - track.waypoints[i].y) * t
-                    };
-                }
-            }
-            return track.waypoints[track.waypoints.length - 1];
-        }
 
         // Initial setup
         resize();
 
-        // Animation Loop (60 FPS)
+        // Main 60 FPS Render Loop
         function animate(timestamp) {
             if (!isTabActive) return;
 
@@ -439,344 +319,221 @@
 
             ctx.clearRect(0, 0, width, height);
 
-            // 1. Smooth Pointer Lerp
-            if (pointer.isActive && pointer.targetX !== null) {
-                pointer.x += (pointer.targetX - pointer.x) * 0.15;
-                pointer.y += (pointer.targetY - pointer.y) * 0.15;
-                pointer.reticleAngle += delta * 1.5;
-            }
-            if (pointer.clickPulse > 0) {
-                pointer.clickPulse = Math.max(0, pointer.clickPulse - delta * 2.0);
+            // 1. Smooth Spring Physics for Rotations
+            if (!pointer.isDragging) {
+                // Constant ambient rotation + mouse tilt blending
+                rotY += baseSpinSpeedY;
+                rotX += (targetRotX - rotX) * 0.04;
+                rotZ = Math.sin(time * 0.5) * 0.08;
             }
 
-            // 2. Blueprint Matrix Crosshairs & Coordinate Grid
+            // Internal core counter-rotation
+            const innerRotY = -rotY * 1.4;
+            const innerRotX = rotX * 1.2;
+            const innerRotZ = time * 0.4;
+
+            // Holographic scanline sweep
+            scanlineY += delta * 120;
+            if (scanlineY > 280) scanlineY = -280;
+
+            // 2. Draw Central Ambient Core Glow (Atmospheric Depth)
+            const coreGlow = ctx.createRadialGradient(
+                centerX, centerY, 10,
+                centerX, centerY, isMobile ? 180 : 280
+            );
+            coreGlow.addColorStop(0, 'rgba(6, 182, 212, 0.14)');
+            coreGlow.addColorStop(0.4, 'rgba(99, 102, 241, 0.08)');
+            coreGlow.addColorStop(0.8, 'rgba(124, 58, 237, 0.03)');
+            coreGlow.addColorStop(1, 'transparent');
+            ctx.fillStyle = coreGlow;
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, isMobile ? 180 : 280, 0, Math.PI * 2);
+            ctx.fill();
+
+            // 3. Project & Render 3D Dust Particles (Deep Background Layer)
+            dustParticles.forEach(p => {
+                const proj = project3D(p, rotX * 0.5, rotY * 0.5, rotZ * 0.5);
+                const pulse = Math.sin(time * 2 + p.pulsePhase);
+                const alpha = Math.max(0.1, (0.4 + pulse * 0.25) * Math.min(1, proj.scale * 1.5));
+
+                ctx.beginPath();
+                ctx.arc(proj.x2d, proj.y2d, Math.max(0.6, p.size * proj.scale), 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${p.color}, ${alpha})`;
+                ctx.fill();
+            });
+
+            // 4. Render Orbital Gyroscopic Rings (Cincin Gyroskopik Holografis)
+            orbitalRings.forEach(ring => {
+                ring.angle += ring.speed;
+
+                ctx.save();
+                ctx.translate(centerX, centerY);
+
+                // Rotate ring in 3D using composite 2D transform projection
+                ctx.scale(1, Math.cos(ring.tiltX + rotX * 0.4));
+                ctx.rotate(ring.tiltZ + rotY * 0.3);
+
+                // Ring Track Stroke
+                ctx.beginPath();
+                ctx.arc(0, 0, ring.radius, 0, Math.PI * 2);
+                ctx.strokeStyle = ring.color + (isMobile ? '0.22)' : '0.35)');
+                ctx.lineWidth = isMobile ? 1 : 1.4;
+                ctx.setLineDash(ring.dashPattern);
+                ctx.stroke();
+
+                // Orbiting Photon Marker Beads
+                const beadAngle1 = ring.angle;
+                const beadAngle2 = ring.angle + Math.PI;
+
+                const b1x = Math.cos(beadAngle1) * ring.radius;
+                const b1y = Math.sin(beadAngle1) * ring.radius;
+                const b2x = Math.cos(beadAngle2) * ring.radius;
+                const b2y = Math.sin(beadAngle2) * ring.radius;
+
+                ctx.setLineDash([]);
+                ctx.shadowColor = ring.beadColor;
+                ctx.shadowBlur = 10;
+                ctx.fillStyle = ring.beadColor;
+
+                ctx.beginPath();
+                ctx.arc(b1x, b1y, isMobile ? 2.5 : 3.5, 0, Math.PI * 2);
+                ctx.arc(b2x, b2y, isMobile ? 2 : 2.8, 0, Math.PI * 2);
+                ctx.fill();
+
+                ctx.restore();
+            });
+
+            // 5. Project Vertices of Monolith and Inner Core
+            const projectedOuter = outerVertices.map(v => project3D(v, rotX, rotY, rotZ));
+            const projectedInner = innerVertices.map(v => project3D(v, innerRotX, innerRotY, innerRotZ));
+
+            // 6. Render Semi-Transparent Outer Faces (Depth Sorting & Crystal Refraction)
+            const sortedFaces = outerFaces.map(face => {
+                const zAvg = (projectedOuter[face[0]].depth + projectedOuter[face[1]].depth + projectedOuter[face[2]].depth) / 3;
+                return { face, zAvg };
+            }).sort((a, b) => a.zAvg - b.zAvg); // Draw back faces first
+
+            sortedFaces.forEach(item => {
+                const f = item.face;
+                const p0 = projectedOuter[f[0]];
+                const p1 = projectedOuter[f[1]];
+                const p2 = projectedOuter[f[2]];
+
+                // Normal check for subtle dynamic shading
+                const normalZ = (p1.x2d - p0.x2d) * (p2.y2d - p0.y2d) - (p1.y2d - p0.y2d) * (p2.x2d - p0.x2d);
+                const isFront = normalZ > 0;
+                const faceAlpha = isFront ? (isMobile ? 0.05 : 0.08) : (isMobile ? 0.02 : 0.035);
+
+                ctx.beginPath();
+                ctx.moveTo(p0.x2d, p0.y2d);
+                ctx.lineTo(p1.x2d, p1.y2d);
+                ctx.lineTo(p2.x2d, p2.y2d);
+                ctx.closePath();
+
+                // Prismatic chromatic gradient fill
+                const faceGrad = ctx.createLinearGradient(p0.x2d, p0.y2d, p2.x2d, p2.y2d);
+                faceGrad.addColorStop(0, `rgba(6, 182, 212, ${faceAlpha * 1.2})`);
+                faceGrad.addColorStop(0.5, `rgba(99, 102, 241, ${faceAlpha})`);
+                faceGrad.addColorStop(1, `rgba(168, 85, 247, ${faceAlpha * 0.8})`);
+
+                ctx.fillStyle = faceGrad;
+                ctx.fill();
+            });
+
+            // 7. Render Inner Counter-Rotating Energy Core (Wireframe + Core Glow)
             ctx.save();
-            ctx.fillStyle = 'rgba(99, 102, 241, 0.18)';
-            ctx.strokeStyle = 'rgba(6, 182, 212, 0.14)';
-            ctx.lineWidth = 1;
+            ctx.strokeStyle = 'rgba(6, 182, 212, 0.65)';
+            ctx.lineWidth = isMobile ? 1 : 1.4;
+            ctx.shadowColor = '#06b6d4';
+            ctx.shadowBlur = 8;
 
-            const crossSize = 3;
-            for (let x = gridStep; x < width; x += gridStep) {
-                for (let y = gridStep; y < height; y += gridStep) {
-                    // Attenuate grid in the center reading area to guarantee crystal-clear headline text
-                    const distXFromCenter = Math.abs(x - width * 0.5);
-                    const distYFromCenter = Math.abs(y - height * 0.44);
-                    let alphaMultiplier = 1.0;
-                    if (distXFromCenter < width * 0.38 && distYFromCenter < height * 0.22) {
-                        alphaMultiplier = 0.3; // Low contrast in center text area
-                    }
+            innerEdges.forEach(edge => {
+                const pA = projectedInner[edge[0]];
+                const pB = projectedInner[edge[1]];
+                ctx.beginPath();
+                ctx.moveTo(pA.x2d, pA.y2d);
+                ctx.lineTo(pB.x2d, pB.y2d);
+                ctx.stroke();
+            });
 
-                    ctx.globalAlpha = 0.45 * alphaMultiplier;
-                    ctx.beginPath();
-                    ctx.moveTo(x - crossSize, y);
-                    ctx.lineTo(x + crossSize, y);
-                    ctx.moveTo(x, y - crossSize);
-                    ctx.lineTo(x, y + crossSize);
-                    ctx.stroke();
-                }
-            }
+            // Inner core glowing vertices
+            projectedInner.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x2d, p.y2d, isMobile ? 2 : 2.8, 0, Math.PI * 2);
+                ctx.fillStyle = '#38bdf8';
+                ctx.fill();
+            });
             ctx.restore();
 
-            // 3. Technical Blueprint Corner Brackets & Metadata (Desktop only)
+            // 8. Render Outer Prismatic Wireframe Edges (Chiseled Crystal Monolith)
+            ctx.save();
+            outerEdges.forEach(edge => {
+                const pA = projectedOuter[edge[0]];
+                const pB = projectedOuter[edge[1]];
+
+                const depthFactor = (pA.depth + pB.depth) * 0.5;
+                const edgeAlpha = Math.max(0.18, Math.min(0.85, 0.45 + (depthFactor / 300) * 0.35));
+
+                ctx.beginPath();
+                ctx.moveTo(pA.x2d, pA.y2d);
+                ctx.lineTo(pB.x2d, pB.y2d);
+
+                // Alternating indigo & cyan crystal edge glow
+                ctx.strokeStyle = `rgba(99, 102, 241, ${edgeAlpha})`;
+                ctx.lineWidth = isMobile ? 1.2 : 1.6;
+                ctx.shadowColor = '#6366f1';
+                ctx.shadowBlur = 6;
+                ctx.stroke();
+            });
+
+            // Outer vertices (Prismatic nodes)
+            projectedOuter.forEach(p => {
+                ctx.beginPath();
+                ctx.arc(p.x2d, p.y2d, isMobile ? 2.2 : 3.2, 0, Math.PI * 2);
+                ctx.fillStyle = '#e0e7ff';
+                ctx.shadowColor = '#38bdf8';
+                ctx.shadowBlur = 10;
+                ctx.fill();
+            });
+            ctx.restore();
+
+            // 9. Holographic Horizontal Scanline Shimmer
+            ctx.save();
+            ctx.translate(centerX, centerY);
+            const scanGrad = ctx.createLinearGradient(0, scanlineY - 15, 0, scanlineY + 15);
+            scanGrad.addColorStop(0, 'transparent');
+            scanGrad.addColorStop(0.5, 'rgba(6, 182, 212, 0.18)');
+            scanGrad.addColorStop(1, 'transparent');
+            ctx.fillStyle = scanGrad;
+            ctx.fillRect(-width * 0.4, scanlineY - 15, width * 0.8, 30);
+            ctx.restore();
+
+            // 10. Technical Monolith Telemetry HUD (Desktop Only)
             if (!isMobile) {
                 ctx.save();
                 ctx.font = '9px "JetBrains Mono", "Fira Code", monospace';
                 ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
-                ctx.strokeStyle = 'rgba(99, 102, 241, 0.4)';
-                ctx.lineWidth = 1.2;
-
-                const bracketSize = 18;
-                const margin = 28;
-
-                // Top-Left Bracket & Spec
-                ctx.beginPath();
-                ctx.moveTo(margin + bracketSize, margin);
-                ctx.lineTo(margin, margin);
-                ctx.lineTo(margin, margin + bracketSize);
-                ctx.stroke();
-                ctx.fillText('SYS.BLUEPRINT // v4.2 [ORTHOGONAL_BUS]', margin + 8, margin - 8);
-
-                // Top-Right Bracket & Security Spec
-                ctx.beginPath();
-                ctx.moveTo(width - margin - bracketSize, margin);
-                ctx.lineTo(width - margin, margin);
-                ctx.lineTo(width - margin, margin + bracketSize);
-                ctx.stroke();
-                ctx.textAlign = 'right';
-                ctx.fillText('ARCH_SPEC: ISO-27001 // OWASP_TOP10', width - margin - 8, margin - 8);
-
-                // Bottom-Left Bracket & Coordinates
-                ctx.beginPath();
-                ctx.moveTo(margin, height - margin - bracketSize);
-                ctx.lineTo(margin, height - margin);
-                ctx.lineTo(margin + bracketSize, height - margin);
-                ctx.stroke();
-                ctx.textAlign = 'left';
-                ctx.fillText('GEO.GRID: 107.6°E 06.9°S // SLA 99.9%', margin + 8, height - margin + 14);
-
-                // Bottom-Right Bracket & Live Status
-                ctx.beginPath();
-                ctx.moveTo(width - margin - bracketSize, height - margin);
-                ctx.lineTo(width - margin, height - margin);
-                ctx.lineTo(width - margin, height - margin - bracketSize);
-                ctx.stroke();
-                ctx.textAlign = 'right';
-                ctx.fillText('BUS_MONITOR: REALTIME_ACTIVE [60 FPS]', width - margin - 8, height - margin + 14);
-
-                ctx.restore();
-            }
-
-            // 4. Render Orthogonal Circuit Busses (Garis Sirkuit Arsitektur)
-            circuitTracks.forEach((track) => {
-                ctx.save();
-                // Proximity glow to cursor
-                let trackAlpha = 0.22;
-                if (pointer.isActive && pointer.x !== null) {
-                    const midP = track.waypoints[Math.floor(track.waypoints.length / 2)];
-                    const distToPointer = Math.hypot(pointer.x - midP.x, pointer.y - midP.y);
-                    if (distToPointer < 200) {
-                        trackAlpha = 0.22 + (1 - distToPointer / 200) * 0.45;
-                    }
-                }
-
-                ctx.strokeStyle = track.color + trackAlpha + ')';
-                ctx.lineWidth = track.style === 'bold' ? 2 : 1.2;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-
-                ctx.beginPath();
-                track.waypoints.forEach((pt, idx) => {
-                    if (idx === 0) ctx.moveTo(pt.x, pt.y);
-                    else ctx.lineTo(pt.x, pt.y);
-                });
-                ctx.stroke();
-
-                // Draw tiny terminal junction solder dots at corners
-                ctx.fillStyle = track.color + (trackAlpha * 1.5) + ')';
-                track.waypoints.forEach(pt => {
-                    ctx.beginPath();
-                    ctx.arc(pt.x, pt.y, 1.8, 0, Math.PI * 2);
-                    ctx.fill();
-                });
-
-                ctx.restore();
-            });
-
-            // 5. Update & Render Luminous Photon Data Packets (Pulsa Aliran Data)
-            for (let i = dataPackets.length - 1; i >= 0; i--) {
-                const packet = dataPackets[i];
-                const track = circuitTracks[packet.trackIndex];
-                if (!track) continue;
-
-                packet.dist += packet.speed;
-
-                // Reached end of track -> trigger node ping and respawn
-                if (packet.dist >= track.totalLength) {
-                    const endPt = track.waypoints[track.waypoints.length - 1];
-                    triggerNodePing(endPt.x, endPt.y, packet.colorType === 'cyan' ? '#06b6d4' : '#818cf8');
-                    dataPackets.splice(i, 1);
-                    spawnDataPacket(false);
-                    continue;
-                }
-
-                const headPos = getPointOnTrack(track, packet.dist);
-
-                ctx.save();
-                // Draw comet glowing tail
-                const tailSteps = 8;
-                for (let s = 1; s <= tailSteps; s++) {
-                    const tailDist = Math.max(0, packet.dist - (packet.tailLength * (s / tailSteps)));
-                    const tailPos = getPointOnTrack(track, tailDist);
-                    const tailAlpha = (1 - s / tailSteps) * 0.6;
-                    ctx.beginPath();
-                    ctx.arc(tailPos.x, tailPos.y, packet.size * (1 - (s / tailSteps) * 0.5), 0, Math.PI * 2);
-                    ctx.fillStyle = packet.colorType === 'cyan' 
-                        ? `rgba(6, 182, 212, ${tailAlpha})` 
-                        : `rgba(99, 102, 241, ${tailAlpha})`;
-                    ctx.fill();
-                }
-
-                // Draw bright glowing photon head
-                ctx.beginPath();
-                ctx.arc(headPos.x, headPos.y, packet.size, 0, Math.PI * 2);
-                ctx.fillStyle = packet.colorType === 'cyan' ? '#38bdf8' : '#c7d2fe';
-                ctx.shadowColor = packet.colorType === 'cyan' ? '#06b6d4' : '#6366f1';
-                ctx.shadowBlur = isMobile ? 8 : 14;
-                ctx.fill();
-
-                // Core brilliant spark
-                ctx.beginPath();
-                ctx.arc(headPos.x, headPos.y, packet.size * 0.45, 0, Math.PI * 2);
-                ctx.fillStyle = '#ffffff';
-                ctx.fill();
-
-                ctx.restore();
-            }
-
-            // 6. Update & Render Node Ping Ripples
-            for (let r = pingRipples.length - 1; r >= 0; r--) {
-                const rip = pingRipples[r];
-                rip.r += delta * 45;
-                rip.alpha -= delta * 1.5;
-
-                if (rip.alpha <= 0 || rip.r >= rip.maxR) {
-                    pingRipples.splice(r, 1);
-                    continue;
-                }
-
-                ctx.save();
-                ctx.beginPath();
-                ctx.arc(rip.x, rip.y, rip.r, 0, Math.PI * 2);
-                ctx.strokeStyle = rip.color;
-                ctx.globalAlpha = Math.max(0, rip.alpha);
-                ctx.lineWidth = 1.2;
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            // 7. Render Architecture Terminal Nodes (Chip Komponen Sistem)
-            nodes.forEach(node => {
-                ctx.save();
-
-                const hw = node.w * 0.5;
-                const hh = node.h * 0.5;
-                const x0 = node.x - hw;
-                const y0 = node.y - hh;
-
-                // Subtle proximity illumination from pointer
-                let proximityBoost = 0;
-                if (pointer.isActive && pointer.x !== null) {
-                    const distToPtr = Math.hypot(pointer.x - node.x, pointer.y - node.y);
-                    if (distToPtr < 160) {
-                        proximityBoost = (1 - distToPtr / 160) * 0.5;
-                    }
-                }
-
-                // Node Box Background
-                ctx.fillStyle = 'rgba(7, 12, 34, 0.78)';
-                ctx.strokeStyle = `rgba(99, 102, 241, ${0.4 + proximityBoost})`;
+                ctx.strokeStyle = 'rgba(99, 102, 241, 0.35)';
                 ctx.lineWidth = 1;
-                ctx.shadowColor = node.color;
-                ctx.shadowBlur = proximityBoost > 0 ? 12 : 4;
 
-                // Rounded Rect container
-                const radius = 4;
-                ctx.beginPath();
-                ctx.moveTo(x0 + radius, y0);
-                ctx.lineTo(x0 + node.w - radius, y0);
-                ctx.quadraticCurveTo(x0 + node.w, y0, x0 + node.w, y0 + radius);
-                ctx.lineTo(x0 + node.w, y0 + node.h - radius);
-                ctx.quadraticCurveTo(x0 + node.w, y0 + node.h, x0 + node.w - radius, y0 + node.h);
-                ctx.lineTo(x0 + radius, y0 + node.h);
-                ctx.quadraticCurveTo(x0, y0 + node.h, x0, y0 + node.h - radius);
-                ctx.lineTo(x0, y0 + radius);
-                ctx.quadraticCurveTo(x0, y0, x0 + radius, y0);
-                ctx.closePath();
-                ctx.fill();
-                ctx.stroke();
+                const margin = 32;
 
-                ctx.shadowBlur = 0;
+                // Top-Left Legend
+                ctx.fillText('SYS.CORE // PRISMATIC_MONOLITH_v3', margin, margin);
+                ctx.fillText(`ROT_MATRIX: [Yaw: ${(rotY % (Math.PI*2)).toFixed(2)} | Pitch: ${rotX.toFixed(2)}]`, margin, margin + 14);
 
-                // Corner Cyan Accent Markers
-                ctx.strokeStyle = node.color;
-                ctx.lineWidth = 1.5;
-                const acc = 4;
-                // Top-left
-                ctx.beginPath();
-                ctx.moveTo(x0, y0 + acc);
-                ctx.lineTo(x0, y0);
-                ctx.lineTo(x0 + acc, y0);
-                ctx.stroke();
-                // Bottom-right
-                ctx.beginPath();
-                ctx.moveTo(x0 + node.w - acc, y0 + node.h);
-                ctx.lineTo(x0 + node.w, y0 + node.h);
-                ctx.lineTo(x0 + node.w, y0 + node.h - acc);
-                ctx.stroke();
+                // Top-Right Legend
+                ctx.textAlign = 'right';
+                ctx.fillText('CRYSTAL_REFRACTION: 1.48 // 60 FPS', width - margin, margin);
+                ctx.fillText('SECURITY: QUANTUM_READY // ISO-27001', width - margin, margin + 14);
 
-                // Status LED Dot (Pulsing Green or Cyan)
-                const ledSine = Math.sin(time * 3 + node.x * 0.05);
-                const ledAlpha = 0.7 + ledSine * 0.3;
-                ctx.beginPath();
-                ctx.arc(x0 + 8, node.y, 2.5, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(16, 185, 129, ${ledAlpha})`;
-                ctx.shadowColor = '#10b981';
-                ctx.shadowBlur = 6;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                // Node Monospace Typography
-                ctx.fillStyle = '#ffffff';
-                ctx.font = `bold ${isMobile ? '8px' : '9.5px'} "JetBrains Mono", "Fira Code", monospace`;
+                // Bottom-Left
                 ctx.textAlign = 'left';
-                ctx.textBaseline = 'middle';
-                ctx.fillText(node.label, x0 + 15, node.y - (isMobile ? 0 : 4));
+                ctx.fillText('ACD // ARCHITECTURE INTELLIGENCE', margin, height - margin);
 
-                // Micro Status Subtext (Desktop only)
-                if (!isMobile) {
-                    ctx.fillStyle = 'rgba(148, 163, 184, 0.75)';
-                    ctx.font = '7.5px "JetBrains Mono", monospace';
-                    ctx.fillText(node.sub, x0 + 15, node.y + 7);
-                }
-
-                ctx.restore();
-            });
-
-            // 8. Interactive Diagnostic Scanner Reticle (Mengikuti Kursor Mouse & Sentuhan)
-            if (pointer.isActive && pointer.x !== null) {
-                ctx.save();
-                ctx.translate(pointer.x, pointer.y);
-
-                // Rotating Dashed Target Ring
-                ctx.rotate(pointer.reticleAngle);
-                ctx.beginPath();
-                ctx.arc(0, 0, isMobile ? 22 : 30, 0, Math.PI * 2);
-                ctx.strokeStyle = 'rgba(6, 182, 212, 0.55)';
-                ctx.lineWidth = 1;
-                ctx.setLineDash([4, 6]);
-                ctx.stroke();
-
-                // Crosshair brackets
-                ctx.setLineDash([]);
-                ctx.rotate(-pointer.reticleAngle); // reset rotation for static crosshair
-                const chSize = isMobile ? 12 : 16;
-                const chGap = 6;
-                ctx.strokeStyle = 'rgba(99, 102, 241, 0.7)';
-                ctx.lineWidth = 1.2;
-
-                // Top
-                ctx.beginPath();
-                ctx.moveTo(0, -chSize);
-                ctx.lineTo(0, -chGap);
-                // Bottom
-                ctx.moveTo(0, chGap);
-                ctx.lineTo(0, chSize);
-                // Left
-                ctx.moveTo(-chSize, 0);
-                ctx.lineTo(-chGap, 0);
-                // Right
-                ctx.moveTo(chGap, 0);
-                ctx.lineTo(chSize, 0);
-                ctx.stroke();
-
-                // Central Focus Dot
-                ctx.beginPath();
-                ctx.arc(0, 0, 2, 0, Math.PI * 2);
-                ctx.fillStyle = '#38bdf8';
-                ctx.shadowColor = '#06b6d4';
-                ctx.shadowBlur = 8;
-                ctx.fill();
-                ctx.shadowBlur = 0;
-
-                // HUD Diagnostic Readout next to reticle (Desktop only)
-                if (!isMobile) {
-                    ctx.font = '8px "JetBrains Mono", monospace';
-                    ctx.fillStyle = 'rgba(56, 189, 248, 0.75)';
-                    ctx.textAlign = 'left';
-                    ctx.fillText('DIAGNOSTIC_PROBE // LIVE', 36, -8);
-                    ctx.fillStyle = 'rgba(148, 163, 184, 0.65)';
-                    ctx.fillText(`BUS_TRACE: ACTIVE // X:${Math.round(pointer.x)} Y:${Math.round(pointer.y)}`, 36, 4);
-                }
+                // Bottom-Right
+                ctx.textAlign = 'right';
+                ctx.fillText('ORBITAL_BUS: DUAL_GYRO [SYNCHRONIZED]', width - margin, height - margin);
 
                 ctx.restore();
             }
@@ -786,7 +543,7 @@
 
         animationFrameId = requestAnimationFrame(animate);
 
-        // Battery Guard: Immediately halt canvas render loop when tab is hidden or minimized
+        // Battery Guard: Instantly pause 3D math calculations when tab is hidden
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 isTabActive = false;
@@ -801,8 +558,8 @@
 
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initACDArchitectureBlueprint);
+        document.addEventListener('DOMContentLoaded', initHolographicMonolith);
     } else {
-        initACDArchitectureBlueprint();
+        initHolographicMonolith();
     }
 })();
