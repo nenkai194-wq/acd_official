@@ -454,35 +454,6 @@
                 ctx.restore();
             }
 
-            // 9. Technical Celestial Coordinates HUD (Desktop Only)
-            if (!isMobile) {
-                ctx.save();
-                ctx.font = '9px "JetBrains Mono", "Fira Code", monospace';
-                ctx.fillStyle = 'rgba(148, 163, 184, 0.45)';
-                ctx.strokeStyle = 'rgba(99, 102, 241, 0.35)';
-                ctx.lineWidth = 1;
-
-                const margin = 32;
-
-                // Top-Left Legend
-                ctx.fillText('COSMOS // GALAXY_VORTEX_v5', margin, margin);
-                ctx.fillText(`ROT_ANGLE: ${(galaxyAngle % (Math.PI*2)).toFixed(2)} rad // ARMS: 3_SPIRAL`, margin, margin + 14);
-
-                // Top-Right Legend
-                ctx.textAlign = 'right';
-                ctx.fillText('CELESTIAL_DEPTH: 3D_PARALLAX // 60 FPS', width - margin, margin);
-                ctx.fillText('STATUS: GRAVITATIONAL_EQUILIBRIUM', width - margin, margin + 14);
-
-                // Bottom-Left
-                ctx.textAlign = 'left';
-                ctx.fillText('ACD // INFINITE DIGITAL HORIZON', margin, height - margin);
-
-                // Bottom-Right
-                ctx.textAlign = 'right';
-                ctx.fillText('METEOR_RADAR: ACTIVE // TRACKING', width - margin, height - margin);
-
-                ctx.restore();
-            }
 
             animationFrameId = requestAnimationFrame(animate);
         }
