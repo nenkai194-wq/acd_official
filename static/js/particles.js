@@ -1,29 +1,30 @@
 /**
  * PT Aksara Cipta Digital (ACD Official)
- * "Prismatic Light Beams / Cyber Laser Aurora"
- * (Berkas Serat Optik & Pita Cahaya Mengalir)
+ * "Cosmic Spiral Galaxy & Celestial Deep Space"
+ * (Alam Semesta, Galaksi Spiral Kosmik & Debu Bintang Interaktif)
  * 
  * Filosofi Visual:
- * - Merepresentasikan "Transmisi Data Berkecepatan Cahaya" (Light-Speed Data Highway):
- *   kelancaran integrasi sistem, transformasi digital tanpa hambatan, dan konektivitas tak terbatas.
- * - Pita gelombang laser optik multi-lapisan (Fiber Optic Aurora Ribbons) dengan dispersi
- *   warna prismatik (Electric Cyan, Sky Blue, Royal Indigo, dan Velvet Violet).
- * - Berkas foton data meluncur kencang di sepanjang kurva serat optik.
- * - Sangat anggun, halus, futuristik, berkelas premium korporat, dan menenangkan di mata.
+ * - Merepresentasikan "Visi Tanpa Batas" (Infinite Digital Universe):
+ *   ekosistem teknologi berskala enterprise yang terus berekspansi, saling terhubung,
+ *   dan berpusat pada inti kecerdasan digital yang kokoh.
+ * - Galaksi spiral kosmik logaritmik 3D dengan ribuan bintang berkedip, awan nebula bercahaya,
+ *   bintang jatuh (shooting stars / meteors), serta tarikan gravitasi kursor interaktif.
+ * - Berwibawa, megah, menenangkan, estetik tingkat tinggi, dan sangat futuristik.
  * 
  * Fitur:
- * - Multi-layered Harmonic Bezier Laser Ribbons dengan dispersi spektral prismatik
- * - Traveling Photon Data Sparks dengan ekor komet bercahaya
- * - Interaktivitas Defleksi Fluida Elastis (Kursor mouse & sentuhan touch meliukkan pita cahaya)
- * - Gelombang denyut klik (Shockwave Optical Ping)
- * - Perlindungan kontras 100% jernih untuk teks headline
- * - 0 MB Video Overhead, 60 FPS Native Canvas, hemat daya baterai
+ * - Logarithmic Spiral Galaxy Arms dengan kedalaman rotasi 3D (Yaw, Pitch & Tilt)
+ * - Layered Multi-Depth Starfield dengan bintang berkedip realistis
+ * - Dynamic Shooting Stars / Meteors meluncur berkala dengan ekor komet
+ * - Interaktivitas Gravitasi Kursor (Medan magnetik kosmik merespons mouse & sentuhan touch)
+ * - Stellar Supernova Ripple saat klik atau tap
+ * - Area teks headline terlindungi dengan kontras gelap agar 100% jernih dan mudah dibaca
+ * - 0 MB Video Overhead, 60 FPS Native Canvas, proteksi baterai otomatis
  */
 
 (function() {
     'use strict';
 
-    function initLaserAurora() {
+    function initCosmicGalaxy() {
         const canvas = document.getElementById('ambient-body-canvas');
         if (!canvas) return;
 
@@ -40,94 +41,108 @@
         let lastTimestamp = 0;
         let time = 0;
 
-        // Pointer state & fluid physics
+        // Galaxy Core Center
+        let galaxyCenterX = 0;
+        let galaxyCenterY = 0;
+
+        // Galaxy 3D Tilt Parameters
+        let galaxyTiltX = 0.95; // Tilted disk perspective
+        let galaxyAngle = 0;
+        let baseRotationSpeed = 0.0018;
+
+        // Interactive Pointer Gravitational Field
         const pointer = {
             x: null,
             y: null,
             targetX: null,
             targetY: null,
-            vx: 0,
-            vy: 0,
-            radius: 220,
-            strength: 0,
             isActive: false,
-            shockwaves: []
+            gravForce: 0,
+            ripples: []
         };
 
-        // Fiber optic ribbons configuration
-        let ribbons = [];
-        const RIBBON_COUNT = isMobile ? 6 : 9;
+        // Galaxy Stars & Dust Particles
+        let galaxyStars = [];
+        const GALAXY_STAR_COUNT = isMobile ? 320 : 750;
 
-        // Photon data pulses traveling along ribbons
-        let photons = [];
-        const PHOTON_COUNT = isMobile ? 12 : 24;
+        // Background Deep Space Starfield
+        let backgroundStars = [];
+        const BG_STAR_COUNT = isMobile ? 60 : 130;
 
-        // Optical background glints
-        let glints = [];
-        const GLINT_COUNT = isMobile ? 25 : 55;
+        // Shooting Stars (Meteors)
+        let meteors = [];
+        let nextMeteorTime = 2.0;
 
-        // Palette presets (Prismatic Spectrum)
-        const beamGradients = [
-            { primary: 'rgba(6, 182, 212, ',  glow: '#06b6d4', core: '#38bdf8' }, // Electric Cyan
-            { primary: 'rgba(56, 189, 248, ', glow: '#38bdf8', core: '#ffffff' }, // Sky Blue
-            { primary: 'rgba(99, 102, 241, ', glow: '#6366f1', core: '#a5b4fc' }, // Royal Indigo
-            { primary: 'rgba(139, 92, 246, ', glow: '#8b5cf6', core: '#c4b5fd' }, // Violet
-            { primary: 'rgba(168, 85, 247, ', glow: '#a855f7', core: '#e9d5ff' }, // Purple
-            { primary: 'rgba(236, 72, 153, ', glow: '#ec4899', core: '#fbcfe8' }  // Pink prism edge
+        // Color Palettes for Galaxy Arms
+        const armColors = [
+            { r: 6,   g: 182, b: 212 }, // Electric Cyan
+            { r: 56,  g: 189, b: 248 }, // Sky Blue
+            { r: 99,  g: 102, b: 241 }, // Royal Indigo
+            { r: 168, g: 85,  b: 247 }, // Nebula Violet
+            { r: 236, g: 72,  b: 153 }  // Cosmic Magenta fringe
         ];
 
-        function setupRibbons() {
-            ribbons = [];
-            const count = isMobile ? 6 : 9;
+        // Setup Galaxy Particles in Logarithmic Spiral Arms
+        function setupGalaxy() {
+            galaxyStars = [];
+            const starCount = isMobile ? 320 : 750;
+            const armCount = 3; // 3-arm grand spiral
+            const maxRadius = (isMobile ? width * 0.55 : Math.min(width, height) * 0.52);
 
-            for (let i = 0; i < count; i++) {
-                const colorDef = beamGradients[i % beamGradients.length];
-                // Base Y distribution: sweep gracefully from mid-bottom to diagonal crest
-                const yRatio = isMobile 
-                    ? 0.35 + (i / count) * 0.45 
-                    : 0.30 + (i / count) * 0.48;
+            for (let i = 0; i < starCount; i++) {
+                // Radial distribution with higher density towards galactic nucleus
+                const distRatio = Math.pow(Math.random(), 1.6);
+                const r = distRatio * maxRadius;
 
-                ribbons.push({
-                    baseY: height * yRatio,
-                    amplitude1: (isMobile ? 35 : 65) + Math.sin(i * 1.3) * 20,
-                    amplitude2: (isMobile ? 20 : 40) + Math.cos(i * 0.9) * 15,
-                    freq1: 0.0018 + (i * 0.0003),
-                    freq2: 0.0035 + (i * 0.0005),
-                    speed1: 0.75 + (i * 0.12),
-                    speed2: -0.55 - (i * 0.10),
-                    phaseOffset: i * 0.75,
-                    lineWidth: (isMobile ? 1.2 : 1.8) + (i % 2 === 0 ? 0.6 : 0),
-                    alpha: isMobile ? 0.35 : 0.45,
-                    colorDef: colorDef,
-                    hasCurtain: i % 2 === 1 // Aurora translucent curtain fill
+                // Arm angle: logarithmic spiral formula theta = b * ln(r) + armOffset
+                const armIndex = i % armCount;
+                const armOffset = (armIndex * Math.PI * 2) / armCount;
+                const spiralAngle = r * 0.009 + armOffset;
+
+                // Random angular scatter around the arm (thicker near center, dispersed at rim)
+                const scatterAngle = (Math.random() - 0.5) * (0.45 + distRatio * 0.5);
+                const scatterR = (Math.random() - 0.5) * (18 + distRatio * 35);
+
+                const finalAngle = spiralAngle + scatterAngle;
+                const finalR = Math.max(8, r + scatterR);
+
+                // Vertical thickness of galactic disk (Z-axis)
+                const diskThickness = (1 - distRatio) * 35 + 8;
+                const z = (Math.random() - 0.5) * diskThickness;
+
+                // Color based on radial position (Core = White/Cyan, Arms = Indigo/Purple, Fringe = Magenta)
+                let colorIdx = Math.floor(distRatio * armColors.length);
+                if (colorIdx >= armColors.length) colorIdx = armColors.length - 1;
+                const baseColor = armColors[colorIdx];
+
+                galaxyStars.push({
+                    origR: finalR,
+                    angle: finalAngle,
+                    z: z,
+                    // Angular velocity decreases with distance (Keplerian differential rotation)
+                    orbitalSpeed: 0.003 / (1 + distRatio * 1.5),
+                    size: Math.random() * (isMobile ? 1.6 : 2.2) + 0.6,
+                    baseAlpha: Math.random() * 0.6 + 0.35,
+                    color: baseColor,
+                    isCoreStar: distRatio < 0.15,
+                    twinkleSpeed: Math.random() * 0.03 + 0.01,
+                    twinklePhase: Math.random() * Math.PI * 2
                 });
             }
 
-            // Setup photons
-            photons = [];
-            const pCount = isMobile ? 12 : 24;
-            for (let j = 0; j < pCount; j++) {
-                photons.push({
-                    ribbonIndex: j % ribbons.length,
-                    progress: Math.random(),
-                    speed: (isMobile ? 0.0025 : 0.0035) + Math.random() * 0.002,
-                    tailLength: isMobile ? 18 : 32,
-                    size: isMobile ? 2.2 : 3.2,
-                    color: beamGradients[j % beamGradients.length]
-                });
-            }
-
-            // Setup optical glints
-            glints = [];
-            const gCount = isMobile ? 25 : 55;
-            for (let k = 0; k < gCount; k++) {
-                glints.push({
+            // Setup Background Deep Space Stars
+            backgroundStars = [];
+            const bgCount = isMobile ? 60 : 130;
+            for (let j = 0; j < bgCount; j++) {
+                backgroundStars.push({
                     x: Math.random() * width,
                     y: Math.random() * height,
-                    size: Math.random() * 1.8 + 0.6,
+                    size: Math.random() * 1.4 + 0.5,
+                    alpha: Math.random() * 0.5 + 0.2,
+                    speed: Math.random() * 0.015 + 0.008,
                     phase: Math.random() * Math.PI * 2,
-                    speed: Math.random() * 0.02 + 0.01,
-                    color: Math.random() > 0.4 ? '6, 182, 212' : '99, 102, 241'
+                    color: Math.random() > 0.4 ? '6, 182, 212' : '99, 102, 241',
+                    hasSpikes: Math.random() > 0.85 && !isMobile // Bright focal stars with 4-point diffraction
                 });
             }
         }
@@ -142,14 +157,16 @@
             canvas.height = Math.floor(height * dpr);
             ctx.scale(dpr, dpr);
 
-            pointer.radius = isMobile ? 140 : 230;
+            // Position galactic center comfortably to frame the hero title gracefully
+            galaxyCenterX = width * 0.5;
+            galaxyCenterY = height * (isMobile ? 0.43 : 0.41);
 
-            setupRibbons();
+            setupGalaxy();
         }
 
         window.addEventListener('resize', resize, { passive: true });
 
-        // Pointer interactions
+        // Pointer event listeners
         window.addEventListener('mousemove', (e) => {
             pointer.targetX = e.clientX;
             pointer.targetY = e.clientY;
@@ -164,7 +181,7 @@
             pointer.isActive = false;
         }, { passive: true });
 
-        // Touch interactions
+        // Touch event listeners
         window.addEventListener('touchmove', (e) => {
             if (e.touches && e.touches[0]) {
                 pointer.targetX = e.touches[0].clientX;
@@ -181,50 +198,38 @@
             pointer.isActive = false;
         }, { passive: true });
 
-        // Optical Ping shockwave on click/tap
+        // Click / Tap Supernova Pulse
         window.addEventListener('click', (e) => {
-            pointer.shockwaves.push({
+            pointer.ripples.push({
                 x: e.clientX,
                 y: e.clientY,
                 r: 10,
-                maxR: isMobile ? 180 : 320,
-                alpha: 0.85
+                maxR: isMobile ? 180 : 340,
+                alpha: 0.9,
+                color: '#38bdf8'
             });
+
+            // Trigger an immediate shooting star
+            spawnMeteor(e.clientX, e.clientY);
         }, { passive: true });
 
-        // Calculate Y on a ribbon curve at given X coordinate
-        function getRibbonY(ribbon, x, t) {
-            // Harmonic multi-frequency wave calculation
-            const wave1 = Math.sin(x * ribbon.freq1 + t * ribbon.speed1 + ribbon.phaseOffset) * ribbon.amplitude1;
-            const wave2 = Math.cos(x * ribbon.freq2 + t * ribbon.speed2 + ribbon.phaseOffset * 1.5) * ribbon.amplitude2;
-            let currentY = ribbon.baseY + wave1 + wave2;
+        // Spawn a Shooting Star / Meteor
+        function spawnMeteor(targetX, targetY) {
+            const startX = Math.random() * width * 0.8;
+            const startY = Math.random() * height * 0.35;
+            const angle = Math.PI * 0.22 + (Math.random() - 0.5) * 0.15; // diagonal fall ~45 deg
+            const speed = (isMobile ? 7 : 11) + Math.random() * 5;
 
-            // Interactive pointer elastic fluid deflection
-            if (pointer.isActive && pointer.x !== null) {
-                const dx = x - pointer.x;
-                const dy = currentY - pointer.y;
-                const dist = Math.hypot(dx, dy);
-
-                if (dist < pointer.radius) {
-                    const factor = (1 - dist / pointer.radius);
-                    // Smooth gaussian bell deflection
-                    const deflection = Math.sin(factor * Math.PI) * (isMobile ? 35 : 65);
-                    currentY += (dy > 0 ? deflection : -deflection) * 0.7;
-                }
-            }
-
-            // Shockwave perturbation
-            for (let s = 0; s < pointer.shockwaves.length; s++) {
-                const sw = pointer.shockwaves[s];
-                const distToShock = Math.hypot(x - sw.x, currentY - sw.y);
-                const diff = Math.abs(distToShock - sw.r);
-                if (diff < 35) {
-                    const waveFactor = (1 - diff / 35) * sw.alpha;
-                    currentY += Math.sin(diff * 0.2) * 20 * waveFactor;
-                }
-            }
-
-            return currentY;
+            meteors.push({
+                x: startX,
+                y: startY,
+                vx: Math.cos(angle) * speed,
+                vy: Math.sin(angle) * speed,
+                length: (isMobile ? 55 : 95) + Math.random() * 40,
+                life: 1.0,
+                decay: 0.018 + Math.random() * 0.012,
+                color: Math.random() > 0.5 ? '#38bdf8' : '#a855f7'
+            });
         }
 
         // Initial setup
@@ -240,162 +245,207 @@
 
             ctx.clearRect(0, 0, width, height);
 
-            // 1. Smooth Pointer Lerp
+            // 1. Smooth Pointer Lerping & Gravitational Inflow
             if (pointer.isActive && pointer.targetX !== null) {
-                pointer.vx = (pointer.targetX - pointer.x) * 0.12;
-                pointer.vy = (pointer.targetY - pointer.y) * 0.12;
-                pointer.x += pointer.vx;
-                pointer.y += pointer.vy;
+                pointer.x += (pointer.targetX - pointer.x) * 0.12;
+                pointer.y += (pointer.targetY - pointer.y) * 0.12;
+                pointer.gravForce = Math.min(1.0, pointer.gravForce + delta * 2.0);
+            } else {
+                pointer.gravForce = Math.max(0, pointer.gravForce - delta * 1.5);
             }
 
-            // 2. Update Shockwaves
-            for (let s = pointer.shockwaves.length - 1; s >= 0; s--) {
-                const sw = pointer.shockwaves[s];
-                sw.r += delta * (isMobile ? 220 : 380);
-                sw.alpha -= delta * 1.4;
+            // 2. Cosmic Supernova Ripples (Shockwave expansion)
+            for (let rip = pointer.ripples.length - 1; rip >= 0; rip--) {
+                const rp = pointer.ripples[rip];
+                rp.r += delta * (isMobile ? 240 : 380);
+                rp.alpha -= delta * 1.2;
 
-                if (sw.alpha <= 0 || sw.r >= sw.maxR) {
-                    pointer.shockwaves.splice(s, 1);
+                if (rp.alpha <= 0 || rp.r >= rp.maxR) {
+                    pointer.ripples.splice(rip, 1);
                     continue;
                 }
 
                 ctx.save();
                 ctx.beginPath();
-                ctx.arc(sw.x, sw.y, sw.r, 0, Math.PI * 2);
-                ctx.strokeStyle = `rgba(6, 182, 212, ${sw.alpha * 0.6})`;
+                ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
+                ctx.strokeStyle = `rgba(56, 189, 248, ${rp.alpha * 0.65})`;
                 ctx.lineWidth = 1.5;
                 ctx.stroke();
                 ctx.restore();
             }
 
-            // 3. Render Optical Background Glints
-            glints.forEach(g => {
-                const pulse = Math.sin(time * 3 + g.phase);
-                const alpha = Math.max(0.1, 0.45 + pulse * 0.35);
+            // 3. Render Deep Space Background Starfield
+            backgroundStars.forEach(st => {
+                const twinkle = Math.sin(time * 2 + st.phase);
+                const currentAlpha = Math.max(0.1, st.alpha + twinkle * 0.25);
+
+                ctx.save();
+                ctx.beginPath();
+                ctx.arc(st.x, st.y, st.size, 0, Math.PI * 2);
+                ctx.fillStyle = `rgba(${st.color}, ${currentAlpha})`;
+                ctx.fill();
+
+                // 4-Point Diffraction Spikes on bright stellar beacons
+                if (st.hasSpikes && currentAlpha > 0.4) {
+                    ctx.strokeStyle = `rgba(${st.color}, ${currentAlpha * 0.6})`;
+                    ctx.lineWidth = 0.8;
+                    const spikeLen = 8 + twinkle * 3;
+                    ctx.beginPath();
+                    ctx.moveTo(st.x - spikeLen, st.y);
+                    ctx.lineTo(st.x + spikeLen, st.y);
+                    ctx.moveTo(st.x, st.y - spikeLen);
+                    ctx.lineTo(st.x, st.y + spikeLen);
+                    ctx.stroke();
+                }
+                ctx.restore();
+            });
+
+            // 4. Render Deep Galactic Core Nebula Glow (Atmospheric Cosmic Fog)
+            ctx.save();
+            const coreRadius = isMobile ? 160 : 260;
+            const coreGlow = ctx.createRadialGradient(
+                galaxyCenterX, galaxyCenterY, 8,
+                galaxyCenterX, galaxyCenterY, coreRadius
+            );
+            coreGlow.addColorStop(0, 'rgba(56, 189, 248, 0.22)');
+            coreGlow.addColorStop(0.35, 'rgba(99, 102, 241, 0.12)');
+            coreGlow.addColorStop(0.75, 'rgba(168, 85, 247, 0.04)');
+            coreGlow.addColorStop(1, 'transparent');
+
+            ctx.fillStyle = coreGlow;
+            ctx.beginPath();
+            ctx.arc(galaxyCenterX, galaxyCenterY, coreRadius, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.restore();
+
+            // 5. Update & Render Spiral Galaxy Stars (3D Projected Disk)
+            galaxyAngle += baseRotationSpeed;
+
+            // Sort stars by simulated depth (Z) for natural depth layering
+            galaxyStars.forEach(star => {
+                // Orbit rotation
+                star.angle += star.orbitalSpeed;
+
+                // 2D Disk Coordinates
+                let xLocal = Math.cos(star.angle) * star.origR;
+                let yLocal = Math.sin(star.angle) * star.origR;
+
+                // Interactive Pointer Gravitational Distortion
+                if (pointer.isActive && pointer.x !== null && pointer.gravForce > 0) {
+                    const screenXEst = galaxyCenterX + xLocal;
+                    const screenYEst = galaxyCenterY + yLocal * Math.cos(galaxyTiltX);
+                    const dx = pointer.x - screenXEst;
+                    const dy = pointer.y - screenYEst;
+                    const distToPtr = Math.hypot(dx, dy);
+
+                    if (distToPtr < 220) {
+                        const pullFactor = (1 - distToPtr / 220) * 18 * pointer.gravForce;
+                        xLocal += (dx / distToPtr) * pullFactor;
+                        yLocal += (dy / distToPtr) * pullFactor;
+                    }
+                }
+
+                // Apply Perspective Tilt (Disk tilt around X-axis)
+                const cosTilt = Math.cos(galaxyTiltX);
+                const sinTilt = Math.sin(galaxyTiltX);
+
+                const finalX = galaxyCenterX + xLocal;
+                const finalY = galaxyCenterY + (yLocal * cosTilt - star.z * sinTilt);
+                const depthZ = yLocal * sinTilt + star.z * cosTilt;
+
+                // Twinkle & Size based on distance & depth
+                const twinkle = Math.sin(time * 3 + star.twinklePhase);
+                const depthScale = Math.max(0.6, 1 + (depthZ / 400) * 0.4);
+                const finalAlpha = Math.max(0.12, (star.baseAlpha + twinkle * 0.25) * Math.min(1.2, depthScale));
 
                 ctx.beginPath();
-                ctx.arc(g.x, g.y, g.size, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(${g.color}, ${alpha})`;
+                ctx.arc(finalX, finalY, Math.max(0.5, star.size * depthScale), 0, Math.PI * 2);
+
+                if (star.isCoreStar) {
+                    ctx.fillStyle = `rgba(240, 249, 255, ${finalAlpha * 1.3})`;
+                } else {
+                    ctx.fillStyle = `rgba(${star.color.r}, ${star.color.g}, ${star.color.b}, ${finalAlpha})`;
+                }
                 ctx.fill();
             });
 
-            // 4. Render Aurora Light Beams & Fiber Optic Ribbons
-            const stepX = isMobile ? 18 : 14;
+            // 6. Galactic Supermassive Nucleus (Inti Pusat Galaksi)
+            ctx.save();
+            ctx.beginPath();
+            ctx.arc(galaxyCenterX, galaxyCenterY, isMobile ? 3.5 : 5, 0, Math.PI * 2);
+            ctx.fillStyle = '#ffffff';
+            ctx.shadowColor = '#38bdf8';
+            ctx.shadowBlur = isMobile ? 12 : 20;
+            ctx.fill();
+            ctx.restore();
 
-            ribbons.forEach((ribbon, rIdx) => {
-                const points = [];
-                for (let x = -20; x <= width + 20; x += stepX) {
-                    points.push({ x, y: getRibbonY(ribbon, x, time) });
+            // 7. Update & Render Shooting Stars / Meteors (Komet Meluncur)
+            nextMeteorTime -= delta;
+            if (nextMeteorTime <= 0) {
+                spawnMeteor();
+                nextMeteorTime = (isMobile ? 3.5 : 2.5) + Math.random() * 3.0;
+            }
+
+            for (let m = meteors.length - 1; m >= 0; m--) {
+                const met = meteors[m];
+                met.x += met.vx;
+                met.y += met.vy;
+                met.life -= met.decay;
+
+                if (met.life <= 0 || met.x > width + 100 || met.y > height + 100) {
+                    meteors.splice(m, 1);
+                    continue;
                 }
 
-                // Render Aurora Translucent Curtain Fill below ribbon (for atmospheric depth)
-                if (ribbon.hasCurtain) {
-                    ctx.save();
-                    ctx.beginPath();
-                    ctx.moveTo(points[0].x, points[0].y);
-                    for (let p = 1; p < points.length; p++) {
-                        ctx.lineTo(points[p].x, points[p].y);
-                    }
-                    // Extend down
-                    ctx.lineTo(width + 20, height);
-                    ctx.lineTo(-20, height);
-                    ctx.closePath();
-
-                    const curtainGrad = ctx.createLinearGradient(0, ribbon.baseY - 50, 0, height);
-                    curtainGrad.addColorStop(0, ribbon.colorDef.primary + (isMobile ? '0.04)' : '0.07)'));
-                    curtainGrad.addColorStop(0.5, ribbon.colorDef.primary + (isMobile ? '0.015)' : '0.025)'));
-                    curtainGrad.addColorStop(1, 'transparent');
-
-                    ctx.fillStyle = curtainGrad;
-                    ctx.fill();
-                    ctx.restore();
-                }
-
-                // Render Main Fiber Optic Laser Strand
                 ctx.save();
+                // Draw blazing tail
+                const tailEndX = met.x - (met.vx / Math.hypot(met.vx, met.vy)) * met.length * met.life;
+                const tailEndY = met.y - (met.vy / Math.hypot(met.vx, met.vy)) * met.length * met.life;
+
+                const meteorGrad = ctx.createLinearGradient(met.x, met.y, tailEndX, tailEndY);
+                meteorGrad.addColorStop(0, '#ffffff');
+                meteorGrad.addColorStop(0.3, met.color);
+                meteorGrad.addColorStop(1, 'transparent');
+
+                ctx.strokeStyle = meteorGrad;
+                ctx.lineWidth = (isMobile ? 1.6 : 2.2) * met.life;
+                ctx.lineCap = 'round';
                 ctx.beginPath();
-                ctx.moveTo(points[0].x, points[0].y);
-                for (let p = 1; p < points.length - 1; p++) {
-                    const xc = (points[p].x + points[p + 1].x) * 0.5;
-                    const yc = (points[p].y + points[p + 1].y) * 0.5;
-                    ctx.quadraticCurveTo(points[p].x, points[p].y, xc, yc);
-                }
-                ctx.lineTo(points[points.length - 1].x, points[points.length - 1].y);
-
-                // Prismatic Horizontal Gradient along wave
-                const waveGrad = ctx.createLinearGradient(0, 0, width, 0);
-                waveGrad.addColorStop(0, 'rgba(6, 182, 212, 0.15)');
-                waveGrad.addColorStop(0.25, ribbon.colorDef.primary + ribbon.alpha + ')');
-                waveGrad.addColorStop(0.65, ribbon.colorDef.primary + (ribbon.alpha * 1.1) + ')');
-                waveGrad.addColorStop(0.9, 'rgba(168, 85, 247, ' + ribbon.alpha + ')');
-                waveGrad.addColorStop(1, 'rgba(236, 72, 153, 0.2)');
-
-                ctx.strokeStyle = waveGrad;
-                ctx.lineWidth = ribbon.lineWidth;
-                ctx.shadowColor = ribbon.colorDef.glow;
-                ctx.shadowBlur = isMobile ? 6 : 12;
+                ctx.moveTo(met.x, met.y);
+                ctx.lineTo(tailEndX, tailEndY);
                 ctx.stroke();
 
-                ctx.restore();
-            });
-
-            // 5. Update & Render Traveling Photon Data Sparks (Berkas Foton Cepat)
-            photons.forEach(pt => {
-                pt.progress += pt.speed;
-                if (pt.progress > 1.0) {
-                    pt.progress = 0;
-                    pt.ribbonIndex = Math.floor(Math.random() * ribbons.length);
-                }
-
-                const ribbon = ribbons[pt.ribbonIndex];
-                const currentX = pt.progress * (width + 40) - 20;
-                const currentY = getRibbonY(ribbon, currentX, time);
-
-                ctx.save();
-                // Draw comet glowing tail
-                const tailSteps = 6;
-                for (let s = 1; s <= tailSteps; s++) {
-                    const tailX = currentX - (pt.tailLength * (s / tailSteps));
-                    const tailY = getRibbonY(ribbon, tailX, time);
-                    const tailAlpha = (1 - s / tailSteps) * 0.55;
-
-                    ctx.beginPath();
-                    ctx.arc(tailX, tailY, pt.size * (1 - s / tailSteps * 0.4), 0, Math.PI * 2);
-                    ctx.fillStyle = pt.color.primary + tailAlpha + ')';
-                    ctx.fill();
-                }
-
-                // Bright glowing photon head
+                // Blazing Meteor Head
                 ctx.beginPath();
-                ctx.arc(currentX, currentY, pt.size, 0, Math.PI * 2);
-                ctx.fillStyle = pt.color.core;
-                ctx.shadowColor = pt.color.glow;
-                ctx.shadowBlur = isMobile ? 8 : 14;
+                ctx.arc(met.x, met.y, (isMobile ? 2 : 2.8) * met.life, 0, Math.PI * 2);
+                ctx.fillStyle = '#ffffff';
+                ctx.shadowColor = met.color;
+                ctx.shadowBlur = 10;
                 ctx.fill();
 
                 ctx.restore();
-            });
+            }
 
-            // 6. Interactive Pointer Laser Aura & Fluid Wake
-            if (pointer.isActive && pointer.x !== null) {
+            // 8. Cosmic Gravitational Cursor Beacon (Desktop Only)
+            if (pointer.isActive && pointer.x !== null && !isMobile) {
                 ctx.save();
-                // Pointer ambient halo
-                const ptrGlow = ctx.createRadialGradient(
-                    pointer.x, pointer.y, 4,
-                    pointer.x, pointer.y, isMobile ? 55 : 85
+                // Ethereal gravitational aura
+                const gravAura = ctx.createRadialGradient(
+                    pointer.x, pointer.y, 2,
+                    pointer.x, pointer.y, 75
                 );
-                ptrGlow.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
-                ptrGlow.addColorStop(0.4, 'rgba(99, 102, 241, 0.2)');
-                ptrGlow.addColorStop(1, 'transparent');
+                gravAura.addColorStop(0, 'rgba(56, 189, 248, 0.45)');
+                gravAura.addColorStop(0.5, 'rgba(99, 102, 241, 0.15)');
+                gravAura.addColorStop(1, 'transparent');
 
-                ctx.fillStyle = ptrGlow;
+                ctx.fillStyle = gravAura;
                 ctx.beginPath();
-                ctx.arc(pointer.x, pointer.y, isMobile ? 55 : 85, 0, Math.PI * 2);
+                ctx.arc(pointer.x, pointer.y, 75, 0, Math.PI * 2);
                 ctx.fill();
 
-                // Center laser probe bead
+                // Central beacon spark
                 ctx.beginPath();
-                ctx.arc(pointer.x, pointer.y, 3.5, 0, Math.PI * 2);
+                ctx.arc(pointer.x, pointer.y, 3, 0, Math.PI * 2);
                 ctx.fillStyle = '#ffffff';
                 ctx.shadowColor = '#38bdf8';
                 ctx.shadowBlur = 12;
@@ -404,7 +454,7 @@
                 ctx.restore();
             }
 
-            // 7. Corner Optical Telemetry HUD (Desktop Only)
+            // 9. Technical Celestial Coordinates HUD (Desktop Only)
             if (!isMobile) {
                 ctx.save();
                 ctx.font = '9px "JetBrains Mono", "Fira Code", monospace';
@@ -415,21 +465,21 @@
                 const margin = 32;
 
                 // Top-Left Legend
-                ctx.fillText('ACD // OPTICAL_FIBER_MESH v4.0', margin, margin);
-                ctx.fillText('SPECTRUM: PRISMATIC_AURORA [480nm - 620nm]', margin, margin + 14);
+                ctx.fillText('COSMOS // GALAXY_VORTEX_v5', margin, margin);
+                ctx.fillText(`ROT_ANGLE: ${(galaxyAngle % (Math.PI*2)).toFixed(2)} rad // ARMS: 3_SPIRAL`, margin, margin + 14);
 
                 // Top-Right Legend
                 ctx.textAlign = 'right';
-                ctx.fillText('THROUGHPUT: 100 Gbps // LOW_JITTER', width - margin, margin);
-                ctx.fillText('DATA_HIGHWAY: REALTIME_60FPS', width - margin, margin + 14);
+                ctx.fillText('CELESTIAL_DEPTH: 3D_PARALLAX // 60 FPS', width - margin, margin);
+                ctx.fillText('STATUS: GRAVITATIONAL_EQUILIBRIUM', width - margin, margin + 14);
 
                 // Bottom-Left
                 ctx.textAlign = 'left';
-                ctx.fillText('INTEGRATION: FLUID_ELASTIC_AURORA', margin, height - margin);
+                ctx.fillText('ACD // INFINITE DIGITAL HORIZON', margin, height - margin);
 
                 // Bottom-Right
                 ctx.textAlign = 'right';
-                ctx.fillText('STATUS: OPTICAL_CARRIER_LOCKED', width - margin, height - margin);
+                ctx.fillText('METEOR_RADAR: ACTIVE // TRACKING', width - margin, height - margin);
 
                 ctx.restore();
             }
@@ -439,7 +489,7 @@
 
         animationFrameId = requestAnimationFrame(animate);
 
-        // Battery Guard: Instantly halt rendering loop when tab is hidden
+        // Battery Guard: Instantly halt canvas calculation loop when tab is hidden
         document.addEventListener('visibilitychange', () => {
             if (document.hidden) {
                 isTabActive = false;
@@ -454,8 +504,8 @@
 
     // Initialize when DOM is ready
     if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', initLaserAurora);
+        document.addEventListener('DOMContentLoaded', initCosmicGalaxy);
     } else {
-        initLaserAurora();
+        initCosmicGalaxy();
     }
 })();
