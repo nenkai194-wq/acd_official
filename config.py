@@ -1,10 +1,28 @@
 import os
+import shutil
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
-class Config:
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'acd-digital-consulting-secret-2025'
+# Check if running in Vercel or serverless environment
+IS_VERCEL = bool(os.environ.get('VERCEL') or os.environ.get('AWS_LAMBDA_FUNCTION_NAME'))
+
+if IS_VERCEL:
+    TMP_DB_PATH = '/tmp/acd_database.sqlite'
+    SOURCE_DB_PATH = os.path.join(BASE_DIR, 'acd_database.sqlite')
+    if os.path.exists(SOURCE_DB_PATH) and not os.path.exists(TMP_DB_PATH):
+        try:
+            shutil.copyfile(SOURCE_DB_PATH, TMP_DB_PATH)
+        except Exception:
+            pass
+    DATABASE_PATH = TMP_DB_PATH if os.path.exists(TMP_DB_PATH) else SOURCE_DB_PATH
+else:
     DATABASE_PATH = os.path.join(BASE_DIR, 'acd_database.sqlite')
+
+class Config:
+    BASE_DIR = BASE_DIR
+    IS_VERCEL = IS_VERCEL
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'acd-digital-consulting-secret-2025'
+    DATABASE_PATH = DATABASE_PATH
     
     # Company Profile Settings
     COMPANY_NAME = "PT Aksara Cipta Digital"

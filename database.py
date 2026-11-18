@@ -1,13 +1,28 @@
+import os
 import sqlite3
 import json
+import shutil
 from datetime import datetime
 from config import Config
 
 def get_db_connection():
+    # If on Vercel, ensure the pre-seeded database is copied to /tmp
+    if getattr(Config, 'IS_VERCEL', False):
+        tmp_db = Config.DATABASE_PATH
+        src_db = os.path.join(Config.BASE_DIR, 'acd_database.sqlite')
+        if not os.path.exists(tmp_db) and os.path.exists(src_db):
+            try:
+                shutil.copyfile(src_db, tmp_db)
+            except Exception:
+                pass
+
     conn = sqlite3.connect(Config.DATABASE_PATH, timeout=30.0)
     conn.row_factory = sqlite3.Row
-    conn.execute('PRAGMA journal_mode=WAL;')
-    conn.execute('PRAGMA synchronous=NORMAL;')
+    try:
+        conn.execute('PRAGMA journal_mode=WAL;')
+        conn.execute('PRAGMA synchronous=NORMAL;')
+    except Exception:
+        pass
     return conn
 
 def init_db():
