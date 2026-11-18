@@ -32,19 +32,23 @@
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo_acd_icon.png') }}">
 </head>
-<body class="deptech-hero-bg min-h-screen py-5 px-3 sm:py-8 sm:px-4 flex items-center justify-center text-white relative font-sans antialiased overflow-y-auto">
-    <!-- 1. Interactive Particle Constellation Canvas -->
-    <canvas id="hero-particle-canvas" class="absolute inset-0 w-full h-full pointer-events-none z-0"></canvas>
+<body class="bg-[#020617] min-h-screen py-5 px-3 sm:py-8 sm:px-4 flex items-center justify-center text-white relative font-sans antialiased overflow-y-auto">
+    <!-- 1. Ambient Cosmic Galaxy Background (Persis Seperti Frontend) -->
+    <div id="ambient-body-bg" class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#020617]" aria-hidden="true">
+        <canvas id="ambient-body-canvas" class="w-full h-full block absolute inset-0 pointer-events-none"></canvas>
+        <div class="ambient-glow ambient-glow-1"></div>
+        <div class="ambient-glow ambient-glow-2"></div>
+        <div class="ambient-glow ambient-glow-3"></div>
+    </div>
 
-    <!-- 2. Ambient Grid Pattern -->
-    <div class="deptech-grid-pattern opacity-30 pointer-events-none"></div>
+    <!-- 2. Ambient Micro-Grid Texture -->
+    <div class="deptech-grid-pattern opacity-25 pointer-events-none fixed inset-0 z-0"></div>
 
-    <!-- 3. Cosmic Soft Glow Ambient Orbs -->
-    <div class="absolute w-[350px] sm:w-[500px] h-[350px] sm:h-[500px] bg-indigo-600/15 rounded-full blur-3xl pointer-events-none -top-20 -left-20"></div>
-    <div class="absolute w-[300px] sm:w-[450px] h-[300px] sm:h-[450px] bg-cyan-600/10 rounded-full blur-3xl pointer-events-none -bottom-16 -right-16"></div>
+    <!-- 3. Ambient Radial Cyber Aura -->
+    <div class="fixed inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(99,102,241,0.22)_0%,rgba(6,182,212,0.12)_35%,transparent_70%)] pointer-events-none z-0"></div>
 
-    <!-- 4. Login Card (Compact Glassmorphic Box Optimized for Mobile & Desktop) -->
-    <div class="max-w-[420px] w-full bg-[#0a0f1d]/95 border border-indigo-950/90 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-2xl relative z-10 backdrop-blur-xl animate-fade-in-up">
+    <!-- 4. Login Card (Compact Glassmorphic Box with Frosted Glow) -->
+    <div class="max-w-[420px] w-full bg-[#0a0f1d]/90 border border-indigo-900/60 rounded-2xl sm:rounded-3xl p-5 sm:p-7 shadow-[0_15px_50px_rgba(0,0,0,0.85)] relative z-10 backdrop-blur-2xl animate-fade-in-up">
         <!-- Logo & Header -->
         <div class="text-center mb-4 sm:mb-5">
             <div class="relative inline-block mb-3">

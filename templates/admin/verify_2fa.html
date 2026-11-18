@@ -13,10 +13,22 @@
         }
     </style>
 </head>
-<body class="deptech-hero-bg min-h-screen flex items-center justify-center p-4 text-white relative font-sans antialiased">
-    <div class="deptech-grid-pattern"></div>
+<body class="bg-[#020617] min-h-screen flex items-center justify-center p-4 text-white relative font-sans antialiased overflow-y-auto">
+    <!-- 1. Ambient Cosmic Galaxy Background (Persis Seperti Frontend) -->
+    <div id="ambient-body-bg" class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#020617]" aria-hidden="true">
+        <canvas id="ambient-body-canvas" class="w-full h-full block absolute inset-0 pointer-events-none"></canvas>
+        <div class="ambient-glow ambient-glow-1"></div>
+        <div class="ambient-glow ambient-glow-2"></div>
+        <div class="ambient-glow ambient-glow-3"></div>
+    </div>
 
-    <div class="max-w-md w-full bg-[#0d0f1a]/95 border border-indigo-950/80 rounded-3xl p-8 shadow-2xl relative z-10 backdrop-blur-md pin-glow space-y-6">
+    <!-- 2. Ambient Micro-Grid Texture -->
+    <div class="deptech-grid-pattern opacity-25 pointer-events-none fixed inset-0 z-0"></div>
+
+    <!-- 3. Ambient Radial Cyber Aura -->
+    <div class="fixed inset-0 bg-[radial-gradient(circle_at_50%_45%,rgba(99,102,241,0.22)_0%,rgba(6,182,212,0.12)_35%,transparent_70%)] pointer-events-none z-0"></div>
+
+    <div class="max-w-md w-full bg-[#0a0f1d]/90 border border-indigo-900/60 rounded-3xl p-8 shadow-[0_15px_50px_rgba(0,0,0,0.85)] relative z-10 backdrop-blur-2xl pin-glow space-y-6">
         <!-- Logo & Header -->
         <div class="text-center space-y-2">
             <div class="inline-flex p-3 rounded-2xl bg-indigo-950/70 border border-indigo-900/60 mb-1">
@@ -97,6 +109,7 @@
         </div>
     </div>
 
+    <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
     <script>
         lucide.createIcons();
 
