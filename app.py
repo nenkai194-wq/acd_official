@@ -842,37 +842,67 @@ def api_estimate():
 # --- ADMIN CMS PORTAL & IMAGE CAPTCHA GENERATOR ---
 
 def generate_captcha_image(code):
-    width, height = 150, 44
-    img = Image.new('RGB', (width, height), color=(10, 15, 29))
+    # Dimensi CAPTCHA diperbesar (260x72 px) agar sangat jelas dan nyaman dibaca
+    width, height = 260, 72
+    img = Image.new('RGB', (width, height), color=(6, 11, 31))
     draw = ImageDraw.Draw(img)
 
-    # Random noise lines
-    for _ in range(4):
+    # Garis distorsi halus (tidak menutupi teks)
+    for _ in range(3):
         draw.line(
             [(random.randint(0, width), random.randint(0, height)),
              (random.randint(0, width), random.randint(0, height))],
-            fill=(random.randint(50, 90), random.randint(70, 120), random.randint(140, 220)),
-            width=1
+            fill=(random.randint(40, 80), random.randint(60, 110), random.randint(140, 200)),
+            width=2
         )
-    # Random dots
-    for _ in range(50):
+    # Titik noise kosmik halus
+    for _ in range(45):
         draw.point(
             (random.randint(0, width), random.randint(0, height)),
-            fill=(random.randint(90, 160), random.randint(110, 190), 240)
+            fill=(random.randint(80, 140), random.randint(110, 180), 230)
         )
 
-    try:
-        font = ImageFont.truetype('arial.ttf', 24)
-    except Exception:
-        font = ImageFont.load_default()
+    # Deteksi Font berukuran besar (38px) kompatibel multi-OS (Linux, Debian, Vercel, Windows, macOS)
+    font = None
+    font_candidates = [
+        'arial.ttf', 'Arial.ttf', 'DejaVuSans-Bold.ttf', 'DejaVuSans.ttf',
+        'LiberationSans-Bold.ttf', 'LiberationSans-Regular.ttf',
+        '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+        '/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf',
+        'C:\\Windows\\Fonts\\arial.ttf'
+    ]
+    for fc in font_candidates:
+        try:
+            font = ImageFont.truetype(fc, 38)
+            break
+        except Exception:
+            continue
+
+    if font is None:
+        try:
+            # Pillow 10+ mendukung parameter size pada load_default
+            font = ImageFont.load_default(size=38)
+        except Exception:
+            font = ImageFont.load_default()
+
+    # Palet warna karakter kontras tinggi & cerah
+    char_colors = [
+        (56, 189, 248),   # Electric sky blue
+        (129, 140, 248),  # Royal indigo
+        (52, 211, 153),   # Emerald green
+        (244, 114, 182),  # Radiant pink
+        (250, 204, 21),   # Golden amber
+        (248, 250, 252)   # Diamond white
+    ]
 
     for i, char in enumerate(code):
-        char_img = Image.new('RGBA', (30, 36), (0, 0, 0, 0))
+        char_img = Image.new('RGBA', (46, 54), (0, 0, 0, 0))
         char_draw = ImageDraw.Draw(char_img)
-        char_draw.text((5, 2), char, font=font, fill=(random.randint(210, 255), random.randint(220, 255), 255, 255))
-        angle = random.randint(-15, 15)
+        c = random.choice(char_colors)
+        char_draw.text((6, 2), char, font=font, fill=(*c, 255))
+        angle = random.randint(-12, 12)
         char_img = char_img.rotate(angle, expand=1)
-        x = 12 + i * 25 + random.randint(-2, 2)
+        x = 16 + i * 46 + random.randint(-2, 2)
         y = (height - char_img.height) // 2 + random.randint(-2, 2)
         img.paste(char_img, (x, y), char_img)
 
