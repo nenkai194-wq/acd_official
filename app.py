@@ -60,7 +60,7 @@ def add_security_headers(response):
     response.headers['Permissions-Policy'] = 'geolocation=(), microphone=(), camera=()'
     if request.path.startswith('/static/'):
         response.headers['Cache-Control'] = 'public, max-age=604800'
-    if request.path.startswith('/admin'):
+    if request.path.startswith('/dapur'):
         response.headers['X-Robots-Tag'] = 'noindex, nofollow'
     return response
 
@@ -94,16 +94,23 @@ def admin_required(f):
 
 @app.before_request
 def handle_before_request():
+    # Anti-reconnaissance / Honeypot: jika ada yang mencoba mengakses /admin, /login, dll.
+    # langsung kembalikan ke beranda (/) agar penyerang mengira tidak ada backend sama sekali
+    norm_path = request.path.rstrip('/')
+    if norm_path in ['/admin', '/login', '/administrator', '/wp-admin', '/backend', '/cpanel'] or \
+       norm_path.startswith('/admin/') or norm_path.startswith('/login/'):
+        return redirect(url_for('index'))
+
     lang = request.args.get('lang')
     if lang in ['id', 'en']:
         session['lang'] = lang
 
     # CSRF validation for Admin POST endpoints and public /kontak POST
-    if request.method == 'POST' and (request.path.startswith('/admin') or request.path in ['/kontak', '/hubungi-kami']):
+    if request.method == 'POST' and (request.path.startswith('/dapur') or request.path in ['/kontak', '/hubungi-kami']):
         expected_token = session.get('_csrf_token')
         provided_token = request.form.get('csrf_token') or request.headers.get('X-CSRFToken')
         if not expected_token or not provided_token or not secrets.compare_digest(str(expected_token), str(provided_token)):
-            if request.is_json or request.path == '/admin/ping-session':
+            if request.is_json or request.path == '/dapur/ping-session':
                 return jsonify({'status': 'error', 'message': 'Invalid or missing CSRF security token.'}), 403
             flash('Sesi keamanan formulir telah kedaluwarsa. Silakan muat ulang halaman dan coba lagi.', 'error')
             return redirect(request.url)
@@ -434,7 +441,6 @@ def robots_txt():
     base_url = SettingModel.get('seo_canonical_url', 'https://acd.co.id').rstrip('/')
     content = f"""User-agent: *
 Allow: /
-Disallow: /admin/
 Disallow: /api/
 
 Sitemap: {base_url}/sitemap.xml
@@ -869,7 +875,7 @@ def generate_captcha_image(code):
     img.save(buf, format='PNG')
     return buf.getvalue()
 
-@app.route('/admin/captcha-image')
+@app.route('/dapur/captcha-image')
 def admin_captcha_image():
     chars = '23456789ABCDEFGHJKLMNPQRSTUVWXYZ'
     code = ''.join(random.choices(chars, k=5))
@@ -882,7 +888,7 @@ def admin_captcha_image():
     response.headers['Expires'] = '0'
     return response
 
-@app.route('/admin/login', methods=['GET', 'POST'])
+@app.route('/dapur/login', methods=['GET', 'POST'])
 def admin_login():
     if session.get('admin_logged_in'):
         return redirect(url_for('admin_dashboard'))
@@ -966,7 +972,7 @@ def admin_login():
 
     return render_template('admin/login.html', is_locked=False, error=None)
 
-@app.route('/admin/verify-pin', methods=['GET', 'POST'])
+@app.route('/dapur/verify-pin', methods=['GET', 'POST'])
 def admin_verify_pin():
     if session.get('admin_logged_in'):
         return redirect(url_for('admin_dashboard'))
@@ -1027,12 +1033,12 @@ def admin_verify_pin():
 
     return render_template('admin/verify_2fa.html', is_locked=False, error=None, username=user)
 
-@app.route('/admin/verify-pin/cancel')
+@app.route('/dapur/verify-pin/cancel')
 def admin_verify_pin_cancel():
     session.pop('auth_step1_user', None)
     return redirect(url_for('admin_login'))
 
-@app.route('/admin/logout')
+@app.route('/dapur/logout')
 def admin_logout():
     user = session.get('admin_user', 'admin')
     ip = get_client_ip()
@@ -1053,7 +1059,7 @@ def admin_logout():
     flash(flash_msg, flash_cat)
     return redirect(url_for('admin_login'))
 
-@app.route('/admin/ping-session', methods=['POST'])
+@app.route('/dapur/ping-session', methods=['POST'])
 @admin_required
 def admin_ping_session():
     return jsonify({
@@ -1062,7 +1068,7 @@ def admin_ping_session():
         'timeout_seconds': ADMIN_INACTIVITY_TIMEOUT
     })
 
-@app.route('/admin/session-status')
+@app.route('/dapur/session-status')
 def admin_session_status():
     if not session.get('admin_logged_in'):
         return jsonify({'logged_in': False, 'remaining': 0})
@@ -1075,8 +1081,8 @@ def admin_session_status():
         'timeout_total': ADMIN_INACTIVITY_TIMEOUT
     })
 
-@app.route('/admin')
-@app.route('/admin/dashboard')
+@app.route('/dapur')
+@app.route('/dapur/dashboard')
 @admin_required
 def admin_dashboard():
     inquiries = InquiryModel.get_all()
@@ -1100,7 +1106,7 @@ def admin_dashboard():
 
 # --- 1. KELOLA LEADS / INQUIRIES ---
 
-@app.route('/admin/inquiries')
+@app.route('/dapur/inquiries')
 @admin_required
 def admin_inquiries():
     status = request.args.get('status')
@@ -1115,7 +1121,7 @@ def admin_inquiries():
         search_query=search
     )
 
-@app.route('/admin/inquiries/<int:inquiry_id>/status', methods=['POST'])
+@app.route('/dapur/inquiries/<int:inquiry_id>/status', methods=['POST'])
 @admin_required
 def admin_update_inquiry_status(inquiry_id):
     status = request.form.get('status', 'Baru')
@@ -1128,7 +1134,7 @@ def admin_update_inquiry_status(inquiry_id):
         return redirect(url_for('admin_dashboard'))
     return redirect(url_for('admin_inquiries'))
 
-@app.route('/admin/inquiries/<int:inquiry_id>/delete', methods=['POST'])
+@app.route('/dapur/inquiries/<int:inquiry_id>/delete', methods=['POST'])
 @admin_required
 def admin_delete_inquiry(inquiry_id):
     InquiryModel.delete(inquiry_id)
@@ -1137,7 +1143,7 @@ def admin_delete_inquiry(inquiry_id):
 
 # --- 2. KELOLA LAYANAN (SERVICES) ---
 
-@app.route('/admin/services')
+@app.route('/dapur/services')
 @admin_required
 def admin_services():
     category = request.args.get('category')
@@ -1171,7 +1177,7 @@ def admin_services():
         search_query=q
     )
 
-@app.route('/admin/services/<int:service_id>/toggle-status', methods=['POST'])
+@app.route('/dapur/services/<int:service_id>/toggle-status', methods=['POST'])
 @admin_required
 def admin_service_toggle_status(service_id):
     updated = ServiceModel.toggle_published(service_id)
@@ -1182,7 +1188,7 @@ def admin_service_toggle_status(service_id):
         flash('Layanan tidak ditemukan.', 'danger')
     return redirect(request.referrer or url_for('admin_services'))
 
-@app.route('/admin/services/add', methods=['GET', 'POST'])
+@app.route('/dapur/services/add', methods=['GET', 'POST'])
 @admin_required
 def admin_service_add():
     if request.method == 'POST':
@@ -1223,7 +1229,7 @@ def admin_service_add():
 
     return render_template('admin/service_form.html', service=None)
 
-@app.route('/admin/services/<int:service_id>/edit', methods=['GET', 'POST'])
+@app.route('/dapur/services/<int:service_id>/edit', methods=['GET', 'POST'])
 @admin_required
 def admin_service_edit(service_id):
     service = ServiceModel.get_by_id(service_id)
@@ -1270,7 +1276,7 @@ def admin_service_edit(service_id):
 
     return render_template('admin/service_form.html', service=service)
 
-@app.route('/admin/services/<int:service_id>/delete', methods=['POST'])
+@app.route('/dapur/services/<int:service_id>/delete', methods=['POST'])
 @admin_required
 def admin_service_delete(service_id):
     ServiceModel.delete(service_id)
@@ -1279,7 +1285,7 @@ def admin_service_delete(service_id):
 
 # --- 3. KELOLA PORTOFOLIO (PORTFOLIOS) ---
 
-@app.route('/admin/portfolios')
+@app.route('/dapur/portfolios')
 @admin_required
 def admin_portfolios():
     category = request.args.get('category')
@@ -1296,7 +1302,7 @@ def admin_portfolios():
         search_query=q
     )
 
-@app.route('/admin/portfolios/add', methods=['GET', 'POST'])
+@app.route('/dapur/portfolios/add', methods=['GET', 'POST'])
 @admin_required
 def admin_portfolio_add():
     if request.method == 'POST':
@@ -1340,7 +1346,7 @@ def admin_portfolio_add():
 
     return render_template('admin/portfolio_form.html', portfolio=None)
 
-@app.route('/admin/portfolios/<int:portfolio_id>/edit', methods=['GET', 'POST'])
+@app.route('/dapur/portfolios/<int:portfolio_id>/edit', methods=['GET', 'POST'])
 @admin_required
 def admin_portfolio_edit(portfolio_id):
     portfolio = PortfolioModel.get_by_id(portfolio_id)
@@ -1390,7 +1396,7 @@ def admin_portfolio_edit(portfolio_id):
 
     return render_template('admin/portfolio_form.html', portfolio=portfolio)
 
-@app.route('/admin/portfolios/<int:portfolio_id>/delete', methods=['POST'])
+@app.route('/dapur/portfolios/<int:portfolio_id>/delete', methods=['POST'])
 @admin_required
 def admin_portfolio_delete(portfolio_id):
     PortfolioModel.delete(portfolio_id)
@@ -1399,14 +1405,14 @@ def admin_portfolio_delete(portfolio_id):
 
 # --- 4. KELOLA BLOG & ARTIKEL ---
 
-@app.route('/admin/blogs')
+@app.route('/dapur/blogs')
 @admin_required
 def admin_blogs():
     category = request.args.get('category')
     blogs = BlogModel.get_all(category=category)
     return render_template('admin/blogs.html', blogs=blogs, current_category=category or 'Semua')
 
-@app.route('/admin/blogs/add', methods=['GET', 'POST'])
+@app.route('/dapur/blogs/add', methods=['GET', 'POST'])
 @admin_required
 def admin_blog_add():
     if request.method == 'POST':
@@ -1445,7 +1451,7 @@ def admin_blog_add():
 
     return render_template('admin/blog_form.html', post=None)
 
-@app.route('/admin/blogs/<int:blog_id>/edit', methods=['GET', 'POST'])
+@app.route('/dapur/blogs/<int:blog_id>/edit', methods=['GET', 'POST'])
 @admin_required
 def admin_blog_edit(blog_id):
     post = BlogModel.get_by_id(blog_id)
@@ -1490,7 +1496,7 @@ def admin_blog_edit(blog_id):
 
     return render_template('admin/blog_form.html', post=post)
 
-@app.route('/admin/blogs/<int:blog_id>/delete', methods=['POST'])
+@app.route('/dapur/blogs/<int:blog_id>/delete', methods=['POST'])
 @admin_required
 def admin_blog_delete(blog_id):
     BlogModel.delete(blog_id)
@@ -1499,7 +1505,7 @@ def admin_blog_delete(blog_id):
 
 # --- 5. KELOLA TESTIMONI ---
 
-@app.route('/admin/testimonials', methods=['GET', 'POST'])
+@app.route('/dapur/testimonials', methods=['GET', 'POST'])
 @admin_required
 def admin_testimonials():
     if request.method == 'POST':
@@ -1520,7 +1526,7 @@ def admin_testimonials():
     testimonials = TestimonialModel.get_all()
     return render_template('admin/testimonials.html', testimonials=testimonials)
 
-@app.route('/admin/testimonials/<int:testimonial_id>/delete', methods=['POST'])
+@app.route('/dapur/testimonials/<int:testimonial_id>/delete', methods=['POST'])
 @admin_required
 def admin_testimonial_delete(testimonial_id):
     TestimonialModel.delete(testimonial_id)
@@ -1529,7 +1535,7 @@ def admin_testimonial_delete(testimonial_id):
 
 # --- 6. KELOLA KARIR & LOWONGAN ---
 
-@app.route('/admin/careers')
+@app.route('/dapur/careers')
 @admin_required
 def admin_careers():
     status_filter = request.args.get('status', 'all')
@@ -1563,7 +1569,7 @@ def admin_careers():
     }
     return render_template('admin/careers.html', careers=careers, counts=counts, current_status=status_filter, current_q=search_query)
 
-@app.route('/admin/careers/<int:career_id>/toggle-status', methods=['POST'])
+@app.route('/dapur/careers/<int:career_id>/toggle-status', methods=['POST'])
 @admin_required
 def admin_career_toggle_status(career_id):
     new_status = CareerModel.toggle_published(career_id)
@@ -1574,7 +1580,7 @@ def admin_career_toggle_status(career_id):
         flash(f'Status lowongan berhasil diubah menjadi: {status_text}', 'success')
     return redirect(request.referrer or url_for('admin_careers'))
 
-@app.route('/admin/careers/add', methods=['GET', 'POST'])
+@app.route('/dapur/careers/add', methods=['GET', 'POST'])
 @admin_required
 def admin_career_add():
     if request.method == 'POST':
@@ -1613,7 +1619,7 @@ def admin_career_add():
 
     return render_template('admin/career_form.html', career=None)
 
-@app.route('/admin/careers/<int:career_id>/edit', methods=['GET', 'POST'])
+@app.route('/dapur/careers/<int:career_id>/edit', methods=['GET', 'POST'])
 @admin_required
 def admin_career_edit(career_id):
     career = CareerModel.get_by_id(career_id)
@@ -1658,7 +1664,7 @@ def admin_career_edit(career_id):
 
     return render_template('admin/career_form.html', career=career)
 
-@app.route('/admin/careers/<int:career_id>/delete', methods=['POST'])
+@app.route('/dapur/careers/<int:career_id>/delete', methods=['POST'])
 @admin_required
 def admin_career_delete(career_id):
     CareerModel.delete(career_id)
@@ -1667,7 +1673,7 @@ def admin_career_delete(career_id):
 
 # --- 7. KELOLA TANYA JAWAB (FAQ) ---
 
-@app.route('/admin/faqs', methods=['GET', 'POST'])
+@app.route('/dapur/faqs', methods=['GET', 'POST'])
 @admin_required
 def admin_faqs():
     if request.method == 'POST':
@@ -1686,7 +1692,7 @@ def admin_faqs():
     faqs = FAQModel.get_all()
     return render_template('admin/faqs.html', faqs=faqs)
 
-@app.route('/admin/faqs/<int:faq_id>/delete', methods=['POST'])
+@app.route('/dapur/faqs/<int:faq_id>/delete', methods=['POST'])
 @admin_required
 def admin_faq_delete(faq_id):
     FAQModel.delete(faq_id)
@@ -1695,20 +1701,20 @@ def admin_faq_delete(faq_id):
 
 # --- 8. LOG WHATSAPP & ANTI-SPAM ---
 
-@app.route('/admin/wa-logs')
+@app.route('/dapur/wa-logs')
 @admin_required
 def admin_wa_logs():
     logs = WALogModel.get_all(limit=150)
     return render_template('admin/wa_logs.html', logs=logs)
 
-@app.route('/admin/wa-logs/clear', methods=['POST'])
+@app.route('/dapur/wa-logs/clear', methods=['POST'])
 @admin_required
 def admin_wa_logs_clear():
     WALogModel.clear_all()
     flash('Seluruh riwayat log WhatsApp berhasil dikosongkan.', 'success')
     return redirect(url_for('admin_wa_logs'))
 
-@app.route('/admin/wa-logs/<int:log_id>/delete', methods=['POST'])
+@app.route('/dapur/wa-logs/<int:log_id>/delete', methods=['POST'])
 @admin_required
 def admin_wa_logs_delete(log_id):
     WALogModel.delete(log_id)
@@ -1717,14 +1723,14 @@ def admin_wa_logs_delete(log_id):
 
 # --- 9. PUSAT KEAMANAN & AUDIT LOG SISTEM ---
 
-@app.route('/admin/security')
+@app.route('/dapur/security')
 @admin_required
 def admin_security():
     logs = SecurityModel.get_recent_logs(limit=100)
     lockouts = SecurityModel.get_active_lockouts()
     return render_template('admin/security.html', logs=logs, lockouts=lockouts)
 
-@app.route('/admin/security/unlock-ip', methods=['POST'])
+@app.route('/dapur/security/unlock-ip', methods=['POST'])
 @admin_required
 def admin_security_unlock_ip():
     ip_address = (request.form.get('ip_address') or '').strip()
@@ -1737,7 +1743,7 @@ def admin_security_unlock_ip():
         flash(f'Blokir untuk IP {ip_address} berhasil dibuka.', 'success')
     return redirect(url_for('admin_security'))
 
-@app.route('/admin/security/clear-logs', methods=['POST'])
+@app.route('/dapur/security/clear-logs', methods=['POST'])
 @admin_required
 def admin_security_clear_logs():
     SecurityModel.clear_security_logs()
@@ -1750,7 +1756,7 @@ def admin_security_clear_logs():
 
 # --- KELOLA FORM KONTAK & KONSULTASI ---
 
-@app.route('/admin/contact-form', methods=['GET', 'POST'])
+@app.route('/dapur/contact-form', methods=['GET', 'POST'])
 @admin_required
 def admin_contact_form():
     if request.method == 'POST':
@@ -1780,7 +1786,7 @@ def admin_contact_form():
     recent_inquiries = InquiryModel.get_all()[:6]
     return render_template('admin/contact_form.html', contact=contact_data, total_inquiries=inquiries_count, recent_inquiries=recent_inquiries)
 
-@app.route('/admin/contact-form/reset-defaults', methods=['POST'])
+@app.route('/dapur/contact-form/reset-defaults', methods=['POST'])
 @admin_required
 def admin_contact_form_reset_defaults():
     defaults = {
@@ -1807,7 +1813,7 @@ def admin_contact_form_reset_defaults():
 
 # --- KELOLA FOOTER WEBSITE ---
 
-@app.route('/admin/footer', methods=['GET', 'POST'])
+@app.route('/dapur/footer', methods=['GET', 'POST'])
 @admin_required
 def admin_footer():
     if request.method == 'POST':
@@ -1849,7 +1855,7 @@ def admin_footer():
     footer_data = get_footer_data()
     return render_template('admin/footer.html', footer=footer_data)
 
-@app.route('/admin/footer/reset-defaults', methods=['POST'])
+@app.route('/dapur/footer/reset-defaults', methods=['POST'])
 @admin_required
 def admin_footer_reset_defaults():
     defaults = {
@@ -1890,7 +1896,7 @@ def admin_footer_reset_defaults():
 
 # --- KELOLA OPTIMASI SEO WEBSITE ---
 
-@app.route('/admin/seo', methods=['GET', 'POST'])
+@app.route('/dapur/seo', methods=['GET', 'POST'])
 @admin_required
 def admin_seo():
     if request.method == 'POST':
@@ -1918,7 +1924,7 @@ def admin_seo():
     seo_data = get_seo_data()
     return render_template('admin/seo.html', seo=seo_data)
 
-@app.route('/admin/seo/reset-defaults', methods=['POST'])
+@app.route('/dapur/seo/reset-defaults', methods=['POST'])
 @admin_required
 def admin_seo_reset_defaults():
     defaults = {
@@ -1943,7 +1949,7 @@ def admin_seo_reset_defaults():
     flash('Konfigurasi SEO berhasil dikembalikan ke standar awal PT Aksara Cipta Digital.', 'info')
     return redirect(url_for('admin_seo'))
 
-@app.route('/admin/settings', methods=['GET', 'POST'])
+@app.route('/dapur/settings', methods=['GET', 'POST'])
 @admin_required
 def admin_settings():
     if request.method == 'POST':
@@ -1983,7 +1989,7 @@ def admin_settings():
 # ==============================================================================
 # BUKU PANDUAN PENGOPERASIAN SISTEM & INFRASTRUKTUR (MANUAL BOOK)
 # ==============================================================================
-@app.route('/admin/manual-book')
+@app.route('/dapur/manual-book')
 @admin_required
 def admin_manual_book():
     from database import get_db_connection
@@ -2087,7 +2093,7 @@ def admin_manual_book():
         now=datetime.now().strftime('%d %B %Y, %H:%M WIB')
     )
 
-@app.route('/admin/manual-book/download')
+@app.route('/dapur/manual-book/download')
 @admin_required
 def admin_manual_book_download():
     from database import get_db_connection
