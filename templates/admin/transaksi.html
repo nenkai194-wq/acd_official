@@ -377,9 +377,9 @@
                 </button>
               </div>
               <select id="judulDokumen" onchange="onTipeDokumenChange(this.value)" class="w-full bg-slate-50 dark:bg-slate-800 border border-slate-300 dark:border-slate-700 text-slate-900 dark:text-white rounded-lg p-2 text-xs font-semibold focus:ring-2 focus:ring-blue-500 outline-none cursor-pointer">
-                <option value="SURAT PENAWARAN HARGA">SURAT PENAWARAN HARGA</option>
-                <option value="PROFORMA INVOICE" selected>PROFORMA INVOICE</option>
-                <option value="INVOICE">INVOICE</option>
+                <option value="SURAT PENAWARAN HARGA">SURAT PENAWARAN HARGA (SPH)</option>
+                <option value="PROFORMA INVOICE" selected>PROFORMA INVOICE (PI DP)</option>
+                <option value="INVOICE">OFFICIAL INVOICE (INV Pelunasan)</option>
               </select>
               <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Mengubah judul & kode awalan otomatis (PI / INV / SPH).</p>
             </div>
@@ -2437,11 +2437,11 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       const romBulan = getRomanMonth(mNum);
 
       let newPrefix = 'PI';
-      if (val === 'INVOICE') {
+      if (val === 'INVOICE' || val === 'OFFICIAL INVOICE') {
         newPrefix = 'INV';
         if (labelEl) labelEl.innerHTML = `<i class="fa-solid fa-hashtag text-blue-500 mr-1"></i>Nomor Official Invoice`;
         if (txtTab1) txtTab1.innerText = 'Official Invoice';
-      } else if (val === 'SURAT PENAWARAN HARGA') {
+      } else if (val === 'SURAT PENAWARAN HARGA' || val === 'SPH') {
         newPrefix = 'SPH';
         if (labelEl) labelEl.innerHTML = `<i class="fa-solid fa-hashtag text-blue-500 mr-1"></i>Nomor Surat Penawaran`;
         if (txtTab1) txtTab1.innerText = 'Surat Penawaran (SPH)';
@@ -3612,7 +3612,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       document.getElementById('formTerbilangDisplay').innerText = `( ${terbilang(inputDp)} Rupiah )`;
 
       // 5. Update DOKUMEN 1: PROFORMA INVOICE (Gambar 1)
-      document.getElementById('pDisplayDocTitle').innerText = docTitle;
+      document.getElementById('pDisplayDocTitle').innerText = (docTitle === 'INVOICE' || docTitle === 'OFFICIAL INVOICE') ? 'OFFICIAL INVOICE' : docTitle;
       document.getElementById('pDocNo').innerText = noInvoice;
       document.getElementById('pDocDate').innerText = formatDocDate(tglRaw, false);
       document.getElementById('pClientName').innerText = namaKlien;

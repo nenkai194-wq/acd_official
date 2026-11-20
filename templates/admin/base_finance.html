@@ -240,22 +240,22 @@
                 <div class="sidebar-category-header px-2.5 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Format Dokumen</div>
                 <div class="sidebar-category-divider h-px bg-emerald-950/80 my-1.5 mx-1"></div>
 
-                <button type="button" onclick="sidebarSelectDoc('SURAT PENAWARAN HARGA')" title="Surat Penawaran Harga (SPH)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                <button type="button" id="sbDoc_SPH" onclick="sidebarSelectDoc('SURAT PENAWARAN HARGA')" title="Surat Penawaran Harga (SPH)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
                     <i data-lucide="file-text" class="w-4 h-4 shrink-0 text-indigo-400"></i>
                     <span class="sidebar-text truncate">1. SPH (Quotation)</span>
                 </button>
 
-                <button type="button" onclick="sidebarSelectDoc('PROFORMA INVOICE')" title="Proforma Invoice (PI DP)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                <button type="button" id="sbDoc_PI" onclick="sidebarSelectDoc('PROFORMA INVOICE')" title="Proforma Invoice (PI DP)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
                     <i data-lucide="receipt" class="w-4 h-4 shrink-0 text-amber-400"></i>
                     <span class="sidebar-text truncate">2. Proforma Invoice (PI)</span>
                 </button>
 
-                <button type="button" onclick="sidebarSelectDoc('OFFICIAL INVOICE')" title="Official Invoice (INV Pelunasan)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                <button type="button" id="sbDoc_INV" onclick="sidebarSelectDoc('INVOICE')" title="Official Invoice (INV Pelunasan)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
                     <i data-lucide="file-check" class="w-4 h-4 shrink-0 text-emerald-400"></i>
                     <span class="sidebar-text truncate">3. Official Invoice (INV)</span>
                 </button>
 
-                <button type="button" onclick="sidebarSelectDoc('KWITANSI PEMBAYARAN')" title="Kwitansi DP & Pelunasan" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                <button type="button" id="sbDoc_KWT" onclick="sidebarSelectDoc('KWITANSI')" title="Kwitansi DP & Pelunasan" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
                     <i data-lucide="badge-check" class="w-4 h-4 shrink-0 text-teal-400"></i>
                     <span class="sidebar-text truncate">4. Kwitansi Sah QR Code</span>
                 </button>
@@ -507,12 +507,48 @@
         function sidebarSelectDoc(tipe) {
             sidebarSwitchView('entry');
             const select = document.getElementById('judulDokumen');
-            if (select) {
-                select.value = tipe;
-                if (typeof onTipeDokumenChange === 'function') {
-                    onTipeDokumenChange(tipe);
+            const t = String(tipe).toUpperCase();
+
+            // 1. Jika Kwitansi, pindahkan tab tampilan preview ke Kwitansi
+            if (t.includes('KWITANSI')) {
+                if (typeof switchDocumentTab === 'function') {
+                    switchDocumentTab('kwitansi');
+                }
+            } else {
+                // 2. Jika SPH / PI / INV, pastikan tab dokumen 1 (sheet proforma/inv/sph) aktif
+                if (typeof switchDocumentTab === 'function') {
+                    switchDocumentTab('proforma');
+                }
+                if (select) {
+                    if (t.includes('OFFICIAL') || t === 'INVOICE' || t.includes('INV')) {
+                        select.value = 'INVOICE';
+                    } else if (t.includes('PENAWARAN') || t.includes('SPH')) {
+                        select.value = 'SURAT PENAWARAN HARGA';
+                    } else {
+                        select.value = 'PROFORMA INVOICE';
+                    }
+                    if (typeof onTipeDokumenChange === 'function') {
+                        onTipeDokumenChange(select.value);
+                    }
                 }
             }
+
+            // Tandai tombol format yang aktif di sidebar
+            ['SPH', 'PI', 'INV', 'KWT'].forEach(k => {
+                const b = document.getElementById('sbDoc_' + k);
+                if (b) {
+                    b.classList.remove('bg-emerald-950/70', 'text-emerald-300', 'font-bold');
+                }
+            });
+            let targetId = 'sbDoc_PI';
+            if (t.includes('OFFICIAL') || t === 'INVOICE' || t.includes('INV')) targetId = 'sbDoc_INV';
+            else if (t.includes('PENAWARAN') || t.includes('SPH')) targetId = 'sbDoc_SPH';
+            else if (t.includes('KWITANSI')) targetId = 'sbDoc_KWT';
+            const activeBtn = document.getElementById(targetId);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-emerald-950/70', 'text-emerald-300', 'font-bold');
+            }
+
             if (window.innerWidth < 768) {
                 closeAdminSidebar();
             }
