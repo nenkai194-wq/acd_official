@@ -2344,12 +2344,18 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       transactionItems.push({ desc: "", qty: 1, unit: "Unit", price: 0 });
       renderItemsEditor();
       renderAll();
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     function removeItem(idx) {
       transactionItems.splice(idx, 1);
       renderItemsEditor();
       renderAll();
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     function clearAllItems() {
@@ -2367,6 +2373,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         transactionItems[idx][field] = val;
       }
       renderAll();
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     // Render items editor inside Left Form
@@ -2412,6 +2421,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       const dp = Math.round(total * (pct / 100));
       document.getElementById('inputDp').value = dp;
       renderAll();
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     // ==========================================
@@ -2459,6 +2471,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       }
 
       renderAll();
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     function onTglDokumenChange() {
@@ -2492,6 +2507,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         }
       }
       renderAll();
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     function getNextSequentialNumbers(customDateIso) {
@@ -2673,6 +2691,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         signKlienEl.value = klienVal;
       }
       renderAll();
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     function renderMasterProyekDropdown(selectedVal) {
@@ -3801,6 +3822,10 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         if (docK) docK.style.display = 'block';
         if (btnBoth) btnBoth.className = "px-3.5 py-1.5 text-xs font-bold rounded-md transition bg-white text-purple-700 shadow-sm flex items-center gap-1.5";
       }
+
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     // Download PDF
@@ -4614,6 +4639,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       transactionItems = JSON.parse(JSON.stringify(t.items || []));
       renderItemsEditor();
       renderAll();
+      if (typeof syncSidebarDocHighlight === 'function') {
+        syncSidebarDocHighlight();
+      }
     }
 
     function deleteTransaction(id) {
@@ -5001,6 +5029,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       if (typeof updateTimelineToggleUI === 'function') updateTimelineToggleUI();
       initOtpInputs();
       checkAuthStatus();
+      if (typeof syncSidebarDocHighlight === 'function') syncSidebarDocHighlight();
     });
 </script>
 {% endblock %}

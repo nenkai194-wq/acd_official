@@ -245,7 +245,7 @@
                     <span class="sidebar-text truncate">1. SPH (Quotation)</span>
                 </button>
 
-                <button type="button" id="sbDoc_PI" onclick="sidebarSelectDoc('PROFORMA INVOICE')" title="Proforma Invoice (PI DP)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                <button type="button" id="sbDoc_PI" onclick="sidebarSelectDoc('PROFORMA INVOICE')" title="Proforma Invoice (PI DP)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-bold transition bg-emerald-950/80 text-emerald-300 border border-emerald-800/80 shadow-sm">
                     <i data-lucide="receipt" class="w-4 h-4 shrink-0 text-amber-400"></i>
                     <span class="sidebar-text truncate">2. Proforma Invoice (PI)</span>
                 </button>
@@ -504,13 +504,44 @@
             }
         }
 
+        function syncSidebarDocHighlight() {
+            const select = document.getElementById('judulDokumen');
+            const val = select ? select.value : 'PROFORMA INVOICE';
+            const isKwt = (typeof activeTab !== 'undefined' && activeTab === 'kwitansi');
+
+            let activeId = 'sbDoc_PI';
+            if (isKwt) {
+                activeId = 'sbDoc_KWT';
+            } else if (val === 'SURAT PENAWARAN HARGA' || val === 'SPH') {
+                activeId = 'sbDoc_SPH';
+            } else if (val === 'INVOICE' || val === 'OFFICIAL INVOICE') {
+                activeId = 'sbDoc_INV';
+            } else {
+                activeId = 'sbDoc_PI';
+            }
+
+            ['SPH', 'PI', 'INV', 'KWT'].forEach(k => {
+                const b = document.getElementById('sbDoc_' + k);
+                if (b) {
+                    b.classList.remove('bg-emerald-950/80', 'text-emerald-300', 'font-bold', 'border', 'border-emerald-800/80', 'shadow-sm');
+                    b.classList.add('text-slate-300', 'font-medium');
+                }
+            });
+
+            const activeBtn = document.getElementById(activeId);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-300', 'font-medium');
+                activeBtn.classList.add('bg-emerald-950/80', 'text-emerald-300', 'font-bold', 'border', 'border-emerald-800/80', 'shadow-sm');
+            }
+        }
+
         function sidebarSelectDoc(tipe) {
             sidebarSwitchView('entry');
             const select = document.getElementById('judulDokumen');
-            const t = String(tipe).toUpperCase();
+            const t = String(tipe).toUpperCase().trim();
 
             // 1. Jika Kwitansi, pindahkan tab tampilan preview ke Kwitansi
-            if (t.includes('KWITANSI')) {
+            if (t.includes('KWITANSI') || t === 'KWT') {
                 if (typeof switchDocumentTab === 'function') {
                     switchDocumentTab('kwitansi');
                 }
@@ -520,7 +551,10 @@
                     switchDocumentTab('proforma');
                 }
                 if (select) {
-                    if (t.includes('OFFICIAL') || t === 'INVOICE' || t.includes('INV')) {
+                    // PENTING: Periksa PROFORMA terlebih dahulu agar tidak tertukar dengan OFFICIAL INVOICE
+                    if (t.includes('PROFORMA') || t === 'PI') {
+                        select.value = 'PROFORMA INVOICE';
+                    } else if (t.includes('OFFICIAL') || t === 'INVOICE' || t.includes('INV')) {
                         select.value = 'INVOICE';
                     } else if (t.includes('PENAWARAN') || t.includes('SPH')) {
                         select.value = 'SURAT PENAWARAN HARGA';
@@ -533,26 +567,17 @@
                 }
             }
 
-            // Tandai tombol format yang aktif di sidebar
-            ['SPH', 'PI', 'INV', 'KWT'].forEach(k => {
-                const b = document.getElementById('sbDoc_' + k);
-                if (b) {
-                    b.classList.remove('bg-emerald-950/70', 'text-emerald-300', 'font-bold');
-                }
-            });
-            let targetId = 'sbDoc_PI';
-            if (t.includes('OFFICIAL') || t === 'INVOICE' || t.includes('INV')) targetId = 'sbDoc_INV';
-            else if (t.includes('PENAWARAN') || t.includes('SPH')) targetId = 'sbDoc_SPH';
-            else if (t.includes('KWITANSI')) targetId = 'sbDoc_KWT';
-            const activeBtn = document.getElementById(targetId);
-            if (activeBtn) {
-                activeBtn.classList.add('bg-emerald-950/70', 'text-emerald-300', 'font-bold');
-            }
+            syncSidebarDocHighlight();
 
             if (window.innerWidth < 768) {
                 closeAdminSidebar();
             }
         }
+
+        // Jalankan sinkronisasi awal saat dokumen siap
+        document.addEventListener('DOMContentLoaded', () => {
+            syncSidebarDocHighlight();
+        });
     </script>
     {% block scripts %}{% endblock %}
 
