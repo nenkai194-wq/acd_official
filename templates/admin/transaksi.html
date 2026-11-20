@@ -4743,12 +4743,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
     }
 
     function fillAdminCredentials() {
-      document.getElementById('loginUsername').value = 'admin';
-      document.getElementById('loginPassword').value = 'acd2026';
-      const inputCaptcha = document.getElementById('loginCaptchaInput');
-      if (inputCaptcha && currentCaptchaCode) {
-        inputCaptcha.value = currentCaptchaCode;
-      }
+      // deprecated
     }
 
     function generateCaptcha() {
