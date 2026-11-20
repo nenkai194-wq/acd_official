@@ -30,7 +30,34 @@
     </script>
     <script src="https://unpkg.com/lucide@latest"></script>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    {% block extra_head %}{% endblock %}
     <style>
+        @media print {
+            #sidebar, header, .no-print, nav, .sidebar-category-header, .sidebar-category-divider, #sidebarBackdrop, #mobileHeaderBar {
+                display: none !important;
+            }
+            body, html {
+                background: #ffffff !important;
+                color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+            }
+            .flex-1 {
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+                height: auto !important;
+                max-height: none !important;
+            }
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+            }
+        }
+
         html, body {
             height: 100%;
             height: 100dvh;
@@ -194,6 +221,12 @@
         <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-3 flex flex-col justify-between">
             <!-- Navigation Links -->
             <nav class="space-y-1 text-xs">
+                <!-- Tombol Navigasi Kembali ke Gerbang Portal Dapur -->
+                <a href="{{ url_for('admin_hub') }}" title="Kembali ke Gerbang Portal Dapur" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-indigo-300 bg-indigo-950/50 hover:bg-indigo-900/80 hover:text-white border border-indigo-900/60 mb-2.5 shadow-sm">
+                    <i data-lucide="layout-grid" class="w-4 h-4 shrink-0 text-indigo-400"></i>
+                    <span class="sidebar-text truncate font-bold">Portal Dapur</span>
+                </a>
+
                 <div class="sidebar-category-header px-2.5 pt-1 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Ringkasan & Leads</div>
                 <div class="sidebar-category-divider h-px bg-indigo-950/80 my-1.5 mx-1"></div>
 

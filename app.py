@@ -33,6 +33,7 @@ app = Flask(
     static_folder=os.path.join(BASE_DIR, 'static')
 )
 app.config.from_object(Config)
+app.config['TEMPLATES_AUTO_RELOAD'] = True
 app.wsgi_app = ProxyFix(app.wsgi_app, x_for=1, x_proto=1, x_host=1)
 
 from translations import TRANSLATIONS, FAQ_TRANSLATIONS, PORTFOLIO_TRANSLATIONS
@@ -99,9 +100,13 @@ def admin_required(f):
 
 @app.before_request
 def handle_before_request():
+    norm_path = request.path.rstrip('/')
+    # Shortcut akses cepat untuk modul transaksi
+    if norm_path in ['/transaksi', '/keuangan', '/admin/transaksi']:
+        return redirect(url_for('admin_transaksi'))
+
     # Anti-reconnaissance / Honeypot: jika ada yang mencoba mengakses /admin, /login, dll.
     # langsung kembalikan ke beranda (/) agar penyerang mengira tidak ada backend sama sekali
-    norm_path = request.path.rstrip('/')
     if norm_path in ['/admin', '/login', '/administrator', '/wp-admin', '/backend', '/cpanel'] or \
        norm_path.startswith('/admin/') or norm_path.startswith('/login/'):
         return redirect(url_for('index'))
@@ -926,7 +931,7 @@ def admin_captcha_image():
 @app.route('/dapur/login', methods=['GET', 'POST'])
 def admin_login():
     if session.get('admin_logged_in'):
-        return redirect(url_for('admin_dashboard'))
+        return redirect(url_for('admin_hub'))
 
     ip_address = get_client_ip()
     user_agent = request.headers.get('User-Agent', '')
@@ -1010,7 +1015,7 @@ def admin_login():
 @app.route('/dapur/verify-pin', methods=['GET', 'POST'])
 def admin_verify_pin():
     if session.get('admin_logged_in'):
-        return redirect(url_for('admin_dashboard'))
+        return redirect(url_for('admin_hub'))
 
     user = session.get('auth_step1_user')
     if not user:
@@ -1044,8 +1049,8 @@ def admin_verify_pin():
             session['login_ip'] = ip_address
             session['last_activity'] = time.time()
 
-            flash('Otorisasi Two-Factor PIN berhasil! Selamat datang di Panel CMS ACD.', 'success')
-            return redirect(url_for('admin_dashboard'))
+            flash('Otorisasi Two-Factor PIN berhasil! Selamat datang di Portal Dapur ACD.', 'success')
+            return redirect(url_for('admin_hub'))
         else:
             is_now_locked, lock_mins, f_cnt = SecurityModel.record_failed_attempt(
                 ip_address, user, user_agent, max_attempts=3, lockout_minutes=15, reason='PIN Master 2FA Salah'
@@ -1117,6 +1122,19 @@ def admin_session_status():
     })
 
 @app.route('/dapur')
+@admin_required
+def admin_hub():
+    inquiries_count = len(InquiryModel.get_all(status='Baru'))
+    services_count = len(ServiceModel.get_all())
+    portfolios_count = len(PortfolioModel.get_all())
+    return render_template(
+        'admin/portal_gate.html',
+        inquiries_count=inquiries_count,
+        services_count=services_count,
+        portfolios_count=portfolios_count,
+        username=session.get('admin_user', 'admin')
+    )
+
 @app.route('/dapur/dashboard')
 @admin_required
 def admin_dashboard():
@@ -1137,6 +1155,18 @@ def admin_dashboard():
         total_careers=len(careers),
         total_wa_logs=len(recent_wa_logs),
         recent_wa_logs=recent_wa_logs
+    )
+
+# --- 1.2. MANAJEMEN KEUANGAN & DOKUMEN TRANSAKSI ---
+
+@app.route('/dapur/transaksi')
+@admin_required
+def admin_transaksi():
+    services = ServiceModel.get_all(only_published=True)
+    return render_template(
+        'admin/transaksi.html',
+        active_page='transaksi',
+        services=services
     )
 
 # --- 1. KELOLA LEADS / INQUIRIES ---

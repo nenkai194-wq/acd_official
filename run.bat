@@ -8,9 +8,10 @@ echo.
 echo [!] Pastikan HP/Tablet/PC lain terhubung ke Wi-Fi / Jaringan yang sama.
 echo.
 echo * Akses di PC ini        : http://127.0.0.1:5000
-echo * Akses di HP / Tablet   : http://192.168.2.105:5000
-echo * Portal Admin           : http://192.168.2.105:5000/admin/login
-echo   - Tahap 1: User 'admin', Pass 'Cipta!2345', & Kode CAPTCHA Gambar
+echo * Akses di HP / Tablet   : http://192.168.2.106:5000
+echo * Portal Admin (Dapur)   : http://192.168.2.106:5000/dapur/login
+echo * Modul Transaksi & Keu  : http://192.168.2.106:5000/dapur/transaksi (atau http://192.168.2.106:5000/transaksi)
+echo   - Tahap 1: User 'admin', Pass 'acd2026' (atau 'Cipta!2345'), & Kode CAPTCHA
 echo   - Tahap 2: PIN Otorisasi Ganda 2FA '555556'
 echo.
 echo =====================================================================

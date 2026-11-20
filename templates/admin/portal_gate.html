@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Portal Dapur Operasional & Manajemen - PT Aksara Cipta Digital</title>
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        deptech: {
+                            dark: '#020617',
+                            slate: '#0f172a',
+                            navy: '#1e1b4b',
+                            indigo: '#6366f1',
+                            purple: '#7c3aed',
+                            violet: '#8b5cf6',
+                            cyan: '#06b6d4',
+                            emerald: '#10b981',
+                            amber: '#f59e0b',
+                            light: '#f8fafc',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='images/logo_acd_icon.png') }}">
+</head>
+<body class="bg-[#020617] text-slate-100 min-h-screen flex flex-col font-sans antialiased relative selection:bg-indigo-500 selection:text-white overflow-x-hidden">
+
+    <!-- 1. AMBIENT BACKGROUND (COSMIC SPIRAL GALAXY 3D SAMA DENGAN FRONTEND) -->
+    <div id="ambient-body-bg" class="fixed inset-0 pointer-events-none z-0 overflow-hidden bg-[#020617]" aria-hidden="true">
+        <canvas id="ambient-body-canvas" class="w-full h-full block absolute inset-0 pointer-events-none"></canvas>
+        <div class="ambient-glow ambient-glow-1"></div>
+        <div class="ambient-glow ambient-glow-2"></div>
+        <div class="ambient-glow ambient-glow-3"></div>
+    </div>
+
+    <!-- 2. AMBIENT MICRO-GRID & RADIAL CYBER GLOW -->
+    <div class="deptech-grid-pattern opacity-25 pointer-events-none fixed inset-0 z-0"></div>
+    <div class="fixed inset-0 bg-[radial-gradient(circle_at_50%_35%,rgba(99,102,241,0.22)_0%,rgba(6,182,212,0.12)_35%,transparent_70%)] pointer-events-none z-0"></div>
+
+    <!-- 3. TOPBAR HEADER NAV -->
+    <header class="relative z-20 border-b border-indigo-950/80 bg-[#070b1e]/85 backdrop-blur-xl sticky top-0 shadow-lg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3.5 flex items-center justify-between">
+            <!-- Brand Logo & Gate Title -->
+            <div class="flex items-center space-x-3 min-w-0">
+                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-10 sm:h-11 w-auto drop-shadow-md shrink-0">
+                <div class="flex flex-col min-w-0">
+                    <span class="font-black text-white text-xs sm:text-sm tracking-tight truncate">PT AKSARA CIPTA DIGITAL</span>
+                    <span class="text-[10px] sm:text-xs text-indigo-400 font-semibold flex items-center gap-1.5 truncate">
+                        <span>Portal Gerbang Dapur Eksekutif</span>
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    </span>
+                </div>
+            </div>
+
+            <!-- Top Action Controls -->
+            <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+                <div class="hidden md:flex items-center space-x-2 px-3 py-1.5 rounded-xl bg-slate-900/80 border border-indigo-950 text-xs">
+                    <span class="text-slate-400">Operator:</span>
+                    <span class="text-emerald-400 font-mono font-bold">{{ username }}</span>
+                </div>
+
+                <a href="{{ url_for('index') }}" target="_blank" class="px-3 py-1.5 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-xs font-semibold text-slate-300 hover:text-white border border-indigo-950 transition inline-flex items-center space-x-1.5 shadow-sm" title="Pratinjau Website Publik">
+                    <i data-lucide="globe" class="w-3.5 h-3.5 text-indigo-400"></i>
+                    <span class="hidden sm:inline">Web Publik</span>
+                </a>
+
+                <a href="{{ url_for('admin_logout') }}" class="px-3 py-1.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-xs font-bold text-rose-300 hover:text-white border border-rose-500/40 transition inline-flex items-center space-x-1.5 shadow-sm" title="Keluar Sesi">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span>Keluar</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- 4. MAIN CONTENT CONTAINER: SPLIT 2 SISI (KIRI: ULASAN SISTEM, KANAN: 2 TOMBOL AKSI MANDIRI) -->
+    <main class="relative z-10 flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 flex flex-col justify-center">
+        
+        <!-- Header Banner Singkat -->
+        <div class="text-center md:text-left mb-8 sm:mb-10">
+            <div class="inline-flex items-center space-x-2 px-3 py-1 rounded-full text-[10px] sm:text-xs font-bold bg-indigo-950/80 text-indigo-300 border border-indigo-900/70 mb-3 shadow-sm">
+                <i data-lucide="shield-check" class="w-3.5 h-3.5 text-indigo-400"></i>
+                <span>SISTEM MANAJEMEN OPERASIONAL & TATA KELOLA TERINTEGRASI</span>
+            </div>
+            <h1 class="text-2xl sm:text-3xl lg:text-4xl font-black text-white tracking-tight leading-tight">
+                Pusat Kendali Eksekutif PT Aksara Cipta Digital
+            </h1>
+            <p class="text-xs sm:text-sm text-slate-300 mt-2 max-w-3xl leading-relaxed">
+                Pilih gerbang kerja yang Anda tuju di sebelah kanan. Setiap modul memiliki kewenangan dan akses terisolasi untuk memastikan keamanan serta ketertiban administrasi perusahaan.
+            </p>
+        </div>
+
+        <!-- Grid 2 Sisi: Sisi Kiri (Ulasan Modul) vs Sisi Kanan (2 Tombol Akses Mandiri) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
+            
+            <!-- ================= SISI KIRI: ULASAN & DESKRIPSI 2 MODUL ================= -->
+            <div class="lg:col-span-7 flex flex-col justify-between space-y-6 bg-[#0a0f24]/90 border border-indigo-900/50 rounded-3xl p-6 sm:p-8 backdrop-blur-xl shadow-2xl relative overflow-hidden">
+                <!-- Background Accent Glow -->
+                <div class="absolute -top-24 -left-24 w-60 h-60 bg-indigo-600/15 rounded-full blur-3xl pointer-events-none"></div>
+                <div class="absolute -bottom-24 -right-24 w-60 h-60 bg-cyan-600/15 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="relative z-10 space-y-6">
+                    <div>
+                        <span class="text-[11px] font-bold tracking-wider text-indigo-400 uppercase">Ulasan & Panduan Sistem</span>
+                        <h2 class="text-xl sm:text-2xl font-extrabold text-white mt-1 tracking-tight">Struktur 2 Gerbang Akses Mandiri</h2>
+                        <p class="text-xs sm:text-sm text-slate-300 mt-2 leading-relaxed">
+                            Demi menjaga standar kepatuhan privasi finansial serta kenyamanan pengelolaan konten publik, seluruh aktivitas di dapur kerja ACD dipisahkan ke dalam dua portal independen:
+                        </p>
+                    </div>
+
+                    <!-- Ulasan Modul 1: cPanel & Backend Website -->
+                    <div class="p-4 sm:p-5 rounded-2xl bg-[#050818]/80 border border-indigo-950/90 space-y-2.5 transition hover:border-indigo-800/80">
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-indigo-600/20 text-indigo-400 flex items-center justify-center font-bold shrink-0 border border-indigo-500/30">
+                                <i data-lucide="server" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                                    <span>1. cPanel & Backend Website (CMS Engine)</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-indigo-950 text-indigo-300 border border-indigo-800/50">Tombol 1</span>
+                                </h3>
+                                <span class="text-[11px] text-indigo-300 font-medium">Pengelolaan Konten Publik, Layanan, Portofolio & SEO</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed pl-10">
+                            Modul ini khusus digunakan untuk memutakhirkan informasi publik perusahaan: menambah & mengubah <strong>19 modul layanan</strong> (Mobile Apps, Web System, ERP, E-Government), mengunggah portofolio proyek studi kasus, mengelola artikel edukasi teknologi, lowongan karir, memantau formulir konsultasi klien yang masuk (Leads), serta mengonfigurasi optimasi mesin pencari Google (SEO, Meta Tags, & Peta Situs XML).
+                        </p>
+                        <div class="pl-10 flex flex-wrap gap-1.5 pt-1">
+                            <span class="px-2 py-0.5 rounded-md text-[10px] bg-slate-900 text-slate-400 border border-slate-800 font-mono">Katalog 19 Layanan</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] bg-slate-900 text-slate-400 border border-slate-800 font-mono">Showcase Portofolio</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] bg-slate-900 text-slate-400 border border-slate-800 font-mono">Pusat Leads Form</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] bg-slate-900 text-slate-400 border border-slate-800 font-mono">Google SEO Engine</span>
+                        </div>
+                    </div>
+
+                    <!-- Ulasan Modul 2: Keuangan & Dokumen Transaksi -->
+                    <div class="p-4 sm:p-5 rounded-2xl bg-[#050818]/80 border border-emerald-950/90 space-y-2.5 transition hover:border-emerald-800/80">
+                        <div class="flex items-center space-x-2.5">
+                            <div class="w-8 h-8 rounded-lg bg-emerald-600/20 text-emerald-400 flex items-center justify-center font-bold shrink-0 border border-emerald-500/30">
+                                <i data-lucide="receipt" class="w-4 h-4"></i>
+                            </div>
+                            <div>
+                                <h3 class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+                                    <span>2. Keuangan & Dokumen Transaksi (Billing Hub)</span>
+                                    <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800/50">Tombol 2</span>
+                                </h3>
+                                <span class="text-[11px] text-emerald-300 font-medium">Penerbitan SPH, Proforma Invoice, Official Invoice & Kwitansi Sah</span>
+                            </div>
+                        </div>
+                        <p class="text-xs text-slate-300 leading-relaxed pl-10">
+                            Modul ini <strong>berdiri sendiri dengan akses eksklusif</strong> dan tidak bercampur dengan pengeditan website. Berfungsi sebagai generator dokumen finansial resmi PT ACD: menerbitkan Surat Penawaran Harga (SPH), Proforma Invoice (PI) termin down payment, Official Invoice (INV) pelunasan, serta Kwitansi bermaterai digital dan <strong>QR Code verifikasi keabsahan</strong>. Mengelola rincian termin, pencatatan pajak PPh 21 TER, serta ekspor pembukuan format PDF, CSV, dan JSON.
+                        </p>
+                        <div class="pl-10 flex flex-wrap gap-1.5 pt-1">
+                            <span class="px-2 py-0.5 rounded-md text-[10px] bg-slate-900 text-emerald-400/90 border border-emerald-950 font-mono">SPH & Invoice Resmi</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] bg-slate-900 text-emerald-400/90 border border-emerald-950 font-mono">Kwitansi Sah QR Code</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] bg-slate-900 text-emerald-400/90 border border-emerald-950 font-mono">Termin DP & Pelunasan</span>
+                            <span class="px-2 py-0.5 rounded-md text-[10px] bg-slate-900 text-emerald-400/90 border border-emerald-950 font-mono">Ekspor Rekap Finansial</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Footer Proteksi Keamanan -->
+                <div class="relative z-10 pt-4 border-t border-indigo-950/80 flex flex-wrap items-center justify-between gap-3 text-[11px] text-slate-400">
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="lock" class="w-3.5 h-3.5 text-indigo-400"></i>
+                        <span>Otorisasi Two-Factor PIN Terverifikasi</span>
+                    </div>
+                    <div class="flex items-center space-x-2">
+                        <i data-lucide="shield" class="w-3.5 h-3.5 text-emerald-400"></i>
+                        <span>Audit Log Enkripsi Aktif</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ================= SISI KANAN: 2 TOMBOL / KARTU AKSES MANDIRI ================= -->
+            <div class="lg:col-span-5 flex flex-col justify-between space-y-6">
+                
+                <!-- TOMBOL / KARTU 1: MASUK CPANEL / BACKEND WEBSITE -->
+                <a href="{{ url_for('admin_dashboard') }}" class="group block p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#0e1638]/95 to-[#070b20]/95 border-2 border-indigo-900/60 hover:border-indigo-500/80 transition-all duration-300 hover:shadow-[0_15px_40px_rgba(99,102,241,0.25)] hover:-translate-y-1 relative overflow-hidden backdrop-blur-xl">
+                    <!-- Glow effect on hover -->
+                    <div class="absolute -right-16 -top-16 w-44 h-44 bg-indigo-500/15 rounded-full blur-2xl group-hover:bg-indigo-500/30 transition-all duration-500 pointer-events-none"></div>
+
+                    <div class="relative z-10 space-y-4">
+                        <!-- Header Bar Kartu 1 -->
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-indigo-950 text-indigo-300 border border-indigo-800/60">
+                                TOMBOL 1 &bull; cPanel & CMS
+                            </span>
+                            <div class="w-12 h-12 rounded-2xl bg-indigo-600/20 text-indigo-400 group-hover:bg-indigo-600 group-hover:text-white flex items-center justify-center transition-all duration-300 border border-indigo-500/30 shadow-md">
+                                <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <!-- Judul & Keterangan -->
+                        <div>
+                            <h3 class="text-xl sm:text-2xl font-black text-white group-hover:text-indigo-300 transition-colors">
+                                Masuk cPanel / Backend Website
+                            </h3>
+                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                                Kelola seluruh halaman website, portofolio proyek, katalog 19 layanan solusi IT, artikel blog, leads formulir kebutuhan masuk, dan optimasi SEO Google.
+                            </p>
+                        </div>
+
+                        <!-- Indikator Statistik Cepat -->
+                        <div class="pt-2 flex items-center gap-3 text-[11px] text-slate-400">
+                            <span class="flex items-center gap-1.5"><i data-lucide="check-circle" class="w-3.5 h-3.5 text-indigo-400"></i>{{ services_count }} Layanan</span>
+                            <span class="flex items-center gap-1.5"><i data-lucide="briefcase" class="w-3.5 h-3.5 text-indigo-400"></i>{{ portfolios_count }} Portofolio</span>
+                            <span class="flex items-center gap-1.5 font-bold text-amber-300"><i data-lucide="inbox" class="w-3.5 h-3.5 text-amber-400"></i>{{ inquiries_count }} Leads Baru</span>
+                        </div>
+
+                        <!-- Tombol CTA -->
+                        <div class="pt-2">
+                            <div class="w-full py-3.5 px-5 rounded-2xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-between shadow-lg shadow-indigo-600/30 transition group-hover:scale-[1.02]">
+                                <span>Buka cPanel CMS Website</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+                <!-- TOMBOL / KARTU 2: MASUK KEUANGAN & TRANSAKSI -->
+                <a href="{{ url_for('admin_transaksi') }}" class="group block p-6 sm:p-7 rounded-3xl bg-gradient-to-b from-[#0b1c28]/95 to-[#06121a]/95 border-2 border-emerald-900/60 hover:border-emerald-500/80 transition-all duration-300 hover:shadow-[0_15px_40px_rgba(16,185,129,0.25)] hover:-translate-y-1 relative overflow-hidden backdrop-blur-xl">
+                    <!-- Glow effect on hover -->
+                    <div class="absolute -right-16 -top-16 w-44 h-44 bg-emerald-500/15 rounded-full blur-2xl group-hover:bg-emerald-500/30 transition-all duration-500 pointer-events-none"></div>
+
+                    <div class="relative z-10 space-y-4">
+                        <!-- Header Bar Kartu 2 -->
+                        <div class="flex items-center justify-between">
+                            <span class="px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-950 text-emerald-300 border border-emerald-800/60">
+                                TOMBOL 2 &bull; AKSES MANDIRI
+                            </span>
+                            <div class="w-12 h-12 rounded-2xl bg-emerald-600/20 text-emerald-400 group-hover:bg-emerald-600 group-hover:text-white flex items-center justify-center transition-all duration-300 border border-emerald-500/30 shadow-md">
+                                <i data-lucide="file-text" class="w-6 h-6"></i>
+                            </div>
+                        </div>
+
+                        <!-- Judul & Keterangan -->
+                        <div>
+                            <h3 class="text-xl sm:text-2xl font-black text-white group-hover:text-emerald-300 transition-colors">
+                                Masuk Keuangan & Transaksi
+                            </h3>
+                            <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                                Penerbitan dokumen resmi surat penawaran harga (SPH), proforma invoice (PI), invoice tagihan sah (INV), kwitansi ber-QR Code valid, dan laporan arus kas proyek.
+                            </p>
+                        </div>
+
+                        <!-- Indikator Fitur Dokumen -->
+                        <div class="pt-2 flex items-center gap-3 text-[11px] text-slate-400">
+                            <span class="flex items-center gap-1.5"><i data-lucide="file-check" class="w-3.5 h-3.5 text-emerald-400"></i>SPH & Invoice Sah</span>
+                            <span class="flex items-center gap-1.5"><i data-lucide="qr-code" class="w-3.5 h-3.5 text-emerald-400"></i>QR Code Valid</span>
+                            <span class="flex items-center gap-1.5"><i data-lucide="download" class="w-3.5 h-3.5 text-emerald-400"></i>Cetak PDF</span>
+                        </div>
+
+                        <!-- Tombol CTA -->
+                        <div class="pt-2">
+                            <div class="w-full py-3.5 px-5 rounded-2xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs uppercase tracking-wider flex items-center justify-between shadow-lg shadow-emerald-600/30 transition group-hover:scale-[1.02]">
+                                <span>Buka Portal Keuangan & Dokumen</span>
+                                <i data-lucide="arrow-right" class="w-4 h-4 transition-transform group-hover:translate-x-1"></i>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- 5. FOOTER GATE -->
+    <footer class="relative z-10 border-t border-indigo-950/80 py-4 text-center text-xs text-slate-500">
+        <p>&copy; 2026 PT Aksara Cipta Digital (ACD). Hak Cipta Dilindungi Undang-Undang. Sesi Enkripsi Keamanan Aktif.</p>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="{{ url_for('static', filename='js/particles.js') }}"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
