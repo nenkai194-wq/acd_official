@@ -2,7 +2,7 @@
 <html lang="{{ current_lang }}" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <meta name="theme-color" content="#020617">
     <title>{% block title %}{{ seo.meta_title }}{% endblock %}</title>
     <meta name="description" content="{% block meta_desc %}{{ seo.meta_description }}{% endblock %}">
@@ -678,7 +678,7 @@
 
     <!-- 7. QUICK CONSULTATION MODAL -->
     <div id="consultation-modal" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 hidden">
-        <div class="bg-[#070c24] rounded-2xl max-w-lg w-full p-6 sm:p-8 shadow-2xl border border-indigo-900/60 relative animate-in fade-in zoom-in-95 duration-200 text-slate-100">
+        <div class="bg-[#070c24] rounded-2xl max-w-lg w-full max-h-[92vh] overflow-y-auto custom-scrollbar modal-inner-card p-6 sm:p-8 shadow-2xl border border-indigo-900/60 relative animate-in fade-in zoom-in-95 duration-200 text-slate-100">
             <button onclick="closeConsultationModal()" class="absolute top-5 right-5 text-slate-400 hover:text-white p-1.5 rounded-lg transition" aria-label="Tutup">
                 <i data-lucide="x" class="w-5 h-5"></i>
             </button>
