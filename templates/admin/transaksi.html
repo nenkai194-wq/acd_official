@@ -1,4 +1,4 @@
-{% extends 'admin/base.html' %}
+{% extends 'admin/base_finance.html' %}
 {% set active_page = 'transaksi' %}
 
 {% block title %}Keuangan & Dokumen Transaksi (PI, INV, Kwitansi){% endblock %}
@@ -2289,6 +2289,8 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       const navMobileEntry = document.getElementById('navMobileBtnEntry');
       const navMobileReport = document.getElementById('navMobileBtnReport');
       const mobileFloat = document.getElementById('mobileFloatingBar');
+      const sbEntry = document.getElementById('sidebarBtnEntry');
+      const sbReport = document.getElementById('sidebarBtnReport');
 
       if (view === 'entry') {
         if (entrySec) entrySec.classList.remove('hidden');
@@ -2301,6 +2303,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         // Nav mobile
         if (navMobileEntry) navMobileEntry.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-blue-600 text-white text-center";
         if (navMobileReport) navMobileReport.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 text-center";
+        // Sidebar Finance Sync
+        if (sbEntry) sbEntry.className = "w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-600/30";
+        if (sbReport) sbReport.className = "w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white";
       } else {
         if (entrySec) entrySec.classList.add('hidden');
         if (reportSec) reportSec.classList.remove('hidden');
@@ -2312,6 +2317,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         // Nav mobile
         if (navMobileReport) navMobileReport.className = "flex-1 py-1.5 text-xs font-bold rounded-lg bg-blue-600 text-white text-center";
         if (navMobileEntry) navMobileEntry.className = "flex-1 py-1.5 text-xs font-semibold rounded-lg bg-slate-800 text-slate-300 text-center";
+        // Sidebar Finance Sync
+        if (sbReport) sbReport.className = "w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-600/30";
+        if (sbEntry) sbEntry.className = "w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white";
 
         renderReportTable();
       }

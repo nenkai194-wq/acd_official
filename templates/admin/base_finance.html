@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="id" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>{% block title %}Portal Keuangan & Dokumen Transaksi{% endblock %} - PT Aksara Cipta Digital</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        finance: {
+                            50: '#ecfdf5',
+                            100: '#d1fae5',
+                            500: '#10b981',
+                            600: '#059669',
+                            700: '#047857',
+                            900: '#064e3b',
+                            950: '#022c22',
+                        },
+                        darkbg: '#020617',
+                        cardbg: '#08111e',
+                        sidebarbg: '#050a14',
+                    }
+                }
+            }
+        }
+    </script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    {% block extra_head %}{% endblock %}
+    <style>
+        @media print {
+            #sidebar, header, .no-print, nav, .sidebar-category-header, .sidebar-category-divider, #adminMobileBackdrop, #mobileHeaderBar {
+                display: none !important;
+            }
+            body, html {
+                background: #ffffff !important;
+                color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                width: 100% !important;
+                height: auto !important;
+            }
+            .flex-1 {
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+                height: auto !important;
+                max-height: none !important;
+            }
+            main {
+                padding: 0 !important;
+                margin: 0 !important;
+                overflow: visible !important;
+            }
+        }
+
+        html, body {
+            height: 100%;
+            height: 100dvh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 5px;
+            height: 5px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #020617;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #1e293b;
+            border-radius: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+            background: #334155;
+        }
+
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+
+        #sidebar {
+            transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1), transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            height: 100vh;
+            height: 100dvh;
+            max-height: 100vh;
+            max-height: 100dvh;
+        }
+
+        @media (max-width: 767px) {
+            #sidebar {
+                height: 100% !important;
+                max-height: 100% !important;
+                bottom: 0 !important;
+                top: 0 !important;
+                right: 0 !important;
+                left: auto !important;
+            }
+        }
+
+        body.sidebar-collapsed #sidebar {
+            width: 4.75rem !important;
+            min-width: 4.75rem !important;
+        }
+
+        body.sidebar-collapsed .sidebar-text,
+        body.sidebar-collapsed .sidebar-brand-text,
+        body.sidebar-collapsed .sidebar-category-header,
+        body.sidebar-collapsed .sidebar-badge {
+            display: none !important;
+        }
+
+        body.sidebar-collapsed .sidebar-link,
+        body.sidebar-collapsed .sidebar-bottom-link {
+            justify-content: center !important;
+            padding-left: 0 !important;
+            padding-right: 0 !important;
+        }
+
+        body.sidebar-collapsed .sidebar-category-divider {
+            margin: 0.5rem auto !important;
+            width: 50% !important;
+        }
+
+        body.sidebar-collapsed .sidebar-brand-wrapper {
+            justify-content: center !important;
+            padding: 1rem 0.5rem !important;
+        }
+
+        body.sidebar-collapsed #sidebarCollapseBtn {
+            display: none !important;
+        }
+
+        body.sidebar-collapsed .sidebar-user-info {
+            padding: 0.5rem !important;
+            justify-content: center !important;
+        }
+        body.sidebar-collapsed .sidebar-collapsed-user-icon {
+            display: flex !important;
+        }
+    </style>
+</head>
+<body class="bg-[#020617] text-slate-100 min-h-screen md:min-h-0 md:h-[100dvh] md:overflow-hidden flex flex-col md:flex-row antialiased font-sans">
+
+    <!-- Mobile Backdrop -->
+    <div id="adminMobileBackdrop" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-40 hidden md:hidden transition-opacity"></div>
+
+    <!-- Mobile Topbar (< 768px) -->
+    <div id="mobileHeaderBar" class="md:hidden flex items-center justify-between p-3 sm:p-4 bg-[#07111e] border-b border-emerald-950/80 sticky top-0 z-30">
+        <div class="flex items-center space-x-2.5 min-w-0">
+            <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-10 w-auto drop-shadow-md shrink-0">
+            <div class="flex flex-col min-w-0">
+                <span class="font-extrabold text-white text-xs truncate">PT AKSARA CIPTA DIGITAL</span>
+                <span class="text-[10px] text-emerald-400 font-semibold truncate flex items-center gap-1">
+                    <span>Portal Keuangan & Dokumen</span>
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                </span>
+            </div>
+        </div>
+        <div class="flex items-center space-x-2 shrink-0">
+            <a href="{{ url_for('admin_hub') }}" class="p-2 rounded-lg bg-indigo-950/80 text-indigo-300 hover:text-white border border-indigo-900 transition" title="Kembali ke Gerbang Dapur">
+                <i data-lucide="layout-grid" class="w-4 h-4"></i>
+            </a>
+            <a href="{{ url_for('admin_logout') }}" class="p-2 rounded-lg bg-rose-500/10 text-rose-400 hover:text-white border border-rose-500/30 transition" title="Logout">
+                <i data-lucide="log-out" class="w-4 h-4"></i>
+            </a>
+            <button id="mobileMenuBtn" class="p-2 rounded-lg bg-slate-900 text-slate-300 hover:text-white border border-slate-800 transition" aria-label="Buka Menu Keuangan">
+                <i data-lucide="menu" class="w-5 h-5"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- ================= SIDEBAR KHUSUS KEUANGAN & DOKUMEN TRANSAKSI ================= -->
+    <aside id="sidebar" class="fixed inset-y-0 right-0 z-50 w-72 max-w-[85vw] sm:w-80 bg-[#050a14] border-l border-emerald-950/70 flex flex-col h-full md:h-screen md:static md:left-0 md:right-auto md:w-64 md:border-r md:border-l-0 md:shrink-0 shadow-2xl md:shadow-none overflow-hidden transform translate-x-full md:translate-x-0 transition-transform duration-300 ease-in-out">
+        
+        <!-- 1. Brand Header Khusus Keuangan -->
+        <div class="sidebar-brand-wrapper shrink-0 px-3.5 py-3.5 border-b border-emerald-950/60 flex items-center justify-between bg-[#050a14]">
+            <a href="{{ url_for('admin_transaksi') }}" class="flex items-center space-x-3 min-w-0" title="PT Aksara Cipta Digital - Billing & Keuangan">
+                <img src="{{ url_for('static', filename='images/logo_acd_icon.png') }}" alt="Logo ACD" class="h-10 w-auto drop-shadow-xl shrink-0 transition-transform hover:scale-105">
+                <div class="sidebar-brand-text flex flex-col min-w-0">
+                    <span class="font-black text-white text-xs leading-snug truncate">AKSARA CIPTA DIGITAL</span>
+                    <span class="text-[10px] text-emerald-400 font-semibold truncate flex items-center gap-1.5">
+                        <span>Billing & Keuangan Hub</span>
+                        <span class="inline-block w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+                    </span>
+                </div>
+            </a>
+            
+            <button id="sidebarCollapseBtn" type="button" class="hidden md:flex p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" title="Kecilkan Menu (Minimize)">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+            </button>
+            <button id="adminMobileCloseBtn" type="button" class="md:hidden p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-slate-800 transition" aria-label="Tutup Menu">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <!-- 2. Scrollable Middle Area Navigasi Khusus Finansial -->
+        <div class="flex-1 min-h-0 overflow-y-auto custom-scrollbar p-3 flex flex-col justify-between">
+            <nav class="space-y-1 text-xs">
+                
+                <!-- Tombol Kembali ke Gerbang Portal Dapur -->
+                <a href="{{ url_for('admin_hub') }}" title="Kembali ke Gerbang Portal Dapur" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-indigo-300 bg-indigo-950/50 hover:bg-indigo-900/80 hover:text-white border border-indigo-900/60 mb-2.5 shadow-sm">
+                    <i data-lucide="layout-grid" class="w-4 h-4 shrink-0 text-indigo-400"></i>
+                    <span class="sidebar-text truncate font-bold">Portal Dapur</span>
+                </a>
+
+                <!-- KATEGORI 1: MANAJEMEN DOKUMEN & LAPORAN -->
+                <div class="sidebar-category-header px-2.5 pt-1 pb-1 text-[10px] font-bold tracking-wider text-emerald-500 uppercase flex items-center justify-between">
+                    <span>Manajemen Finansial</span>
+                    <span class="text-[9px] px-1.5 py-0.2 rounded bg-emerald-950 text-emerald-400 border border-emerald-800/60 font-mono">AKTIF</span>
+                </div>
+                <div class="sidebar-category-divider h-px bg-emerald-950/80 my-1.5 mx-1"></div>
+
+                <button type="button" onclick="sidebarSwitchView('entry')" id="sidebarBtnEntry" title="Entri & Dokumen Baru" class="w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-600/30">
+                    <div class="flex items-center space-x-2.5 min-w-0">
+                        <i data-lucide="file-plus-2" class="w-4 h-4 shrink-0"></i>
+                        <span class="sidebar-text truncate">Entri & Dokumen Baru</span>
+                    </div>
+                    <span class="sidebar-badge px-1.5 py-0.5 text-[9px] font-bold rounded-md bg-emerald-900/80 text-emerald-200">Form</span>
+                </button>
+
+                <button type="button" onclick="sidebarSwitchView('report')" id="sidebarBtnReport" title="Tabel Laporan & Rekap" class="w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                    <div class="flex items-center space-x-2.5 min-w-0">
+                        <i data-lucide="table" class="w-4 h-4 shrink-0 text-cyan-400"></i>
+                        <span class="sidebar-text truncate">Tabel Laporan & Rekap</span>
+                    </div>
+                    <span id="sidebarReportBadge" class="sidebar-badge px-1.5 py-0.5 text-[9px] font-bold rounded-md bg-cyan-950 text-cyan-300 border border-cyan-800/50">Arsip</span>
+                </button>
+
+                <!-- KATEGORI 2: FORMAT DOKUMEN CEPAT -->
+                <div class="sidebar-category-header px-2.5 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Format Dokumen</div>
+                <div class="sidebar-category-divider h-px bg-emerald-950/80 my-1.5 mx-1"></div>
+
+                <button type="button" onclick="sidebarSelectDoc('SURAT PENAWARAN HARGA')" title="Surat Penawaran Harga (SPH)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                    <i data-lucide="file-text" class="w-4 h-4 shrink-0 text-indigo-400"></i>
+                    <span class="sidebar-text truncate">1. SPH (Quotation)</span>
+                </button>
+
+                <button type="button" onclick="sidebarSelectDoc('PROFORMA INVOICE')" title="Proforma Invoice (PI DP)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                    <i data-lucide="receipt" class="w-4 h-4 shrink-0 text-amber-400"></i>
+                    <span class="sidebar-text truncate">2. Proforma Invoice (PI)</span>
+                </button>
+
+                <button type="button" onclick="sidebarSelectDoc('OFFICIAL INVOICE')" title="Official Invoice (INV Pelunasan)" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                    <i data-lucide="file-check" class="w-4 h-4 shrink-0 text-emerald-400"></i>
+                    <span class="sidebar-text truncate">3. Official Invoice (INV)</span>
+                </button>
+
+                <button type="button" onclick="sidebarSelectDoc('KWITANSI PEMBAYARAN')" title="Kwitansi DP & Pelunasan" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                    <i data-lucide="badge-check" class="w-4 h-4 shrink-0 text-teal-400"></i>
+                    <span class="sidebar-text truncate">4. Kwitansi Sah QR Code</span>
+                </button>
+
+                <!-- KATEGORI 3: MASTER & OPERASIONAL -->
+                <div class="sidebar-category-header px-2.5 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-400 uppercase">Aksi & Master</div>
+                <div class="sidebar-category-divider h-px bg-emerald-950/80 my-1.5 mx-1"></div>
+
+                <button type="button" onclick="bukaModalTambahProyek()" title="+ Tambah Proyek / Klien Baru" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-semibold transition text-emerald-300 hover:bg-emerald-950/50 hover:text-white border border-emerald-900/40">
+                    <i data-lucide="folder-plus" class="w-4 h-4 shrink-0 text-emerald-400"></i>
+                    <span class="sidebar-text truncate">+ Proyek / Klien Baru</span>
+                </button>
+
+                <button type="button" onclick="bukaModalKelolaBank()" title="Kelola Rekening Bank Pembayaran" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white">
+                    <i data-lucide="landmark" class="w-4 h-4 shrink-0 text-blue-400"></i>
+                    <span class="sidebar-text truncate">Rekening Bank ACD</span>
+                </button>
+
+                <button type="button" onclick="bukaModalPanduanDokumen('definisi')" title="Panduan SOP Dokumen & Pajak" class="w-full text-left sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-amber-300/90 hover:bg-slate-900 hover:text-amber-200">
+                    <i data-lucide="graduation-cap" class="w-4 h-4 shrink-0 text-amber-400"></i>
+                    <span class="sidebar-text truncate">Panduan SOP Finansial</span>
+                </button>
+
+                <!-- KATEGORI 4: SWITCH KE CPANEL WEBSITE -->
+                <div class="sidebar-category-header px-2.5 pt-3 pb-1 text-[10px] font-bold tracking-wider text-slate-500 uppercase">Beralih Modul</div>
+                <div class="sidebar-category-divider h-px bg-emerald-950/80 my-1.5 mx-1"></div>
+
+                <a href="{{ url_for('admin_dashboard') }}" title="Beralih ke cPanel Website" class="sidebar-link flex items-center space-x-2.5 px-3 py-2 rounded-xl font-medium transition text-slate-400 hover:bg-indigo-950/40 hover:text-indigo-300">
+                    <i data-lucide="server" class="w-4 h-4 shrink-0 text-indigo-400"></i>
+                    <span class="sidebar-text truncate">cPanel / CMS Website</span>
+                </a>
+            </nav>
+
+            <!-- Bottom User & Website Links -->
+            <div class="pt-4 mt-4 border-t border-emerald-950/80 space-y-2 text-xs pb-14 md:pb-6">
+                <!-- Buka Web Publik -->
+                <a href="{{ url_for('index') }}" target="_blank" title="Buka Web Publik" class="sidebar-bottom-link flex items-center justify-between px-3 py-2 rounded-xl bg-slate-900/90 hover:bg-slate-800 text-slate-200 border border-slate-800/80 hover:border-emerald-900/60 transition shadow-sm">
+                    <span class="flex items-center space-x-2.5 min-w-0">
+                        <i data-lucide="globe" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                        <span class="sidebar-text truncate font-semibold">Buka Web Publik</span>
+                    </span>
+                    <i data-lucide="external-link" class="sidebar-text w-3.5 h-3.5 text-slate-400 shrink-0"></i>
+                </a>
+
+                <!-- Keluar (Logout) -->
+                <a href="{{ url_for('admin_logout') }}" title="Keluar (Logout)" class="sidebar-bottom-link flex items-center space-x-2.5 px-3 py-2 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-300 hover:text-white border border-rose-500/40 transition shadow-sm">
+                    <i data-lucide="log-out" class="w-4 h-4 text-rose-400 shrink-0"></i>
+                    <span class="sidebar-text truncate font-bold">Keluar (Logout)</span>
+                </a>
+
+                <!-- Status Pengguna Logged as: admin (Finance) -->
+                <div class="sidebar-user-info px-3 py-2 rounded-xl bg-[#020b14] border border-emerald-950 flex items-center justify-between text-xs text-slate-400 mt-2">
+                    <div class="flex items-center space-x-2 min-w-0 truncate">
+                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shrink-0 animate-pulse" title="Status Online"></span>
+                        <span class="sidebar-text truncate text-slate-300 font-medium">Finance Officer: <strong class="text-emerald-400 font-bold">{{ session.get('admin_user', 'admin') }}</strong></span>
+                    </div>
+                    <span class="sidebar-collapsed-user-icon hidden" title="Logged in as: {{ session.get('admin_user', 'admin') }}">
+                        <i data-lucide="user-check" class="w-4 h-4 text-emerald-400"></i>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex-1 flex flex-col min-w-0 md:h-[100dvh] overflow-y-auto custom-scrollbar relative">
+        <!-- Top Header Bar Khusus Keuangan -->
+        <header class="hidden md:flex items-center justify-between px-3 sm:px-6 lg:px-8 py-3 bg-[#07111e]/95 backdrop-blur-xl border-b border-emerald-950/80 sticky top-0 z-30 shrink-0 shadow-[0_4px_25px_rgba(2,6,23,0.8)]">
+            <div class="flex items-center space-x-2 sm:space-x-3 min-w-0">
+                <button id="sidebarToggleBtn" type="button" class="p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 border border-emerald-950/80 transition flex items-center justify-center shrink-0" title="Kecilkan / Perluas Menu Sidebar">
+                    <i data-lucide="panel-left-close" id="sidebarToggleIcon" class="w-4 h-4"></i>
+                </button>
+
+                <div class="flex items-center space-x-2 min-w-0">
+                    <span class="text-xs sm:text-sm lg:text-base font-extrabold text-white tracking-tight truncate">Portal Keuangan & Dokumen Transaksi</span>
+                    <span class="text-slate-600 text-xs font-bold hidden sm:inline">&bull;</span>
+                    <span class="text-xs text-emerald-400 font-bold truncate hidden lg:inline">PT Aksara Cipta Digital</span>
+                </div>
+            </div>
+
+            <div class="flex items-center space-x-2 sm:space-x-3 shrink-0">
+                <!-- Portal Dapur Shortcut -->
+                <a href="{{ url_for('admin_hub') }}" class="px-2.5 sm:px-3 py-1 rounded-lg bg-indigo-950/80 hover:bg-indigo-900 text-xs font-bold text-indigo-300 hover:text-white transition inline-flex items-center space-x-1.5 border border-indigo-800/60 shadow-sm" title="Kembali ke Gerbang Portal Dapur">
+                    <i data-lucide="layout-grid" class="w-3.5 h-3.5"></i>
+                    <span class="hidden sm:inline">Portal Dapur</span>
+                </a>
+
+                <!-- cPanel Website Shortcut -->
+                <a href="{{ url_for('admin_dashboard') }}" class="px-2.5 sm:px-3 py-1 rounded-lg bg-slate-900 hover:bg-slate-800 text-xs font-semibold text-slate-300 hover:text-white transition inline-flex items-center space-x-1.5 border border-slate-700 shadow-sm" title="Beralih ke cPanel / CMS Website">
+                    <i data-lucide="server" class="w-3.5 h-3.5 text-indigo-400"></i>
+                    <span class="hidden xl:inline">cPanel Website</span>
+                </a>
+
+                <!-- Auto-Logout Inactivity Protection Badge -->
+                <div class="flex items-center space-x-1 sm:space-x-1.5 px-2.5 py-1 rounded-full bg-slate-900/90 border border-emerald-950 text-xs font-mono shadow-sm" title="Proteksi Keamanan: Logout otomatis saat tidak ada aktivitas selama 15 menit">
+                    <i data-lucide="shield-alert" class="w-3.5 h-3.5 text-amber-400 shrink-0"></i>
+                    <span class="text-slate-400 hidden xl:inline text-[11px]">Auto-Logout:</span>
+                    <span id="sessionTimerText" class="font-bold text-white tracking-wider text-[11px] sm:text-xs">15:00</span>
+                </div>
+
+                <!-- Database & Server Online Badge -->
+                <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0"></span>
+                    <span class="hidden md:inline text-[11px]">Server Online</span>
+                </div>
+
+                <!-- Quick Logout Button in Header -->
+                <a href="{{ url_for('admin_logout') }}" class="px-2.5 sm:px-3 py-1 rounded-lg bg-rose-500/10 hover:bg-rose-500/20 text-xs font-semibold text-rose-400 hover:text-rose-300 transition inline-flex items-center space-x-1.5 border border-rose-500/30" title="Keluar (Logout)">
+                    <i data-lucide="log-out" class="w-3.5 h-3.5"></i>
+                    <span class="hidden xl:inline">Keluar</span>
+                </a>
+            </div>
+        </header>
+
+        <!-- Flash Notifications -->
+        <div class="px-3 sm:px-6 lg:px-8 pt-4">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                    <div class="p-3.5 mb-4 rounded-xl text-xs font-medium border flex items-center justify-between {% if category == 'success' %}bg-emerald-500/10 border-emerald-500/30 text-emerald-300{% elif category == 'danger' or category == 'error' %}bg-rose-500/10 border-rose-500/30 text-rose-300{% elif category == 'warning' %}bg-amber-500/10 border-amber-500/30 text-amber-300{% else %}bg-indigo-500/10 border-indigo-500/30 text-indigo-300{% endif %}">
+                        <div class="flex items-center space-x-2 min-w-0">
+                            {% if category == 'success' %}
+                            <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+                            {% elif category == 'danger' or category == 'error' %}
+                            <i data-lucide="alert-circle" class="w-4 h-4 text-rose-400 shrink-0"></i>
+                            {% else %}
+                            <i data-lucide="info" class="w-4 h-4 text-indigo-400 shrink-0"></i>
+                            {% endif %}
+                            <span class="truncate">{{ message }}</span>
+                        </div>
+                        <button onclick="this.parentElement.remove()" class="text-slate-400 hover:text-white shrink-0 ml-2">&times;</button>
+                    </div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        <!-- Page Main Block -->
+        <main class="p-3 sm:p-5 lg:p-8 flex-1">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+
+    <!-- Script Lucide & Responsive Minimize & Drawer Toggle -->
+    <script>
+        lucide.createIcons();
+
+        const sidebar = document.getElementById('sidebar');
+        const sidebarToggleBtn = document.getElementById('sidebarToggleBtn');
+        const sidebarCollapseBtn = document.getElementById('sidebarCollapseBtn');
+        const sidebarToggleIcon = document.getElementById('sidebarToggleIcon');
+        const mobileBtn = document.getElementById('mobileMenuBtn');
+        const adminBackdrop = document.getElementById('adminMobileBackdrop');
+        const adminCloseBtn = document.getElementById('adminMobileCloseBtn');
+
+        function updateSidebarToggleIcon(isCollapsed) {
+            if (sidebarToggleIcon) {
+                sidebarToggleIcon.setAttribute('data-lucide', isCollapsed ? 'panel-left-open' : 'panel-left-close');
+                lucide.createIcons();
+            }
+        }
+
+        function toggleSidebarMinimize() {
+            if (window.innerWidth < 768) {
+                if (sidebar && sidebar.classList.contains('translate-x-full')) {
+                    openAdminSidebar();
+                } else {
+                    closeAdminSidebar();
+                }
+            } else {
+                const isNowCollapsed = document.body.classList.toggle('sidebar-collapsed');
+                localStorage.setItem('admin_sidebar_collapsed', isNowCollapsed ? 'true' : 'false');
+                updateSidebarToggleIcon(isNowCollapsed);
+            }
+        }
+
+        (function initSidebarState() {
+            const saved = localStorage.getItem('admin_sidebar_collapsed');
+            if (saved === 'true' || (saved === null && window.innerWidth >= 768 && window.innerWidth < 1024)) {
+                document.body.classList.add('sidebar-collapsed');
+                updateSidebarToggleIcon(true);
+            } else {
+                updateSidebarToggleIcon(false);
+            }
+        })();
+
+        if (sidebarToggleBtn) sidebarToggleBtn.addEventListener('click', toggleSidebarMinimize);
+        if (sidebarCollapseBtn) sidebarCollapseBtn.addEventListener('click', toggleSidebarMinimize);
+
+        function openAdminSidebar() {
+            if (sidebar) {
+                sidebar.classList.remove('translate-x-full');
+                sidebar.classList.add('translate-x-0');
+                if (adminBackdrop) adminBackdrop.classList.remove('hidden');
+                document.body.classList.add('overflow-hidden');
+            }
+        }
+
+        function closeAdminSidebar() {
+            if (sidebar) {
+                sidebar.classList.remove('translate-x-0');
+                sidebar.classList.add('translate-x-full');
+                if (adminBackdrop) adminBackdrop.classList.add('hidden');
+                document.body.classList.remove('overflow-hidden');
+            }
+        }
+
+        if (mobileBtn) mobileBtn.addEventListener('click', openAdminSidebar);
+        if (adminCloseBtn) adminCloseBtn.addEventListener('click', closeAdminSidebar);
+        if (adminBackdrop) adminBackdrop.addEventListener('click', closeAdminSidebar);
+
+        if (sidebar) {
+            sidebar.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', () => {
+                    if (window.innerWidth < 768) {
+                        closeAdminSidebar();
+                    }
+                });
+            });
+        }
+
+        // Bridge helper untuk Sidebar Finansial
+        function sidebarSwitchView(view) {
+            if (typeof switchMainView === 'function') {
+                switchMainView(view);
+            }
+            const btnEntry = document.getElementById('sidebarBtnEntry');
+            const btnReport = document.getElementById('sidebarBtnReport');
+            if (view === 'entry') {
+                if (btnEntry) {
+                    btnEntry.className = "w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-600/30";
+                }
+                if (btnReport) {
+                    btnReport.className = "w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white";
+                }
+            } else {
+                if (btnReport) {
+                    btnReport.className = "w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition bg-emerald-600 text-white font-bold shadow-lg shadow-emerald-600/30";
+                }
+                if (btnEntry) {
+                    btnEntry.className = "w-full text-left sidebar-link flex items-center justify-between px-3 py-2 rounded-xl font-medium transition text-slate-300 hover:bg-slate-900 hover:text-white";
+                }
+            }
+            if (window.innerWidth < 768) {
+                closeAdminSidebar();
+            }
+        }
+
+        function sidebarSelectDoc(tipe) {
+            sidebarSwitchView('entry');
+            const select = document.getElementById('judulDokumen');
+            if (select) {
+                select.value = tipe;
+                if (typeof onTipeDokumenChange === 'function') {
+                    onTipeDokumenChange(tipe);
+                }
+            }
+            if (window.innerWidth < 768) {
+                closeAdminSidebar();
+            }
+        }
+    </script>
+    {% block scripts %}{% endblock %}
+
+    <!-- Inactivity Auto-Logout Warning Modal -->
+    <div id="inactivityModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden items-center justify-center p-4">
+        <div class="bg-[#07111e] border border-amber-500/50 rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl text-center space-y-5">
+            <div class="w-16 h-16 rounded-2xl bg-amber-500/20 border border-amber-500/40 text-amber-400 flex items-center justify-center mx-auto shadow-lg shadow-amber-500/20 animate-bounce">
+                <i data-lucide="shield-alert" class="w-8 h-8"></i>
+            </div>
+            <div>
+                <h3 class="text-xl font-bold text-white tracking-tight">Peringatan Keamanan: Sesi Tidak Aktif</h3>
+                <p class="text-xs text-slate-300 mt-2 leading-relaxed">
+                    Sistem mendeteksi tidak ada aktivitas di portal keuangan. Demi keamanan data finansial perusahaan, sesi Anda akan logout otomatis dalam:
+                </p>
+                <div class="my-4 py-3 px-6 rounded-2xl bg-[#020617] border border-amber-500/40 inline-block shadow-inner">
+                    <span id="modalCountdownText" class="text-3xl font-black font-mono text-amber-400 tracking-widest">02:00</span>
+                </div>
+                <p class="text-[11px] text-slate-400">
+                    Klik tombol di bawah untuk memperpanjang sesi dan tetap masuk di portal keuangan.
+                </p>
+            </div>
+            <div class="flex items-center justify-center space-x-3 pt-2">
+                <a href="{{ url_for('admin_logout') }}" class="flex-1 py-2.5 px-4 rounded-xl bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-white text-xs font-semibold border border-slate-800 transition">
+                    Logout Sekarang
+                </a>
+                <button type="button" id="btnExtendSession" class="flex-1 py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow-lg shadow-emerald-600/30">
+                    Tetap Masuk
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inactivity Auto-Logout Watchdog Script -->
+    <script>
+        (function() {
+            const TOTAL_TIMEOUT = {{ admin_inactivity_timeout or 900 }};
+            const WARNING_THRESHOLD = 120;
+            let remainingSeconds = TOTAL_TIMEOUT;
+            let lastPingTime = Date.now();
+            let isWarningShown = false;
+
+            const timerDisplay = document.getElementById('sessionTimerText');
+            const modal = document.getElementById('inactivityModal');
+            const modalCountdown = document.getElementById('modalCountdownText');
+            const btnExtend = document.getElementById('btnExtendSession');
+
+            function formatTime(seconds) {
+                const mins = Math.floor(seconds / 60);
+                const secs = seconds % 60;
+                return `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+            }
+
+            function updateDisplays() {
+                const formatted = formatTime(remainingSeconds);
+                if (timerDisplay) timerDisplay.textContent = formatted;
+                if (modalCountdown) modalCountdown.textContent = formatted;
+
+                if (remainingSeconds <= WARNING_THRESHOLD) {
+                    if (timerDisplay) {
+                        timerDisplay.classList.add('text-amber-400');
+                        timerDisplay.classList.remove('text-white');
+                    }
+                    if (!isWarningShown && modal) {
+                        modal.classList.remove('hidden');
+                        modal.classList.add('flex');
+                        isWarningShown = true;
+                        if (window.lucide) lucide.createIcons();
+                    }
+                } else {
+                    if (timerDisplay) {
+                        timerDisplay.classList.remove('text-amber-400');
+                        timerDisplay.classList.add('text-white');
+                    }
+                    if (isWarningShown && modal) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                        isWarningShown = false;
+                    }
+                }
+            }
+
+            function extendSession() {
+                fetch('{{ url_for("admin_ping_session") }}', {
+                    method: 'POST',
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest',
+                        'X-CSRFToken': '{{ csrf_token() }}'
+                    }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    remainingSeconds = TOTAL_TIMEOUT;
+                    lastPingTime = Date.now();
+                    if (modal) {
+                        modal.classList.add('hidden');
+                        modal.classList.remove('flex');
+                    }
+                    isWarningShown = false;
+                    updateDisplays();
+                })
+                .catch(() => {
+                    remainingSeconds = TOTAL_TIMEOUT;
+                    updateDisplays();
+                });
+            }
+
+            if (btnExtend) {
+                btnExtend.addEventListener('click', extendSession);
+            }
+
+            const activityEvents = ['mousedown', 'mousemove', 'keydown', 'scroll', 'touchstart'];
+            let activityThrottle = null;
+
+            function onUserActivity() {
+                if (!isWarningShown) {
+                    remainingSeconds = TOTAL_TIMEOUT;
+                    updateDisplays();
+
+                    const now = Date.now();
+                    if (now - lastPingTime > 150000) {
+                        lastPingTime = now;
+                        fetch('{{ url_for("admin_ping_session") }}', {
+                            method: 'POST',
+                            headers: {
+                                'X-Requested-With': 'XMLHttpRequest',
+                                'X-CSRFToken': '{{ csrf_token() }}'
+                            }
+                        }).catch(() => {});
+                    }
+                }
+            }
+
+            activityEvents.forEach(evt => {
+                window.addEventListener(evt, () => {
+                    if (!activityThrottle) {
+                        activityThrottle = setTimeout(() => {
+                            onUserActivity();
+                            activityThrottle = null;
+                        }, 1000);
+                    }
+                }, { passive: true });
+            });
+
+            setInterval(() => {
+                remainingSeconds--;
+                if (remainingSeconds <= 0) {
+                    window.location.href = '{{ url_for("admin_logout") }}?reason=timeout';
+                } else {
+                    updateDisplays();
+                }
+            }, 1000);
+
+            updateDisplays();
+        })();
+    </script>
+</body>
+</html>
