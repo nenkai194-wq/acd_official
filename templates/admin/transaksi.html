@@ -416,6 +416,31 @@
               <p class="text-[10px] text-slate-500 dark:text-slate-400 mt-1">Alamat domisili/kantor penagihan (langsung tertera di invoice & kwitansi).</p>
             </div>
 
+            <!-- Kode Proyek IT (ID Unik Pengikat Seluruh Termin Transaksi / Pembayaran) -->
+            <div class="bg-indigo-50/70 dark:bg-indigo-950/40 p-3 rounded-xl border border-indigo-200 dark:border-indigo-800 space-y-1.5">
+              <div class="flex items-center justify-between flex-wrap gap-2">
+                <label class="font-bold text-slate-800 dark:text-slate-100 text-xs flex items-center gap-1.5">
+                  <i class="fa-solid fa-fingerprint text-indigo-600 dark:text-indigo-400"></i>
+                  <span>Kode Proyek IT</span>
+                  <span class="text-[9px] font-bold px-1.5 py-0.5 rounded bg-indigo-100 dark:bg-indigo-900/80 text-indigo-700 dark:text-indigo-300">ID Pengikat Transaksi</span>
+                </label>
+                <div class="flex items-center gap-1.5 text-[10px]">
+                  <button type="button" onclick="autoGenerateKodeProyek()" class="px-2 py-0.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded font-bold transition flex items-center gap-1 shadow-sm" title="Generate Kode Proyek Baru Otomatis">
+                    <i class="fa-solid fa-arrows-rotate text-[9px]"></i> Kode Baru
+                  </button>
+                  <button type="button" onclick="bukaModalPilihProyekAktif()" class="px-2 py-0.5 bg-white dark:bg-slate-800 hover:bg-indigo-50 dark:hover:bg-slate-700 text-indigo-700 dark:text-indigo-300 rounded font-bold transition flex items-center gap-1 border border-indigo-300 dark:border-indigo-700 shadow-sm" title="Pilih Proyek Berjalan untuk Transaksi/Termin Lanjutan">
+                    <i class="fa-solid fa-folder-tree text-[9px] text-indigo-500"></i> Pilih Proyek Berjalan
+                  </button>
+                </div>
+              </div>
+              <div class="flex gap-2">
+                <input type="text" id="kodeProyek" value="PRJ/ACD/2026/001" oninput="renderAll()" class="w-full bg-white dark:bg-slate-900 border border-indigo-300 dark:border-indigo-700 rounded-lg p-2.5 text-xs font-mono font-bold text-indigo-950 dark:text-indigo-200 focus:ring-2 focus:ring-indigo-500 outline-none uppercase shadow-sm" placeholder="Contoh: PRJ/ACD/2026/001">
+              </div>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">
+                Gunakan <strong>Kode Proyek yang SAMA</strong> walaupun pembayaran dilakukan dalam beberapa transaksi (SPH, DP, Termin, Pelunasan) agar seluruh riwayat terhubung.
+              </p>
+            </div>
+
             <!-- 3. Nama Proyek IT (Format Rapih, Lebar Penuh & Anti-Patah Teks) -->
             <div class="bg-slate-50/70 dark:bg-slate-800/50 p-3 rounded-xl border border-slate-200 dark:border-slate-700 space-y-2">
               <div class="flex items-center justify-between flex-wrap gap-2">
@@ -784,6 +809,10 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
               </div>
               <!-- Kanan: Pekerjaan & Pembayaran -->
               <div class="col-span-6 pl-4">
+                <div class="mb-1" id="pKodeProyekRow">
+                  <span class="text-slate-700">Kode Proyek : </span>
+                  <span id="pKodeProyek" class="font-bold font-mono text-indigo-950 bg-indigo-50/80 border border-indigo-200 px-1.5 py-0.5 rounded text-[11px]">PRJ/ACD/2026/001</span>
+                </div>
                 <div class="mb-1">
                   <span class="font-bold text-slate-900">Pekerjaan : </span>
                   <span id="pJobName" class="font-bold text-slate-900">Pengembangan Sistem ERP & Custom AI Assistant Enterprise</span>
@@ -944,6 +973,14 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
                     <span class="font-bold text-slate-900 text-sm font-mono" id="kNominalDpDisplay">Rp. 12.000.000</span>
                     <span class="text-slate-700 italic font-medium text-xs ml-3" id="kTerbilangDpDisplay">( Dua Belas Juta Rupiah )</span>
                   </div>
+                </div>
+              </div>
+
+              <!-- Kode Proyek Kwitansi -->
+              <div class="grid grid-cols-12 items-baseline mb-1" id="kKodeProyekRow">
+                <div class="col-span-3 text-slate-800 font-medium">Kode Proyek :</div>
+                <div class="col-span-9 text-slate-900">
+                  <span id="kKodeProyek" class="font-bold font-mono text-xs text-indigo-900 bg-indigo-50 px-1.5 py-0.5 rounded border border-indigo-200">PRJ/ACD/2026/001</span>
                 </div>
               </div>
 
@@ -1308,6 +1345,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
           <thead class="bg-slate-50 dark:bg-slate-800/80 text-[11px] font-bold uppercase text-slate-700 dark:text-slate-300 border-b border-slate-200 dark:border-slate-700 tracking-wider">
             <tr>
               <th class="py-3 px-3 text-center" style="width: 40px;">No</th>
+              <th class="py-3 px-3"><i class="fa-solid fa-fingerprint text-indigo-500 mr-1"></i>Kode Proyek</th>
               <th class="py-3 px-3">Nomor Dokumen</th>
               <th class="py-3 px-3">Tanggal Terbit</th>
               <th class="py-3 px-3">Nama Klien & Alamat</th>
@@ -1973,6 +2011,43 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       <span>Hasil Dokumen</span>
     </button>
   </div>
+  <!-- ================= MODAL PILIH PROYEK BERJALAN (KODE PROYEK SAMA) ================= -->
+  <div id="modalPilihProyekAktif" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+    <div class="bg-white dark:bg-slate-900 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar p-6 shadow-2xl border border-slate-200 dark:border-slate-800 relative text-left">
+      <div class="flex items-start justify-between pb-3.5 border-b border-slate-100 dark:border-slate-800">
+        <div class="flex items-center gap-3">
+          <div class="w-10 h-10 rounded-xl bg-indigo-100 dark:bg-indigo-950 flex items-center justify-center text-indigo-600 dark:text-indigo-400 shadow-inner">
+            <i class="fa-solid fa-folder-tree text-lg"></i>
+          </div>
+          <div>
+            <h3 class="text-base font-bold text-slate-900 dark:text-white">Pilih Proyek Berjalan (Kode Proyek Sama)</h3>
+            <p class="text-xs text-slate-500 dark:text-slate-400">Pilih proyek yang sedang berlangsung untuk menerbitkan dokumen/termin lanjutan</p>
+          </div>
+        </div>
+        <button onclick="closeModalPilihProyekAktif()" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center transition">
+          <i class="fa-solid fa-xmark text-sm"></i>
+        </button>
+      </div>
+
+      <div class="my-4">
+        <div class="relative mb-3">
+          <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-xs"></i>
+          <input type="text" id="searchProyekAktifInput" oninput="renderDaftarProyekAktif()" placeholder="Ketik Kode Proyek, Nama Klien, atau Pekerjaan..." class="w-full pl-8 pr-3 py-2 bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 rounded-lg text-xs font-semibold focus:ring-2 focus:ring-indigo-500 outline-none text-slate-900 dark:text-white">
+        </div>
+
+        <div id="listProyekAktifContainer" class="space-y-2.5 max-h-[50vh] overflow-y-auto pr-1">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-100 dark:border-slate-800 flex justify-between items-center text-xs">
+        <span class="text-slate-500 text-[11px]"><i class="fa-solid fa-circle-info text-indigo-500 mr-1"></i>Kode Proyek yang sama otomatis diikatkan ke transaksi baru.</span>
+        <button type="button" onclick="closeModalPilihProyekAktif()" class="px-4 py-2 border border-slate-300 dark:border-slate-700 hover:bg-slate-200 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 rounded-xl font-semibold transition cursor-pointer">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
@@ -2036,6 +2111,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         judulDokumen: "PROFORMA INVOICE",
         noInvoice: "PI/ACD/2026/001",
         noKwitansi: "KWT/ACD/2026/001",
+        kodeProyek: "PRJ/ACD/2026/001",
         tgl: "2026-11-17",
         timelineAwal: "2026-11-01",
         timelineAkhir: "2026-11-30",
@@ -2061,6 +2137,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         judulDokumen: "INVOICE",
         noInvoice: "PI/ACD/2026/002",
         noKwitansi: "KWT/ACD/2026/002",
+        kodeProyek: "PRJ/ACD/2026/002",
         tgl: "2026-11-15",
         timelineAwal: "2026-11-05",
         timelineAkhir: "2026-11-20",
@@ -2090,6 +2167,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         judulDokumen: "INVOICE",
         noInvoice: "INV/ACD/2026/003",
         noKwitansi: "KWT/ACD/2026/003",
+        kodeProyek: "PRJ/ACD/2026/003",
         tgl: "2026-10-22",
         timelineAwal: "2026-10-01",
         timelineAkhir: "2026-10-31",
@@ -2118,6 +2196,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         judulDokumen: "INVOICE",
         noInvoice: "PI/ACD/2026/004",
         noKwitansi: "KWT/ACD/2026/004",
+        kodeProyek: "PRJ/ACD/2026/004",
         tgl: "2026-10-08",
         timelineAwal: "2026-10-08",
         timelineAkhir: "2026-11-10",
@@ -2146,6 +2225,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         judulDokumen: "INVOICE",
         noInvoice: "INV/ACD/2026/005",
         noKwitansi: "KWT/ACD/2026/005",
+        kodeProyek: "PRJ/ACD/2026/005",
         tgl: "2026-09-18",
         timelineAwal: "2026-09-01",
         timelineAkhir: "2026-09-30",
@@ -2174,6 +2254,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         judulDokumen: "INVOICE",
         noInvoice: "PI/ACD/2026/006",
         noKwitansi: "KWT/ACD/2026/006",
+        kodeProyek: "PRJ/ACD/2026/006",
         tgl: "2026-08-25",
         timelineAwal: "2026-08-25",
         timelineAkhir: "2026-12-15",
@@ -2193,6 +2274,32 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         wa: "0852-8789-8937",
         catatan: "Note : Serah terima asset Figma selesai.",
         signClient: "Ibu Maya Lestari",
+        signCompany: "PT Aksara Cipta Digital"
+      },
+      {
+        id: 1731859200007,
+        savedAt: "2026-11-20T10:00:00.000Z",
+        kopType: "acd_asli",
+        judulDokumen: "INVOICE",
+        noInvoice: "INV/ACD/2026/007",
+        noKwitansi: "KWT/ACD/2026/007",
+        kodeProyek: "PRJ/ACD/2026/001", // KODE PROYEKNYA SAMA (Termin Pelunasan untuk Proyek 1)
+        tgl: "2026-11-20",
+        timelineAwal: "2026-11-01",
+        timelineAkhir: "2026-11-30",
+        targetTimeline: "2026-11-30",
+        kota: "Tasikmalaya",
+        klien: "PT Enchante Digital Solusindo (Bpk. Freddy)",
+        alamat: "Cluster Enchante Blok E2 No.15, BSD City",
+        pekerjaan: "Pengembangan Sistem ERP & Custom AI Assistant Enterprise",
+        category: "Enterprise AI & ERP",
+        skema: "Pelunasan 70% (Lunas)",
+        dp: 39581000,
+        items: JSON.parse(JSON.stringify(ITEMS_SAMPLE_ACD)),
+        bank: "Bank BCA | No. Rekening : 148-092-8899 | A.N. PT Aksara Cipta Digital",
+        wa: "0852-8789-8937",
+        catatan: "Note : Kwitansi & Invoice Pelunasan 70% setelah UAT & sistem Go-Live.",
+        signClient: "Bapak Freddy",
         signCompany: "PT Aksara Cipta Digital"
       }
     ];
@@ -2538,6 +2645,198 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       }
       renderAll();
       showToast("Nomor otomatis diperbarui melanjutkan nomor sebelumnya!");
+    }
+
+    // ==========================================
+    // SISTEM KODE PROYEK IT RESMI PT ACD
+    // Satu kode proyek menaungi banyak transaksi/termin (SPH, DP, Termin, Pelunasan)
+    // ==========================================
+    function getNextSequentialKodeProyek() {
+      const dVal = document.getElementById('tglDokumen') ? document.getElementById('tglDokumen').value : '';
+      const d = dVal ? new Date(dVal) : new Date();
+      const yr = isNaN(d.getFullYear()) ? new Date().getFullYear() : d.getFullYear();
+
+      let maxPrjSeq = 0;
+      const allTx = (typeof savedTransactions !== 'undefined' && savedTransactions && savedTransactions.length > 0)
+        ? savedTransactions
+        : (typeof SEED_REPORT_TRANSACTIONS !== 'undefined' ? SEED_REPORT_TRANSACTIONS : []);
+
+      allTx.forEach(t => {
+        if (t.kodeProyek) {
+          const match = String(t.kodeProyek).match(/(\d+)$/);
+          if (match) {
+            const num = parseInt(match[1], 10);
+            if (!isNaN(num) && num > maxPrjSeq) maxPrjSeq = num;
+          }
+        }
+      });
+
+      const nextNum = String(maxPrjSeq + 1).padStart(3, '0');
+      return `PRJ/ACD/${yr}/${nextNum}`;
+    }
+
+    function autoGenerateKodeProyek() {
+      const newCode = getNextSequentialKodeProyek();
+      const inp = document.getElementById('kodeProyek');
+      if (inp) {
+        inp.value = newCode;
+        renderAll();
+        showToast(`Kode Proyek Baru dibuat: ${newCode}`);
+      }
+    }
+
+    // Modal Pilih Proyek Berjalan untuk Transaksi / Termin Baru
+    function bukaModalPilihProyekAktif() {
+      const modal = document.getElementById('modalPilihProyekAktif');
+      if (modal) {
+        modal.classList.remove('hidden');
+        renderDaftarProyekAktif();
+      }
+    }
+
+    function closeModalPilihProyekAktif() {
+      const modal = document.getElementById('modalPilihProyekAktif');
+      if (modal) modal.classList.add('hidden');
+    }
+
+    function getDaftarProyekUnik() {
+      const allTx = (typeof savedTransactions !== 'undefined' && savedTransactions && savedTransactions.length > 0)
+        ? savedTransactions
+        : (typeof SEED_REPORT_TRANSACTIONS !== 'undefined' ? SEED_REPORT_TRANSACTIONS : []);
+
+      const map = new Map();
+      allTx.forEach(t => {
+        const kode = (t.kodeProyek || '').trim();
+        if (!kode) return;
+        if (!map.has(kode)) {
+          map.set(kode, {
+            kodeProyek: kode,
+            klien: t.klien || '-',
+            alamat: t.alamat || '',
+            pekerjaan: t.pekerjaan || '-',
+            timelineAwal: t.timelineAwal || t.tgl,
+            timelineAkhir: t.timelineAkhir || t.targetTimeline || t.tgl,
+            items: t.items || [],
+            transaksiList: []
+          });
+        }
+        map.get(kode).transaksiList.push(t);
+      });
+
+      return Array.from(map.values());
+    }
+
+    function renderDaftarProyekAktif() {
+      const container = document.getElementById('listProyekAktifContainer');
+      const searchVal = (document.getElementById('searchProyekAktifInput') ? document.getElementById('searchProyekAktifInput').value : '').toLowerCase().trim();
+      if (!container) return;
+
+      const list = getDaftarProyekUnik();
+      const filtered = list.filter(p => {
+        if (!searchVal) return true;
+        return (p.kodeProyek || '').toLowerCase().includes(searchVal) ||
+               (p.klien || '').toLowerCase().includes(searchVal) ||
+               (p.pekerjaan || '').toLowerCase().includes(searchVal);
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="py-8 text-center text-slate-400">
+            <i class="fa-solid fa-folder-open text-3xl mb-2 opacity-50"></i>
+            <p class="text-xs">Tidak ditemukan proyek yang cocok dengan pencarian.</p>
+          </div>
+        `;
+        return;
+      }
+
+      let html = '';
+      filtered.forEach(p => {
+        const txCount = p.transaksiList.length;
+
+        html += `
+          <div class="p-3.5 bg-slate-50 dark:bg-slate-800/80 rounded-xl border border-slate-200 dark:border-slate-700 hover:border-indigo-400 dark:hover:border-indigo-600 transition flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+            <div class="space-y-1 text-xs">
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="px-2 py-0.5 rounded bg-indigo-100 dark:bg-indigo-950 text-indigo-800 dark:text-indigo-300 font-mono font-bold text-xs border border-indigo-200 dark:border-indigo-800">
+                  <i class="fa-solid fa-fingerprint text-[10px] mr-1"></i>${p.kodeProyek}
+                </span>
+                <span class="font-bold text-slate-900 dark:text-white">${p.klien}</span>
+                <span class="px-1.5 py-0.5 rounded text-[10px] font-semibold bg-blue-50 dark:bg-blue-950 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-800">
+                  ${txCount} Transaksi Tercatat
+                </span>
+              </div>
+              <div class="font-medium text-slate-700 dark:text-slate-200 text-xs">${p.pekerjaan}</div>
+              <div class="text-[11px] text-slate-500 dark:text-slate-400">Alamat: ${p.alamat || '-'}</div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button type="button" onclick="pilihProyekUntukTransaksiLanjutan('${p.kodeProyek}')" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-500 text-white rounded-lg font-bold text-xs transition flex items-center gap-1.5 shadow-sm cursor-pointer whitespace-nowrap">
+                <i class="fa-solid fa-circle-plus"></i>
+                <span>Gunakan Proyek Ini</span>
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      container.innerHTML = html;
+    }
+
+    function pilihProyekUntukTransaksiLanjutan(kode) {
+      const list = getDaftarProyekUnik();
+      const p = list.find(x => x.kodeProyek === kode);
+      if (!p) return;
+
+      // 1. Tetapkan Kode Proyek yang SAMA!
+      document.getElementById('kodeProyek').value = p.kodeProyek;
+
+      // 2. Isi identitas Klien & Proyek
+      document.getElementById('namaKlien').value = p.klien;
+      document.getElementById('alamatKlien').value = p.alamat;
+      if (document.getElementById('penandatanganKlien')) {
+        document.getElementById('penandatanganKlien').value = p.klien;
+      }
+      document.getElementById('namaPekerjaan').value = p.pekerjaan;
+      if (typeof renderMasterProyekDropdown === 'function') {
+        renderMasterProyekDropdown(p.pekerjaan);
+      }
+
+      // 3. Pasang timeline jika ada
+      if (document.getElementById('timelineAwal') && p.timelineAwal) {
+        document.getElementById('timelineAwal').value = p.timelineAwal;
+      }
+      if (document.getElementById('timelineAkhir') && p.timelineAkhir) {
+        document.getElementById('timelineAkhir').value = p.timelineAkhir;
+      }
+      if (document.getElementById('targetTimeline') && p.timelineAkhir) {
+        document.getElementById('targetTimeline').value = p.timelineAkhir;
+      }
+
+      // 4. Salin items jika ada
+      if (p.items && p.items.length > 0) {
+        transactionItems = JSON.parse(JSON.stringify(p.items));
+        renderItemsEditor();
+      }
+
+      // 5. Generate NOMOR INVOICE & KWITANSI BARU (Sequential Lanjutan)
+      //    Sehingga No. Dokumen baru, tetapi KODE PROYEK TETAP SAMA!
+      autoGenerateNumber('invoice');
+      autoGenerateNumber('kwitansi');
+
+      closeModalPilihProyekAktif();
+      switchMainView('entry');
+      renderAll();
+      showToast(`Proyek ${p.kodeProyek} dimuat! Siap membuat transaksi lanjutan dengan Kode Proyek sama.`);
+    }
+
+    function filterByKodeProyek(kode) {
+      if (!kode || kode === '-') return;
+      const searchBox = document.getElementById('reportSearchInput');
+      if (searchBox) {
+        searchBox.value = kode;
+        switchMainView('report');
+        applyAllFilters();
+        showToast(`Menampilkan semua transaksi untuk proyek: ${kode}`);
+      }
     }
 
     // ==========================================
@@ -3181,6 +3480,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       document.getElementById('noKwitansi').value = nextSeq.kwitansi;
       document.getElementById('tglDokumen').value = new Date().toISOString().slice(0, 10);
       document.getElementById('kotaDokumen').value = 'Tasikmalaya';
+      if (document.getElementById('kodeProyek')) {
+        document.getElementById('kodeProyek').value = getNextSequentialKodeProyek();
+      }
       
       // 2. Klien, Proyek & Target Timeline: KOSONG!
       document.getElementById('namaKlien').value = '';
@@ -3235,6 +3537,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       document.getElementById('noKwitansi').value = 'KWT/ACD/XI/2026/001';
       document.getElementById('tglDokumen').value = '2026-11-17';
       document.getElementById('kotaDokumen').value = 'Tasikmalaya';
+      if (document.getElementById('kodeProyek')) {
+        document.getElementById('kodeProyek').value = 'PRJ/ACD/2026/001';
+      }
       document.getElementById('namaKlien').value = 'Bapak Freddy';
       document.getElementById('alamatKlien').value = 'Cluster Enchante Blok E2 No.15';
       document.getElementById('namaPekerjaan').value = 'Pengembangan Sistem ERP & Custom AI Assistant Enterprise';
@@ -3276,6 +3581,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
 
       document.getElementById('tglDokumen').value = '2026-11-19';
       document.getElementById('kotaDokumen').value = 'Tasikmalaya';
+      if (document.getElementById('kodeProyek')) {
+        document.getElementById('kodeProyek').value = 'PRJ/ACD/2026/001';
+      }
       document.getElementById('namaKlien').value = 'PT Enchante Digital Solusindo (Up: Bapak Freddy)';
       document.getElementById('alamatKlien').value = 'Cluster Enchante Blok E2 No.15, BSD City';
       document.getElementById('namaPekerjaan').value = 'Pengembangan Sistem ERP & Custom AI Assistant Enterprise';
@@ -3607,6 +3915,13 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       document.getElementById('pClientAddress').innerText = alamatKlien;
       document.getElementById('pJobName').innerText = namaPekerjaan;
       document.getElementById('pPaymentTerms').innerText = skemaPembayaran;
+      const kodeProyekVal = (document.getElementById('kodeProyek') ? document.getElementById('kodeProyek').value : '').trim() || 'PRJ/ACD/2026/001';
+      if (document.getElementById('pKodeProyek')) {
+        document.getElementById('pKodeProyek').innerText = kodeProyekVal;
+      }
+      if (document.getElementById('kKodeProyek')) {
+        document.getElementById('kKodeProyek').innerText = kodeProyekVal;
+      }
 
       // Update Target Timeline & Form Countdown Badge
       const tAwal = document.getElementById('timelineAwal') ? document.getElementById('timelineAwal').value : '';
@@ -3850,6 +4165,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         judulDokumen: document.getElementById('judulDokumen').value,
         noInvoice: document.getElementById('noInvoice').value,
         noKwitansi: document.getElementById('noKwitansi').value,
+        kodeProyek: (document.getElementById('kodeProyek') ? document.getElementById('kodeProyek').value : '').trim() || getNextSequentialKodeProyek(),
         tgl: document.getElementById('tglDokumen').value,
         kota: document.getElementById('kotaDokumen').value,
         klien: document.getElementById('namaKlien').value,
@@ -3913,7 +4229,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
             savedTransactions = JSON.parse(JSON.stringify(SEED_REPORT_TRANSACTIONS));
             localStorage.setItem('acd_transactions_db', JSON.stringify(savedTransactions));
           } else {
-            // Pastikan setiap record memiliki field timelineAwal & timelineAkhir yang valid
+            // Pastikan setiap record memiliki field timelineAwal, timelineAkhir & kodeProyek yang valid
             savedTransactions.forEach((item, i) => {
               const seedMatch = SEED_REPORT_TRANSACTIONS[i % SEED_REPORT_TRANSACTIONS.length] || {};
               if (!item.timelineAwal) {
@@ -3924,6 +4240,16 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
               }
               if (!item.targetTimeline) {
                 item.targetTimeline = item.timelineAkhir;
+              }
+              if (!item.kodeProyek) {
+                const matchOther = savedTransactions.find(x => x !== item && x.kodeProyek && (x.klien === item.klien || x.pekerjaan === item.pekerjaan));
+                if (matchOther) {
+                  item.kodeProyek = matchOther.kodeProyek;
+                } else {
+                  const mNum = String(item.noInvoice || '').match(/(\d+)$/);
+                  const numStr = mNum ? String(mNum[1]).padStart(3, '0') : String(i + 1).padStart(3, '0');
+                  item.kodeProyek = `PRJ/ACD/2026/${numStr}`;
+                }
               }
             });
             localStorage.setItem('acd_transactions_db', JSON.stringify(savedTransactions));
@@ -4152,7 +4478,8 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         if (bulanFilter !== 'all' && itemMonth !== bulanFilter) return false;
 
         if (searchVal) {
-          const matchSearch = (item.noInvoice || "").toLowerCase().includes(searchVal) ||
+          const matchSearch = (item.kodeProyek || "").toLowerCase().includes(searchVal) ||
+                              (item.noInvoice || "").toLowerCase().includes(searchVal) ||
                               (item.noKwitansi || "").toLowerCase().includes(searchVal) ||
                               (item.klien || "").toLowerCase().includes(searchVal) ||
                               (item.pekerjaan || "").toLowerCase().includes(searchVal);
@@ -4306,7 +4633,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       if (pageData.length === 0) {
         tbody.innerHTML = `
           <tr>
-            <td colspan="13" class="py-8 text-center text-slate-400 italic">
+            <td colspan="14" class="py-8 text-center text-slate-400 italic">
               Tidak ada catatan transaksi yang sesuai dengan filter (${currentStatusTab.toUpperCase()}).
             </td>
           </tr>
@@ -4325,6 +4652,12 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         tr.className = "hover:bg-slate-50 dark:hover:bg-slate-800/60 transition border-b border-slate-100 dark:border-slate-800";
         tr.innerHTML = `
           <td class="py-3 px-3 text-center font-bold text-slate-400">${startIndex + idx + 1}</td>
+          <td class="py-3 px-3 whitespace-nowrap">
+            <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded bg-indigo-50 dark:bg-indigo-950/80 border border-indigo-200 dark:border-indigo-800 text-indigo-700 dark:text-indigo-300 font-mono font-bold text-[11px] hover:bg-indigo-100 dark:hover:bg-indigo-900/80 cursor-pointer transition shadow-xs" title="Klik untuk memfilter semua transaksi dengan Kode Proyek ini" onclick="filterByKodeProyek('${t.kodeProyek || ''}')">
+              <i class="fa-solid fa-fingerprint text-[10px] text-indigo-500"></i>
+              <span>${t.kodeProyek || '-'}</span>
+            </span>
+          </td>
           <td class="py-3 px-3 font-mono font-bold text-slate-800 dark:text-slate-100 text-xs">
             <div>${t.noInvoice}</div>
             <div class="text-[10px] text-slate-400 font-normal">${t.noKwitansi}</div>
@@ -4571,6 +4904,9 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
       document.getElementById('judulDokumen').value = t.judulDokumen || 'PROFORMA INVOICE';
       document.getElementById('noInvoice').value = t.noInvoice;
       document.getElementById('noKwitansi').value = t.noKwitansi;
+      if (document.getElementById('kodeProyek')) {
+        document.getElementById('kodeProyek').value = t.kodeProyek || getNextSequentialKodeProyek();
+      }
       document.getElementById('tglDokumen').value = t.tgl;
       document.getElementById('kotaDokumen').value = t.kota || 'Tasikmalaya';
       document.getElementById('namaKlien').value = t.klien;
@@ -4629,7 +4965,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
         return;
       }
 
-      let csv = "No,No Invoice,No Kwitansi,Tanggal Terbit,Klien,Alamat,Pekerjaan,Timeline Awal,Timeline Akhir,Sisa Hari,Total Nilai,DP Dibayar,Sisa Pelunasan,Status\n";
+      let csv = "No,Kode Proyek,No Invoice,No Kwitansi,Tanggal Terbit,Klien,Alamat,Pekerjaan,Timeline Awal,Timeline Akhir,Sisa Hari,Total Nilai,DP Dibayar,Sisa Pelunasan,Status\n";
 
       savedTransactions.forEach((t, i) => {
         const sub = (t.items || []).reduce((acc, it) => acc + (it.qty * it.price), 0);
@@ -4641,6 +4977,7 @@ Garansi sistem & SLA aktif selama 6 bulan setelah UAT.</textarea>
 
         const row = [
           i + 1,
+          `"${t.kodeProyek || '-'}"`,
           `"${t.noInvoice}"`,
           `"${t.noKwitansi}"`,
           `"${t.tgl}"`,
